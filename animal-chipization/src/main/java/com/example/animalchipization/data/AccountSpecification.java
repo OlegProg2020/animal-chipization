@@ -21,13 +21,8 @@ public class AccountSpecification implements Specification<Account> {
         if (criteria.getValue() == null) {
             return builder.isTrue(builder.literal(true));
         } else {
-            String rootValue = root.get(criteria.getKey()).toString().toLowerCase();
-            String criteriaValue = criteria.getValue().toLowerCase();
-            if (rootValue.contains(criteriaValue)) {
-                return builder.like()
-            } else {
-                return builder.isTrue(builder.literal(false));
-            }
+            return builder.like(builder.lower(root.get(criteria.getKey())),
+                    "%" + criteria.getValue().toLowerCase() + "%");
         }
     }
 }

@@ -11,5 +11,5 @@ import org.springframework.data.jpa.domain.Specification;
 
 @Repository
 public interface AccountRepository extends CrudRepository<Account, Long>, JpaSpecificationExecutor<Account> {
-    //Page<Account> findAll(Specification<Account> specification, Pageable page);
+
 }
