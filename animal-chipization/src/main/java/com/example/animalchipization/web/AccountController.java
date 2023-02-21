@@ -3,6 +3,7 @@ package com.example.animalchipization.web;
 import com.example.animalchipization.models.Account;
 import com.example.animalchipization.data.AccountRepository;
 
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,5 +38,13 @@ public class AccountController {
         return response;
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<Iterable<Account>> searchAccounts(
+            @RequestParam(name = "firstName", required = false) String firstName,
+            @RequestParam(name = "lastName", required = false) String lastName,
+            @RequestParam(name = "from", required = false, defaultValue = "0") Integer from,
+            @RequestParam(name = "size", required = false, defaultValue = "10") Integer size) {
 
+        Specification<Account> specification = Specification.where()
+    }
 }
