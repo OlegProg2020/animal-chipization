@@ -2,7 +2,7 @@ package com.example.animalchipization.web;
 
 import com.example.animalchipization.data.AnimalTypeRepository;
 import com.example.animalchipization.models.AnimalType;
-import com.example.animalchipization.models.LocationPoint;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
