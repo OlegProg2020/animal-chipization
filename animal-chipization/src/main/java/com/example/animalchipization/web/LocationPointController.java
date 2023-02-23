@@ -25,7 +25,7 @@ public class LocationPointController {
     }
 
     @GetMapping("/{pointId}")
-    public ResponseEntity<LocationPoint> accountById(@PathVariable("pointId") Long pointId) {
+    public ResponseEntity<LocationPoint> locationPointById(@PathVariable("pointId") Long pointId) {
         ResponseEntity<LocationPoint> response;
         if (pointId <= 0) {
             response = new ResponseEntity<>(null, HttpStatus.valueOf(400));
