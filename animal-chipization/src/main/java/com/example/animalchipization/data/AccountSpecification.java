@@ -9,9 +9,9 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
 
 public class AccountSpecification implements Specification<Account> {
-    private final SearchCriteria criteria;
+    private final SearchCriteria<?> criteria;
 
-    public AccountSpecification(SearchCriteria criteria) {
+    public AccountSpecification(SearchCriteria<?> criteria) {
         this.criteria = criteria;
     }
 
@@ -22,7 +22,7 @@ public class AccountSpecification implements Specification<Account> {
             return builder.isTrue(builder.literal(true));
         } else {
             return builder.like(builder.lower(root.get(criteria.getKey())),
-                    "%" + criteria.getValue().toLowerCase() + "%");
+                    "%" + criteria.getValue().toString().toLowerCase() + "%");
         }
     }
 }
