@@ -1,12 +1,11 @@
 package com.example.animalchipization.models;
 
-import com.example.animalchipization.models.AnimalType;
-import com.example.animalchipization.models.LocationPoint;
-
 import jakarta.persistence.*;
 
+import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.Data;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.time.LocalDateTime;
@@ -34,9 +33,10 @@ public class Animal {
     private LocationPoint chippingLocation;
     @OneToMany
     private List<LocationPoint> visitedLocations = new ArrayList<>();
+    @Setter(value = AccessLevel.NONE)
     private LocalDateTime deathDateTime = null;
 
-    public void selectDeathDateTime(LocalDateTime deathDateTime) {
+    public void setDeathDateTime(LocalDateTime deathDateTime) {
         this.deathDateTime = deathDateTime;
         this.setLifeStatus("DEAD");
     }
