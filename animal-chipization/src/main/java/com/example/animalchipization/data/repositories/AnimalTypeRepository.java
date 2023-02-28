@@ -1,4 +1,4 @@
-package com.example.animalchipization.data;
+package com.example.animalchipization.data.repositories;
 
 import com.example.animalchipization.models.AnimalType;
 

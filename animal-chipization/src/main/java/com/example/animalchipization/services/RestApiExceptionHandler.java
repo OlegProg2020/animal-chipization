@@ -1,4 +1,4 @@
-package com.example.animalchipization.web;
+package com.example.animalchipization.services;
 
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -7,10 +7,11 @@ import org.springframework.http.ResponseEntity;
 
 //import org.springframework.web.bind.MethodArgumentNotValidException;
 import jakarta.validation.ConstraintViolationException;
+
 import java.util.NoSuchElementException;
 
 @RestControllerAdvice
-public class ExceptionRestApiHandler {
+public class RestApiExceptionHandler {
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<?> onConstraintViolationException(ConstraintViolationException exception) {

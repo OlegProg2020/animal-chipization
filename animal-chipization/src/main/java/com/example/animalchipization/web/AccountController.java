@@ -1,11 +1,10 @@
 package com.example.animalchipization.web;
 
 import com.example.animalchipization.models.Account;
-import com.example.animalchipization.data.AccountRepository;
+import com.example.animalchipization.data.repositories.AccountRepository;
 
-import static com.example.animalchipization.data.AccountSpecification.*;
+import static com.example.animalchipization.data.specifications.AccountSpecification.*;
 
-import com.example.animalchipization.models.Animal;
 import jakarta.validation.constraints.Min;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RestController;
@@ -47,24 +46,20 @@ public class AccountController {
 
     @GetMapping("/search")
     public ResponseEntity<Iterable<Account>> searchForAccounts(
-            @RequestParam(name = "firstName", required = false) String firstName,
-            @RequestParam(name = "lastName", required = false) String lastName,
-            @RequestParam(name = "email", required = false) String email,
-            @RequestParam(name = "from", required = false, defaultValue = "0") Integer from,
-            @RequestParam(name = "size", required = false, defaultValue = "10") Integer size) {
+            @RequestParam(name = "firstName") String firstName,
+            @RequestParam(name = "lastName") String lastName,
+            @RequestParam(name = "email") String email,
+            @RequestParam(name = "from", defaultValue = "0") @Min(0) Integer from,
+            @RequestParam(name = "size", defaultValue = "10") @Min(1) Integer size) {
 
-        if (from < 0 || size <= 0) {
-            return new ResponseEntity<>(HttpStatus.valueOf(400));
-        } else {
-            PageRequest pageRequest = PageRequest.of(from, size, Sort.by("id").ascending());
-            Specification<Account> specifications = Specification.where(
-                    hasFirstName(firstName)
-                            .and(hasLastName(lastName))
-                            .and(hasEmail(email))
-            );
-            Iterable<Account> accounts = accountRepository.findAll(specifications, pageRequest);
-            return new ResponseEntity<>(accounts, HttpStatus.valueOf(200));
-        }
+        PageRequest pageRequest = PageRequest.of(from, size, Sort.by("id").ascending());
+        Specification<Account> specifications = Specification.where(
+                hasFirstName(firstName)
+                        .and(hasLastName(lastName))
+                        .and(hasEmail(email))
+        );
+        Iterable<Account> accounts = accountRepository.findAll(specifications, pageRequest).getContent();
+        return new ResponseEntity<>(accounts, HttpStatus.valueOf(200));
     }
 
 }

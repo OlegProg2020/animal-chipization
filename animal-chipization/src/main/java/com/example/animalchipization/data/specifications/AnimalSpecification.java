@@ -1,4 +1,4 @@
-package com.example.animalchipization.data;
+package com.example.animalchipization.data.specifications;
 
 import com.example.animalchipization.models.Animal;
 

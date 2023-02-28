@@ -1,6 +1,6 @@
 package com.example.animalchipization.web;
 
-import com.example.animalchipization.data.LocationPointRepository;
+import com.example.animalchipization.data.repositories.LocationPointRepository;
 import com.example.animalchipization.models.LocationPoint;
 
 import jakarta.validation.constraints.Min;

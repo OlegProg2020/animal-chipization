@@ -1,10 +1,12 @@
 package com.example.animalchipization.web;
 
 import com.example.animalchipization.models.Animal;
-import com.example.animalchipization.data.AnimalRepository;
+import com.example.animalchipization.data.repositories.AnimalRepository;
 
-import static com.example.animalchipization.data.AnimalSpecification.*;
+import static com.example.animalchipization.data.specifications.AnimalSpecification.*;
 
+import com.example.animalchipization.services.annotations.CorrectGender;
+import com.example.animalchipization.services.annotations.CorrectLifeStatus;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -47,31 +49,25 @@ public class AnimalController {
 
     @GetMapping("/search")
     public ResponseEntity<Iterable<Animal>> searchForAnimals(
-            @RequestParam(name = "startDateTime", required = false) LocalDateTime startDateTime,
-            @RequestParam(name = "endDateTime", required = false) LocalDateTime endDateTime,
-            @RequestParam(name = "chipperId", required = false) Long chipperId,
-            @RequestParam(name = "chippingLocationId", required = false) Long chippingLocationId,
-            @RequestParam(name = "lifeStatus", required = false) String lifeStatus,
-            @RequestParam(name = "gender", required = false) String gender,
-            @RequestParam(name = "from", required = false, defaultValue = "0") Integer from,
-            @RequestParam(name = "size", required = false, defaultValue = "10") Integer size) {
+            @RequestParam(name = "startDateTime") LocalDateTime startDateTime,
+            @RequestParam(name = "endDateTime") LocalDateTime endDateTime,
+            @RequestParam(name = "chipperId") @Min(1) Long chipperId,
+            @RequestParam(name = "chippingLocationId") @Min(1) Long chippingLocationId,
+            @RequestParam(name = "lifeStatus") @CorrectLifeStatus String lifeStatus,
+            @RequestParam(name = "gender") @CorrectGender String gender,
+            @RequestParam(name = "from", defaultValue = "0") @Min(0) Integer from,
+            @RequestParam(name = "size", defaultValue = "10") @Min(1) Integer size) {
 
-        if (from < 0 || size <= 0 || chipperId <= 0 || chippingLocationId <= 0) {
-            return new ResponseEntity<>(null, HttpStatus.valueOf(400));
-        } else {
-            PageRequest pageRequest = PageRequest.of(from, size, Sort.by("id").ascending());
-            Specification<Animal> specifications = Specification.where(
-                    hasChippingDateTimeGreaterThanOrEqualTo(startDateTime)
-                            .and(hasChippingDateTimeLessThanOrEqualTo(endDateTime))
-                            .and(hasChipperId(chipperId))
-                            .and(hasChippingLocationId(chippingLocationId))
-                            .and(hasLifeStatus(lifeStatus))
-                            .and(hasGender(gender))
-            );
-            Iterable<Animal> animals = animalRepository.findAll(specifications, pageRequest);
-            return new ResponseEntity<>(animals, HttpStatus.valueOf(200));
-        }
+        PageRequest pageRequest = PageRequest.of(from, size, Sort.by("id").ascending());
+        Specification<Animal> specifications = Specification.where(
+                hasChippingDateTimeGreaterThanOrEqualTo(startDateTime)
+                        .and(hasChippingDateTimeLessThanOrEqualTo(endDateTime))
+                        .and(hasChipperId(chipperId))
+                        .and(hasChippingLocationId(chippingLocationId))
+                        .and(hasLifeStatus(lifeStatus))
+                        .and(hasGender(gender))
+        );
+        Iterable<Animal> animals = animalRepository.findAll(specifications, pageRequest).getContent();
+        return new ResponseEntity<>(animals, HttpStatus.valueOf(200));
     }
-
-
 }
