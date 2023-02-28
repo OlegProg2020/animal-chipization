@@ -5,6 +5,9 @@ import com.example.animalchipization.data.AccountRepository;
 
 import static com.example.animalchipization.data.AccountSpecification.*;
 
+import com.example.animalchipization.models.Animal;
+import jakarta.validation.constraints.Min;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,10 +20,12 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "/accounts", produces = "application/json")
+@Validated
 public class AccountController {
 
     private final AccountRepository accountRepository;
@@ -31,19 +36,13 @@ public class AccountController {
     }
 
     @GetMapping("/{accountId}")
-    public ResponseEntity<Account> accountById(@PathVariable("accountId") Long accountId) {
-        ResponseEntity<Account> response;
-        if (accountId <= 0) {
-            response = new ResponseEntity<>(null, HttpStatus.valueOf(400));
+    public ResponseEntity<Account> accountById(@PathVariable("accountId") @Min(1) Long accountId) {
+        Optional<Account> optionalAccount = accountRepository.findById(accountId);
+        if (optionalAccount.isPresent()) {
+            return new ResponseEntity<>(optionalAccount.get(), HttpStatus.valueOf(200));
         } else {
-            Optional<Account> account = accountRepository.findById(accountId);
-            if (account.isPresent()) {
-                response = new ResponseEntity<>(account.get(), HttpStatus.valueOf(200));
-            } else {
-                response = new ResponseEntity<>(null, HttpStatus.valueOf(404));
-            }
+            throw new NoSuchElementException();
         }
-        return response;
     }
 
     @GetMapping("/search")

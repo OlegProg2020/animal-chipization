@@ -5,12 +5,14 @@ import com.example.animalchipization.data.AnimalRepository;
 
 import static com.example.animalchipization.data.AnimalSpecification.*;
 
+import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,10 +20,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "/animals", produces = "application/json")
+@Validated
 public class AnimalController {
 
     private final AnimalRepository animalRepository;
@@ -32,19 +36,13 @@ public class AnimalController {
     }
 
     @GetMapping("/{animalId}")
-    public ResponseEntity<Animal> animalById(@PathVariable("animalId") Long animalId) {
-        ResponseEntity<Animal> response;
-        if (animalId <= 0) {
-            response = new ResponseEntity<>(null, HttpStatus.valueOf(400));
+    public ResponseEntity<Animal> animalById(@PathVariable("animalId") @Min(1) Long animalId) {
+        Optional<Animal> optionalAnimal = animalRepository.findById(animalId);
+        if (optionalAnimal.isPresent()) {
+            return new ResponseEntity<>(optionalAnimal.get(), HttpStatus.valueOf(200));
         } else {
-            Optional<Animal> animal = animalRepository.findById(animalId);
-            if (animal.isPresent()) {
-                response = new ResponseEntity<>(animal.get(), HttpStatus.valueOf(200));
-            } else {
-                response = new ResponseEntity<>(null, HttpStatus.valueOf(404));
-            }
+            throw new NoSuchElementException();
         }
-        return response;
     }
 
     @GetMapping("/search")
@@ -74,5 +72,6 @@ public class AnimalController {
             return new ResponseEntity<>(animals, HttpStatus.valueOf(200));
         }
     }
+
 
 }
