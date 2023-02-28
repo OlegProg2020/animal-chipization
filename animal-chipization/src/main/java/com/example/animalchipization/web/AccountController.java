@@ -46,11 +46,11 @@ public class AccountController {
 
     @GetMapping("/search")
     public ResponseEntity<Iterable<Account>> searchForAccounts(
-            @RequestParam(name = "firstName") String firstName,
-            @RequestParam(name = "lastName") String lastName,
-            @RequestParam(name = "email") String email,
-            @RequestParam(name = "from", defaultValue = "0") @Min(0) Integer from,
-            @RequestParam(name = "size", defaultValue = "10") @Min(1) Integer size) {
+            @RequestParam(name = "firstName", required = false) String firstName,
+            @RequestParam(name = "lastName", required = false) String lastName,
+            @RequestParam(name = "email", required = false) String email,
+            @RequestParam(name = "from", required = false, defaultValue = "0") @Min(0) Integer from,
+            @RequestParam(name = "size", required = false, defaultValue = "10") @Min(1) Integer size) {
 
         PageRequest pageRequest = PageRequest.of(from, size, Sort.by("id").ascending());
         Specification<Account> specifications = Specification.where(

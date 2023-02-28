@@ -49,14 +49,14 @@ public class AnimalController {
 
     @GetMapping("/search")
     public ResponseEntity<Iterable<Animal>> searchForAnimals(
-            @RequestParam(name = "startDateTime") LocalDateTime startDateTime,
-            @RequestParam(name = "endDateTime") LocalDateTime endDateTime,
-            @RequestParam(name = "chipperId") @Min(1) Long chipperId,
-            @RequestParam(name = "chippingLocationId") @Min(1) Long chippingLocationId,
-            @RequestParam(name = "lifeStatus") @CorrectLifeStatus String lifeStatus,
-            @RequestParam(name = "gender") @CorrectGender String gender,
-            @RequestParam(name = "from", defaultValue = "0") @Min(0) Integer from,
-            @RequestParam(name = "size", defaultValue = "10") @Min(1) Integer size) {
+            @RequestParam(name = "startDateTime", required = false) LocalDateTime startDateTime,
+            @RequestParam(name = "endDateTime", required = false) LocalDateTime endDateTime,
+            @RequestParam(name = "chipperId", required = false) @Min(1) Long chipperId,
+            @RequestParam(name = "chippingLocationId", required = false) @Min(1) Long chippingLocationId,
+            @RequestParam(name = "lifeStatus", required = false) @CorrectLifeStatus String lifeStatus,
+            @RequestParam(name = "gender", required = false) @CorrectGender String gender,
+            @RequestParam(name = "from", required = false, defaultValue = "0") @Min(0) Integer from,
+            @RequestParam(name = "size", required = false, defaultValue = "10") @Min(1) Integer size) {
 
         PageRequest pageRequest = PageRequest.of(from, size, Sort.by("id").ascending());
         Specification<Animal> specifications = Specification.where(
