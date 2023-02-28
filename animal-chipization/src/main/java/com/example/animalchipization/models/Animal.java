@@ -1,12 +1,6 @@
 package com.example.animalchipization.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -38,7 +32,7 @@ public class Animal {
     @ManyToOne
     private LocationPoint chippingLocation;
     @OneToMany
-    private List<LocationPoint> visitedLocations = new ArrayList<>();
+    private List<AnimalVisitedLocation> visitedLocations = new ArrayList<>();
     @Setter(value = AccessLevel.NONE)
     private LocalDateTime deathDateTime = null;
 
