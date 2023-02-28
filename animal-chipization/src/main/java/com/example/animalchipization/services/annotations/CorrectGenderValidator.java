@@ -1,7 +1,9 @@
 package com.example.animalchipization.services.annotations;
 
+import jakarta.annotation.Nullable;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -13,8 +15,12 @@ public class CorrectGenderValidator implements ConstraintValidator<CorrectGender
     }
 
     @Override
-    public boolean isValid(String gender, ConstraintValidatorContext constraintValidatorContext) {
-        List<String> validValues = List.of("MALE", "FEMALE", "OTHER");
-        return validValues.stream().anyMatch(gender::equals);
+    public boolean isValid(@Nullable String gender, ConstraintValidatorContext constraintValidatorContext) {
+        if(gender != null) {
+            List<String> validValues = List.of("MALE", "FEMALE", "OTHER");
+            return validValues.stream().anyMatch(gender::equals);
+        } else {
+            return true;
+        }
     }
 }

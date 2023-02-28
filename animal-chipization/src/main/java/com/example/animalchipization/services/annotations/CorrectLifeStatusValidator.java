@@ -1,5 +1,6 @@
 package com.example.animalchipization.services.annotations;
 
+import jakarta.annotation.Nullable;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.stereotype.Service;
@@ -13,8 +14,12 @@ public class CorrectLifeStatusValidator implements ConstraintValidator<CorrectLi
     }
 
     @Override
-    public boolean isValid(String lifeStatus, ConstraintValidatorContext constraintValidatorContext) {
-        List<String> validValues = List.of("ALIVE", "DEAD");
-        return validValues.stream().anyMatch(lifeStatus::equals);
+    public boolean isValid(@Nullable String lifeStatus, ConstraintValidatorContext constraintValidatorContext) {
+        if(lifeStatus != null) {
+            List<String> validValues = List.of("ALIVE", "DEAD");
+            return validValues.stream().anyMatch(lifeStatus::equals);
+        } else {
+            return true;
+        }
     }
 }

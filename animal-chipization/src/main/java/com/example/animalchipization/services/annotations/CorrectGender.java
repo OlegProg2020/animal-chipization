@@ -10,7 +10,7 @@ import java.lang.annotation.RetentionPolicy;
 
 @Documented
 @Constraint(validatedBy = CorrectGenderValidator.class)
-@Target(value = { ElementType.PARAMETER, ElementType.FIELD })
+@Target(value = { ElementType.PARAMETER })
 @Retention(value = RetentionPolicy.RUNTIME)
 public @interface CorrectGender {
     String message() default "";
