@@ -1,19 +1,21 @@
 package com.example.animalchipization.web;
 
-import com.example.animalchipization.data.AnimalRepository;
-import com.example.animalchipization.data.AnimalSpecification;
-import com.example.animalchipization.data.SearchCriteria;
-import static com.example.animalchipization.data.SearchCriteria.CriteriaOperation.*;
 import com.example.animalchipization.models.Animal;
+import com.example.animalchipization.data.AnimalRepository;
+
+import static com.example.animalchipization.data.AnimalSpecification.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -46,30 +48,31 @@ public class AnimalController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Iterable<Animal>> searchAnimals(
+    public ResponseEntity<Iterable<Animal>> searchForAnimals(
             @RequestParam(name = "startDateTime", required = false) LocalDateTime startDateTime,
             @RequestParam(name = "endDateTime", required = false) LocalDateTime endDateTime,
             @RequestParam(name = "chipperId", required = false) Long chipperId,
+            @RequestParam(name = "chippingLocationId", required = false) Long chippingLocationId,
             @RequestParam(name = "lifeStatus", required = false) String lifeStatus,
             @RequestParam(name = "gender", required = false) String gender,
             @RequestParam(name = "from", required = false, defaultValue = "0") Integer from,
             @RequestParam(name = "size", required = false, defaultValue = "10") Integer size) {
 
-        //TODO
-        if (from < 0 || size <= 0) {
-            return new ResponseEntity<>(HttpStatus.valueOf(400));
+        if (from < 0 || size <= 0 || chipperId <= 0 || chippingLocationId <= 0) {
+            return new ResponseEntity<>(null, HttpStatus.valueOf(400));
+        } else {
+            PageRequest pageRequest = PageRequest.of(from, size, Sort.by("id").ascending());
+            Specification<Animal> specifications = Specification.where(
+                    hasChippingDateTimeGreaterThanOrEqualTo(startDateTime)
+                            .and(hasChippingDateTimeLessThanOrEqualTo(endDateTime))
+                            .and(hasChipperId(chipperId))
+                            .and(hasChippingLocationId(chippingLocationId))
+                            .and(hasLifeStatus(lifeStatus))
+                            .and(hasGender(gender))
+            );
+            Iterable<Animal> animals = animalRepository.findAll(specifications, pageRequest);
+            return new ResponseEntity<>(animals, HttpStatus.valueOf(200));
         }
-        PageRequest pageRequest = PageRequest.of(from, size, Sort.by("id").ascending());
-        Page<Animal> animals = animalRepository.findAll(
-                Specification.where(
-                        new AnimalSpecification(new SearchCriteria<LocalDateTime>("startDateTime", startDateTime, GREATER_OR_EQUAL))
-                                .and(new AnimalSpecification(new SearchCriteria<LocalDateTime>("endDateTime", endDateTime, LESS_OR_EQUAL)))
-                                .and(new AnimalSpecification(new SearchCriteria<Long>("chipperId", chipperId, EQUALS)))
-                                .and(new AnimalSpecification(new SearchCriteria<String>("lifeStatus", lifeStatus, EQUALS)))
-                                .and(new AnimalSpecification(new SearchCriteria<String>("gender", gender, EQUALS)))
-                                .and(new AnimalSpecification(new SearchCriteria<Long>("chipperId", chipperId, EQUALS)))),
-                pageRequest);
-        return new ResponseEntity<>(animals, HttpStatus.valueOf(200));
     }
 
 }

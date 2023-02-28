@@ -3,26 +3,36 @@ package com.example.animalchipization.data;
 import com.example.animalchipization.models.Account;
 
 import org.springframework.data.jpa.domain.Specification;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Root;
 
-public class AccountSpecification implements Specification<Account> {
-    private final SearchCriteria<?> criteria;
+public class AccountSpecification {
 
-    public AccountSpecification(SearchCriteria<?> criteria) {
-        this.criteria = criteria;
+    public static Specification<Account> hasFirstName(String firstName) {
+        return (root, criteriaQuery, criteriaBuilder) -> {
+            if (firstName != null) {
+                return criteriaBuilder.equal(root.get("firstName"), firstName);
+            } else {
+                return criteriaBuilder.isTrue(criteriaBuilder.literal(true));
+            }
+        };
     }
 
-    @Override
-    public Predicate toPredicate(Root<Account> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
+    public static Specification<Account> hasLastName(String lastName) {
+        return (root, criteriaQuery, criteriaBuilder) -> {
+            if (lastName != null) {
+                return criteriaBuilder.equal(root.get("lastName"), lastName);
+            } else {
+                return criteriaBuilder.isTrue(criteriaBuilder.literal(true));
+            }
+        };
+    }
 
-        if (criteria.getValue() == null) {
-            return builder.isTrue(builder.literal(true));
-        } else {
-            return builder.like(builder.lower(root.get(criteria.getKey())),
-                    "%" + criteria.getValue().toString().toLowerCase() + "%");
-        }
+    public static Specification<Account> hasEmail(String email) {
+        return (root, criteriaQuery, criteriaBuilder) -> {
+            if (email != null) {
+                return criteriaBuilder.equal(root.get("email"), email);
+            } else {
+                return criteriaBuilder.isTrue(criteriaBuilder.literal(true));
+            }
+        };
     }
 }
