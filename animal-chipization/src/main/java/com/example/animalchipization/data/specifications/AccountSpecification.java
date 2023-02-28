@@ -6,7 +6,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 public class AccountSpecification {
 
-    public static Specification<Account> hasFirstName(String firstName) {
+    public static Specification<Account> firstNameLike(String firstName) {
         return (root, criteriaQuery, criteriaBuilder) -> {
             if (firstName != null) {
                 return criteriaBuilder.like(root.get("firstName"), ("%" + firstName + "%"));
@@ -16,7 +16,7 @@ public class AccountSpecification {
         };
     }
 
-    public static Specification<Account> hasLastName(String lastName) {
+    public static Specification<Account> lastNameLike(String lastName) {
         return (root, criteriaQuery, criteriaBuilder) -> {
             if (lastName != null) {
                 return criteriaBuilder.equal(root.get("lastName"), ("%" + lastName + "%"));
@@ -26,7 +26,7 @@ public class AccountSpecification {
         };
     }
 
-    public static Specification<Account> hasEmail(String email) {
+    public static Specification<Account> emailLike(String email) {
         return (root, criteriaQuery, criteriaBuilder) -> {
             if (email != null) {
                 return criteriaBuilder.equal(root.get("email"), ("%" + email + "%"));

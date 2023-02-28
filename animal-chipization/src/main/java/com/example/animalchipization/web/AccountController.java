@@ -54,9 +54,9 @@ public class AccountController {
 
         PageRequest pageRequest = PageRequest.of(from, size, Sort.by("id").ascending());
         Specification<Account> specifications = Specification.where(
-                hasFirstName(firstName)
-                        .and(hasLastName(lastName))
-                        .and(hasEmail(email))
+                firstNameLike(firstName)
+                        .and(lastNameLike(lastName))
+                        .and(emailLike(email))
         );
         Iterable<Account> accounts = accountRepository.findAll(specifications, pageRequest).getContent();
         return new ResponseEntity<>(accounts, HttpStatus.valueOf(200));
