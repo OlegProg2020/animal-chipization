@@ -5,7 +5,6 @@ import com.example.animalchipization.data.repositories.AccountRepository;
 
 import static com.example.animalchipization.data.specifications.AccountSpecification.*;
 
-import com.example.animalchipization.models.AccountProjection;
 import jakarta.validation.constraints.Min;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,8 +35,8 @@ public class AccountController {
     }
 
     @GetMapping("/{accountId}")
-    public ResponseEntity<AccountProjection> accountById(@PathVariable("accountId") @Min(1) Long accountId) {
-        Optional<AccountProjection> optionalAccount = accountRepository.findProjectionById(accountId);
+    public ResponseEntity<Account> accountById(@PathVariable("accountId") @Min(1) Long accountId) {
+        Optional<Account> optionalAccount = accountRepository.findById(accountId);
         if (optionalAccount.isPresent()) {
             return new ResponseEntity<>(optionalAccount.get(), HttpStatus.valueOf(200));
         } else {
@@ -46,7 +45,7 @@ public class AccountController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Iterable<AccountProjection>> searchForAccounts(
+    public ResponseEntity<Iterable<Account>> searchForAccounts(
             @RequestParam(name = "firstName", required = false) String firstName,
             @RequestParam(name = "lastName", required = false) String lastName,
             @RequestParam(name = "email", required = false) String email,
@@ -59,7 +58,7 @@ public class AccountController {
                         .and(lastNameLike(lastName))
                         .and(emailLike(email))
         );
-        Iterable<AccountProjection> accounts = accountRepository.findAllAndReturnProjections(specifications, pageRequest);
+        Iterable<Account> accounts = accountRepository.findAll(specifications, pageRequest).getContent();
         return new ResponseEntity<>(accounts, HttpStatus.valueOf(200));
     }
 
