@@ -1,5 +1,6 @@
 package com.example.animalchipization.services;
 
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.http.HttpStatus;
@@ -21,5 +22,10 @@ public class RestApiExceptionHandler {
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<?> onConstraintViolationException(NoSuchElementException exception) {
         return new ResponseEntity<>(HttpStatus.valueOf(404));
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<?> onUsernameNotFoundException(UsernameNotFoundException exception) {
+        return new ResponseEntity<>(HttpStatus.valueOf(403));
     }
 }
