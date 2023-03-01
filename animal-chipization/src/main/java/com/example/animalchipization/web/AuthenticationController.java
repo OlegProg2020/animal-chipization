@@ -4,6 +4,7 @@ import com.example.animalchipization.data.repositories.AccountRepository;
 import com.example.animalchipization.exceptions.AccountWithThisEmailAlreadyExistsException;
 import com.example.animalchipization.models.Account;
 
+import com.example.animalchipization.models.AccountProjection;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,10 +31,11 @@ public class AuthenticationController {
     }
 
     @PostMapping(consumes = "application/json")
-    public ResponseEntity<Account> registry(@RequestBody @Valid AccountForm accountForm) {
+    public ResponseEntity<AccountProjection> registry(@RequestBody @Valid AccountForm accountForm) {
 
         if (!accountRepository.existsByEmail(accountForm.getEmail())) {
-            return new ResponseEntity<>(accountRepository.save(accountForm.toAccount(passwordEncoder)),
+            return new ResponseEntity<>(accountRepository.saveAndReturnProjection(
+                    accountForm.toAccount(passwordEncoder)),
                     HttpStatus.valueOf(201));
         } else {
             throw new AccountWithThisEmailAlreadyExistsException();
