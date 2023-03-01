@@ -32,7 +32,7 @@ public class RestApiExceptionHandler {
 
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<?> onUsernameNotFoundException(UsernameNotFoundException exception) {
-        return new ResponseEntity<>(HttpStatus.valueOf(403));
+        return new ResponseEntity<>(HttpStatus.valueOf(401));
     }
 
     @ExceptionHandler(AccountWithThisEmailAlreadyExistsException.class)
