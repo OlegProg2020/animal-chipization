@@ -20,14 +20,9 @@ public class Account implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @NotBlank
     private String firstName;
-    @NotBlank
     private String lastName;
-    @Column(unique = true)
-    @NotBlank
     private String email;
-    @NotBlank
     private String password;
 
     @Override
@@ -59,4 +54,13 @@ public class Account implements UserDetails {
     public String getUsername() {
         return this.getEmail();
     }
+
+
+    public Account(String firstName, String lastName, String email, String password) {
+        this.setFirstName(firstName);
+        this.setLastName(lastName);
+        this.setEmail(email);
+        this.setPassword(password);
+    }
+
 }

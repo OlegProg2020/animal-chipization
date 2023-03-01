@@ -25,7 +25,7 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService(AccountRepository accountRepository) {
         return email -> {
             Optional<Account> optionalAccount = accountRepository.findByEmail(email);
-            if(optionalAccount.isPresent()) {
+            if (optionalAccount.isPresent()) {
                 return optionalAccount.get();
             } else {
                 throw new UsernameNotFoundException("User '" + email + "' not found");
@@ -36,8 +36,11 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
-                .authorizeHttpRequests()
-                .requestMatchers("/").permitAll()
+                .authorizeRequests()
+                .requestMatchers("/registration").anonymous()
+                .anyRequest().permitAll()
+                .and()
+                .httpBasic()
                 .and()
                 .build();
     }
