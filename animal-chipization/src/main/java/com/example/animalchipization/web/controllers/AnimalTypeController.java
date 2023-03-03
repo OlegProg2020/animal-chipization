@@ -1,8 +1,7 @@
-package com.example.animalchipization.web;
+package com.example.animalchipization.web.controllers;
 
 import com.example.animalchipization.data.repositories.AnimalTypeRepository;
 import com.example.animalchipization.models.AnimalType;
-
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

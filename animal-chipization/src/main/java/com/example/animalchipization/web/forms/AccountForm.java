@@ -1,4 +1,4 @@
-package com.example.animalchipization.web;
+package com.example.animalchipization.web.forms;
 
 
 import com.example.animalchipization.models.Account;

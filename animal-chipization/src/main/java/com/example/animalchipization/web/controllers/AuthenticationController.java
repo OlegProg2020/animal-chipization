@@ -1,9 +1,9 @@
-package com.example.animalchipization.web;
+package com.example.animalchipization.web.controllers;
 
 import com.example.animalchipization.data.repositories.AccountRepository;
 import com.example.animalchipization.exceptions.AccountWithThisEmailAlreadyExistsException;
-
 import com.example.animalchipization.models.Account;
+import com.example.animalchipization.web.forms.AccountForm;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

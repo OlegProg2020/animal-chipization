@@ -1,14 +1,13 @@
 package com.example.animalchipization.services;
 
 import com.example.animalchipization.exceptions.AccountWithThisEmailAlreadyExistsException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import jakarta.validation.ConstraintViolationException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.NoSuchElementException;
 
@@ -36,7 +35,7 @@ public class RestApiExceptionHandler {
     }
 
     @ExceptionHandler(AccountWithThisEmailAlreadyExistsException.class)
-    public ResponseEntity<?> onAccountWithThisEmailAlreadyExists(AccountWithThisEmailAlreadyExistsException exception) {
+    public ResponseEntity<?> onAccountWithThisEmailAlreadyExistsException(AccountWithThisEmailAlreadyExistsException exception) {
         return new ResponseEntity<>(HttpStatus.valueOf(409));
     }
 }
