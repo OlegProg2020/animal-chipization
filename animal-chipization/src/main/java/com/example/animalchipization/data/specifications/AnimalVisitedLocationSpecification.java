@@ -7,9 +7,8 @@ import java.time.LocalDateTime;
 
 public class AnimalVisitedLocationSpecification {
     public static Specification<AnimalVisitedLocation> hasAnimalId(Long animalId) {
-        return (root, criteriaQuery, criteriaBuilder) -> {
-            return criteriaBuilder.equal(root.get("animal").get("id"), animalId);
-        };
+        return (root, criteriaQuery, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get("animal").get("id"), animalId);
     }
 
     public static Specification<AnimalVisitedLocation> hasDateTimeOfVisitLocationPointGreaterThanOrEqualTo(

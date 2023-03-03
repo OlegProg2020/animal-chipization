@@ -1,7 +1,6 @@
 package com.example.animalchipization.data.specifications;
 
 import com.example.animalchipization.models.Animal;
-
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDateTime;

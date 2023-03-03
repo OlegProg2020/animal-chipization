@@ -1,7 +1,6 @@
 package com.example.animalchipization.data.repositories;
 
 import com.example.animalchipization.models.AnimalVisitedLocation;
-import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
