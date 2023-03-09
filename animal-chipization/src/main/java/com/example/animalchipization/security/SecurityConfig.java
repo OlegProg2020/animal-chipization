@@ -4,6 +4,7 @@ import com.example.animalchipization.data.repositories.AccountRepository;
 import com.example.animalchipization.models.Account;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -14,6 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import java.util.Optional;
 
 @Configuration
+@EnableMethodSecurity
 public class SecurityConfig {
 
     @Bean
