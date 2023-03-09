@@ -64,7 +64,7 @@ public class AccountController {
     }
 
     @PutMapping(path = "/{accountId}", consumes = "application/json")
-    @PreAuthorize("#{isAuthenticated()}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Account> updateAccount(@PathVariable("accountId") @Min(1) Long accountId,
                                                  @RequestBody @Valid AccountForm accountForm,
                                                  @AuthenticationPrincipal Account authenticatedAccount) {
@@ -72,7 +72,9 @@ public class AccountController {
         if(!authenticatedAccount.getId().equals(accountId)) {
             throw new AccessDeniedException("Updating a non-personal account");
         } else {
-            if (!accountRepository.existsByEmail(accountForm.getEmail())) {
+            if (!accountRepository.existsByEmail(accountForm.getEmail()) ||
+                    authenticatedAccount.getEmail().equals(accountForm.getEmail())) {
+
                 Account account = accountForm.toAccount(passwordEncoder);
                 account.setId(accountId);
                 return new ResponseEntity<>(accountRepository.save(account), HttpStatus.valueOf(200));
@@ -83,7 +85,7 @@ public class AccountController {
     }
 
     @DeleteMapping(path = "/{accountId}", consumes = "application/json")
-    @PreAuthorize("#{isAuthenticated()}")
+    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(value = HttpStatus.OK)
     public void deleteAccount(@PathVariable("accountId") @Min(1) Long accountId,
                                     @AuthenticationPrincipal Account authenticatedAccount) {
