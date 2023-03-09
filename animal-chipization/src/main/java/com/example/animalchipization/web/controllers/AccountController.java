@@ -4,10 +4,11 @@ import com.example.animalchipization.data.repositories.AccountRepository;
 import com.example.animalchipization.exceptions.AccountWithThisEmailAlreadyExistsException;
 import com.example.animalchipization.models.Account;
 import com.example.animalchipization.web.forms.AccountForm;
+import com.example.animalchipization.services.OffsetBasedPageRequest;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -56,7 +57,7 @@ public class AccountController {
             @RequestParam(name = "from", required = false, defaultValue = "0") @Min(0) Integer from,
             @RequestParam(name = "size", required = false, defaultValue = "10") @Min(1) Integer size) {
 
-        PageRequest pageRequest = PageRequest.of(from, size, Sort.by("id").ascending());
+        OffsetBasedPageRequest pageRequest = new OffsetBasedPageRequest(from, size, Sort.by("id").ascending());
         Specification<Account> specifications = Specification
                 .where(firstNameLike(firstName).and(lastNameLike(lastName)).and(emailLike(email)));
         Iterable<Account> accounts = accountRepository.findAll(specifications, pageRequest).getContent();
@@ -69,7 +70,7 @@ public class AccountController {
                                                  @RequestBody @Valid AccountForm accountForm,
                                                  @AuthenticationPrincipal Account authenticatedAccount) {
 
-        if(!authenticatedAccount.getId().equals(accountId)) {
+        if (!authenticatedAccount.getId().equals(accountId)) {
             throw new AccessDeniedException("Updating a non-personal account");
         } else {
             if (!accountRepository.existsByEmail(accountForm.getEmail()) ||
@@ -88,9 +89,9 @@ public class AccountController {
     @PreAuthorize("isAuthenticated()")
     @ResponseStatus(value = HttpStatus.OK)
     public void deleteAccount(@PathVariable("accountId") @Min(1) Long accountId,
-                                    @AuthenticationPrincipal Account authenticatedAccount) {
+                              @AuthenticationPrincipal Account authenticatedAccount) {
 
-        if(!authenticatedAccount.getId().equals(accountId)) {
+        if (!authenticatedAccount.getId().equals(accountId)) {
             throw new AccessDeniedException("Deleting a non-personal account");
         } else {
             accountRepository.deleteById(accountId);
