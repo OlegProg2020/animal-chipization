@@ -70,7 +70,7 @@ public class AccountController {
                                                  @AuthenticationPrincipal Account authenticatedAccount) {
 
         if(!authenticatedAccount.getId().equals(accountId)) {
-            throw new AccessDeniedException("Updating not your account");
+            throw new AccessDeniedException("Updating a non-personal account");
         } else {
             if (!accountRepository.existsByEmail(accountForm.getEmail())) {
                 Account account = accountForm.toAccount(passwordEncoder);
@@ -82,6 +82,17 @@ public class AccountController {
         }
     }
 
-    
+    @DeleteMapping(path = "/{accountId}", consumes = "application/json")
+    @PreAuthorize("#{isAuthenticated()}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public void deleteAccount(@PathVariable("accountId") @Min(1) Long accountId,
+                                    @AuthenticationPrincipal Account authenticatedAccount) {
+
+        if(!authenticatedAccount.getId().equals(accountId)) {
+            throw new AccessDeniedException("Deleting a non-personal account");
+        } else {
+            accountRepository.deleteById(accountId);
+        }
+    }
 
 }

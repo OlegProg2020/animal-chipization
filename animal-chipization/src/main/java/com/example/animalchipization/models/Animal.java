@@ -26,7 +26,7 @@ public class Animal {
     private String gender;
     private String lifeStatus = "ALIVE";
     private LocalDateTime chippingDateTime = LocalDateTime.now();
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Account chipper;
     @ManyToOne
     private LocationPoint chippingLocation;
