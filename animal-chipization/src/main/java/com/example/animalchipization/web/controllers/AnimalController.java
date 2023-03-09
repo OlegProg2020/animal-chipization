@@ -2,11 +2,11 @@ package com.example.animalchipization.web.controllers;
 
 import com.example.animalchipization.data.repositories.AnimalRepository;
 import com.example.animalchipization.models.Animal;
+import com.example.animalchipization.services.OffsetBasedPageRequest;
 import com.example.animalchipization.services.annotations.CorrectGender;
 import com.example.animalchipization.services.annotations.CorrectLifeStatus;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -53,7 +53,7 @@ public class AnimalController {
             @RequestParam(name = "from", required = false, defaultValue = "0") @Min(0) Integer from,
             @RequestParam(name = "size", required = false, defaultValue = "10") @Min(1) Integer size) {
 
-        PageRequest pageRequest = PageRequest.of(from, size, Sort.by("id").ascending());
+        OffsetBasedPageRequest pageRequest = new OffsetBasedPageRequest(from, size, Sort.by("id").ascending());
         Specification<Animal> specifications = Specification.where(
                 hasChippingDateTimeGreaterThanOrEqualTo(startDateTime)
                         .and(hasChippingDateTimeLessThanOrEqualTo(endDateTime))

@@ -3,9 +3,10 @@ package com.example.animalchipization.web.controllers;
 import com.example.animalchipization.data.repositories.AnimalRepository;
 import com.example.animalchipization.data.repositories.AnimalVisitedLocationRepository;
 import com.example.animalchipization.models.AnimalVisitedLocation;
+import com.example.animalchipization.services.OffsetBasedPageRequest;
+
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -42,7 +43,7 @@ public class AnimalVisitedLocationController {
             @RequestParam(name = "size", required = false, defaultValue = "10") @Min(1) Integer size) {
 
         if (animalRepository.existsById(animalId)) {
-            PageRequest pageRequest = PageRequest.of(from, size,
+            OffsetBasedPageRequest pageRequest = new OffsetBasedPageRequest(from, size,
                     Sort.by("dateTimeOfVisitLocationPoint").ascending());
             Specification<AnimalVisitedLocation> specifications = Specification.where(
                     hasAnimalId(animalId)
