@@ -1,7 +1,6 @@
 package com.example.animalchipization.web.controller;
 
 import com.example.animalchipization.model.AnimalVisitedLocation;
-
 import com.example.animalchipization.service.AnimalVisitedLocationService;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;

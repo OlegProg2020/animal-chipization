@@ -3,7 +3,6 @@ package com.example.animalchipization.web.controller;
 import com.example.animalchipization.model.Account;
 import com.example.animalchipization.service.AccountService;
 import com.example.animalchipization.web.form.AccountForm;
-
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;

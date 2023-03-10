@@ -30,8 +30,8 @@ public class AnimalVisitedLocationServiceImpl implements AnimalVisitedLocationSe
 
     @Override
     public Iterable<AnimalVisitedLocation> searchForAnimalVisitedLocations(Long animalId, LocalDateTime startDateTime,
-                                                                    LocalDateTime endDateTime, Integer from,
-                                                                    Integer size) {
+                                                                           LocalDateTime endDateTime, Integer from,
+                                                                           Integer size) {
         if (animalRepository.existsById(animalId)) {
             OffsetBasedPageRequest pageRequest = new OffsetBasedPageRequest(from, size,
                     Sort.by("dateTimeOfVisitLocationPoint").ascending());

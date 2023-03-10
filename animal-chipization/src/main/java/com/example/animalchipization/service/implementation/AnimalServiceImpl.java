@@ -14,7 +14,6 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static com.example.animalchipization.data.specification.AnimalSpecification.*;
-import static com.example.animalchipization.data.specification.AnimalSpecification.hasGender;
 
 @Service
 public class AnimalServiceImpl implements AnimalService {
