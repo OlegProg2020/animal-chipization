@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.NoSuchElementException;
 
 @RestControllerAdvice
-public class RestApiExceptionHandler {
+public class GlobalExceptionHandler {
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<?> onConstraintViolationException(ConstraintViolationException exception) {
