@@ -1,7 +1,7 @@
 package com.example.animalchipization.security;
 
-import com.example.animalchipization.data.repositories.AccountRepository;
-import com.example.animalchipization.models.Account;
+import com.example.animalchipization.data.repository.AccountRepository;
+import com.example.animalchipization.model.Account;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
