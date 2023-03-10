@@ -9,7 +9,8 @@ import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,7 +44,6 @@ public class AccountController {
     }
 
     @PutMapping(path = "/{accountId}", consumes = "application/json")
-    @PreAuthorize("accountId == authentication.principal.getId()")
     public ResponseEntity<Account> updateAccount(@PathVariable("accountId") @Min(1) Long accountId,
                                                  @RequestBody @Valid AccountForm accountForm) {
         Account updatedAccount = accountService.updateAccountById(accountId, accountForm);
@@ -52,9 +52,7 @@ public class AccountController {
 
     @DeleteMapping(path = "/{accountId}", consumes = "application/json")
     @ResponseStatus(value = HttpStatus.OK)
-    @PreAuthorize("accountId == authentication.principal.getId()")
     public void deleteAccount(@PathVariable("accountId") @Min(1) Long accountId) {
-
         accountService.deleteAccountById(accountId);
     }
 

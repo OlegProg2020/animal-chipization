@@ -11,6 +11,7 @@ import com.example.animalchipization.services.OffsetBasedPageRequest;
 import com.example.animalchipization.web.forms.AccountForm;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -50,6 +51,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @PreAuthorize("#accountId == authentication.principal.getId()")
     public Account updateAccountById(Long accountId, AccountForm accountForm) {
         Account currentAccountDetails = accountRepository.findById(accountId)
                 .orElseThrow(NoSuchElementException::new);
@@ -65,6 +67,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @PreAuthorize("#accountId == authentication.principal.getId()")
     public void deleteAccountById(Long accountId) {
         accountRepository.deleteById(accountId);
     }
