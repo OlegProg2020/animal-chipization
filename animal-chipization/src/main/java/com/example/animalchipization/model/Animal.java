@@ -20,8 +20,8 @@ public class Animal {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @ManyToMany
-    private Set<AnimalType> animalTypes = new HashSet<>();
+    @ManyToMany(targetEntity = AnimalType.class)
+    private Set<Long> animalTypes = new HashSet<>();
     private Float weight;
     private Float length;
     private Float height;
@@ -29,13 +29,13 @@ public class Animal {
     @Setter(value = AccessLevel.NONE)
     private LifeStatus lifeStatus = LifeStatus.ALIVE;
     private LocalDateTime chippingDateTime = LocalDateTime.now();
-    @ManyToOne(optional = false)
-    private Account chipper;
-    @ManyToOne
-    private LocationPoint chippingLocation;
-    @OneToMany
+    @ManyToOne(optional = false, targetEntity = Account.class)
+    private Long chipperId;
+    @ManyToOne(targetEntity = LocationPoint.class)
+    private Long chippingLocationId;
+    @OneToMany(targetEntity = AnimalVisitedLocation.class)
     @JoinColumn(name = "animal_id")
-    private List<AnimalVisitedLocation> visitedLocations = new ArrayList<>();
+    private List<Long> visitedLocations = new ArrayList<>();
     @Setter(value = AccessLevel.NONE)
     private LocalDateTime deathDateTime = null;
 

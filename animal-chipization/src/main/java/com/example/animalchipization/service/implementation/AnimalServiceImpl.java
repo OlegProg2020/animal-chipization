@@ -57,8 +57,8 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    Animal addAnimal(AnimalForm animalForm) {
-
+    public Animal addAnimal(AnimalForm animalForm) {
+        return new Animal();
     }
 
 }
