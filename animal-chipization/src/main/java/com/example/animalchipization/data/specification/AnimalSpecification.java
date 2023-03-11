@@ -47,7 +47,7 @@ public class AnimalSpecification {
         };
     }
 
-    public static Specification<Animal> hasLifeStatus(String lifeStatus) {
+    public static Specification<Animal> hasLifeStatus(Animal.LifeStatus lifeStatus) {
         return (root, criteriaQuery, criteriaBuilder) -> {
             if (lifeStatus != null) {
                 return criteriaBuilder.equal(root.get("lifeStatus"), lifeStatus);
@@ -57,7 +57,7 @@ public class AnimalSpecification {
         };
     }
 
-    public static Specification<Animal> hasGender(String gender) {
+    public static Specification<Animal> hasGender(Animal.Gender gender) {
         return (root, criteriaQuery, criteriaBuilder) -> {
             if (gender != null) {
                 return criteriaBuilder.equal(root.get("gender"), gender);

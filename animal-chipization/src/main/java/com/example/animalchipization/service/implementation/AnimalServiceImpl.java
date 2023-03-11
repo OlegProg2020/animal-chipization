@@ -1,5 +1,9 @@
 package com.example.animalchipization.service.implementation;
 
+import static com.example.animalchipization.model.Animal.LifeStatus;
+import static com.example.animalchipization.model.Animal.Gender;
+import com.example.animalchipization.web.form.AnimalForm;
+
 import com.example.animalchipization.data.repository.AnimalRepository;
 import com.example.animalchipization.model.Animal;
 import com.example.animalchipization.service.AnimalService;
@@ -37,8 +41,8 @@ public class AnimalServiceImpl implements AnimalService {
 
     @Override
     public Iterable<Animal> searchForAnimals(LocalDateTime startDateTime, LocalDateTime endDateTime,
-                                             Long chipperId, Long chippingLocationId, String lifeStatus,
-                                             String gender, Integer from, Integer size) {
+                                             Long chipperId, Long chippingLocationId, LifeStatus lifeStatus,
+                                             Gender gender, Integer from, Integer size) {
 
         OffsetBasedPageRequest pageRequest = new OffsetBasedPageRequest(from, size, Sort.by("id").ascending());
         Specification<Animal> specifications = Specification.where(
@@ -50,6 +54,11 @@ public class AnimalServiceImpl implements AnimalService {
                         .and(hasGender(gender))
         );
         return animalRepository.findAll(specifications, pageRequest).getContent();
+    }
+
+    @Override
+    Animal addAnimal(AnimalForm animalForm) {
+
     }
 
 }

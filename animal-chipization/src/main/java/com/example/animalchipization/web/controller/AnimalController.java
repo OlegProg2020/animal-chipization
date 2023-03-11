@@ -1,9 +1,14 @@
 package com.example.animalchipization.web.controller;
 
+import static com.example.animalchipization.model.Animal.LifeStatus;
+import static com.example.animalchipization.model.Animal.Gender;
+
 import com.example.animalchipization.model.Animal;
 import com.example.animalchipization.service.AnimalService;
 import com.example.animalchipization.validation.annotations.CorrectGender;
 import com.example.animalchipization.validation.annotations.CorrectLifeStatus;
+import com.example.animalchipization.web.form.AnimalForm;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,8 +41,8 @@ public class AnimalController {
             @RequestParam(name = "endDateTime", required = false) LocalDateTime endDateTime,
             @RequestParam(name = "chipperId", required = false) @Min(1) Long chipperId,
             @RequestParam(name = "chippingLocationId", required = false) @Min(1) Long chippingLocationId,
-            @RequestParam(name = "lifeStatus", required = false) @CorrectLifeStatus String lifeStatus,
-            @RequestParam(name = "gender", required = false) @CorrectGender String gender,
+            @RequestParam(name = "lifeStatus", required = false) LifeStatus lifeStatus,
+            @RequestParam(name = "gender", required = false) Gender gender,
             @RequestParam(name = "from", required = false, defaultValue = "0") @Min(0) Integer from,
             @RequestParam(name = "size", required = false, defaultValue = "10") @Min(1) Integer size) {
 
@@ -45,4 +50,10 @@ public class AnimalController {
                 chippingLocationId, lifeStatus, gender, from, size);
         return new ResponseEntity<>(animals, HttpStatus.valueOf(200));
     }
+
+    @PostMapping(consumes = "application/json")
+    public ResponseEntity<Animal> addAnimal(@RequestBody @Valid AnimalForm animalForm) {
+        return new ResponseEntity<>(animalService.addAnimal(animalForm), HttpStatus.valueOf(201));
+    }
+
 }

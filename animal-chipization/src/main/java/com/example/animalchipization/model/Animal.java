@@ -8,7 +8,9 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @NoArgsConstructor
@@ -19,12 +21,13 @@ public class Animal {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @ManyToMany
-    private List<AnimalType> animalTypes = new ArrayList<>();
+    private Set<AnimalType> animalTypes = new HashSet<>();
     private Float weight;
     private Float length;
     private Float height;
-    private String gender;
-    private String lifeStatus = "ALIVE";
+    private Gender gender;
+    @Setter(value = AccessLevel.NONE)
+    private LifeStatus lifeStatus = LifeStatus.ALIVE;
     private LocalDateTime chippingDateTime = LocalDateTime.now();
     @ManyToOne(optional = false)
     private Account chipper;
@@ -36,8 +39,15 @@ public class Animal {
     @Setter(value = AccessLevel.NONE)
     private LocalDateTime deathDateTime = null;
 
-    public void setDeathDateTime(LocalDateTime deathDateTime) {
-        this.deathDateTime = deathDateTime;
-        this.setLifeStatus("DEAD");
+    public void setLifeStatus(LifeStatus lifeStatus) {
+        this.lifeStatus = LifeStatus.DEAD;
+        this.deathDateTime = LocalDateTime.now();
+    }
+
+    public enum Gender {
+        MALE, FEMALE, OTHER
+    }
+    public enum LifeStatus {
+        ALIVE, DEAD;
     }
 }
