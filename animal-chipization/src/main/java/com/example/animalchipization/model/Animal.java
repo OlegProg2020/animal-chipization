@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -40,7 +40,7 @@ public class Animal {
     private Gender gender;
     @Enumerated(EnumType.STRING)
     private LifeStatus lifeStatus = LifeStatus.ALIVE;
-    private LocalDateTime chippingDateTime = LocalDateTime.now();
+    private ZonedDateTime chippingDateTime = ZonedDateTime.now();
     @ManyToOne(optional = false, targetEntity = Account.class)
     @NotNull
     @Min(1)
@@ -52,7 +52,7 @@ public class Animal {
     @OneToMany(targetEntity = AnimalVisitedLocation.class)
     @JoinColumn(name = "animal_id")
     private List<Long> visitedLocations = new ArrayList<>();
-    private LocalDateTime deathDateTime = null;
+    private ZonedDateTime deathDateTime = null;
 
     public Animal(Set<Long> animalTypes, Float weight, Float length, Float height,
                   Gender gender, Long chipperId, Long chippingLocationId) {
@@ -67,7 +67,7 @@ public class Animal {
 
     public void setLifeStatusToDeadAndSetDeathDateTime() {
         this.lifeStatus = LifeStatus.DEAD;
-        this.deathDateTime = LocalDateTime.now();
+        this.deathDateTime = ZonedDateTime.now();
     }
 
 }
