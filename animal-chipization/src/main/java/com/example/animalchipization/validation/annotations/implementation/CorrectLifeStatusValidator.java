@@ -4,11 +4,11 @@ import com.example.animalchipization.validation.annotations.CorrectLifeStatus;
 import jakarta.annotation.Nullable;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Service
+@Component
 public class CorrectLifeStatusValidator implements ConstraintValidator<CorrectLifeStatus, String> {
 
     @Override

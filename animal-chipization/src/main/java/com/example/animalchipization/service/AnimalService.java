@@ -2,9 +2,8 @@ package com.example.animalchipization.service;
 
 import com.example.animalchipization.web.form.AnimalForm;
 import com.example.animalchipization.model.Animal;
-
-import static com.example.animalchipization.model.Animal.LifeStatus;
-import static com.example.animalchipization.model.Animal.Gender;
+import com.example.animalchipization.model.enums.LifeStatus;
+import com.example.animalchipization.model.enums.Gender;
 
 import java.time.LocalDateTime;
 

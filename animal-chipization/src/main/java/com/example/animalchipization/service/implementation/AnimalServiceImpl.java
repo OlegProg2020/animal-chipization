@@ -1,7 +1,7 @@
 package com.example.animalchipization.service.implementation;
 
-import static com.example.animalchipization.model.Animal.LifeStatus;
-import static com.example.animalchipization.model.Animal.Gender;
+import com.example.animalchipization.model.enums.LifeStatus;
+import com.example.animalchipization.model.enums.Gender;
 import com.example.animalchipization.web.form.AnimalForm;
 
 import com.example.animalchipization.data.repository.AnimalRepository;
@@ -14,8 +14,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.Set;
 
 import static com.example.animalchipization.data.specification.AnimalSpecification.*;
 
@@ -58,7 +60,8 @@ public class AnimalServiceImpl implements AnimalService {
 
     @Override
     public Animal addAnimal(AnimalForm animalForm) {
-        return new Animal();
+        Animal animal = animalForm.toAnimal();
+        return animalRepository.save(animal);
     }
 
 }

@@ -1,6 +1,7 @@
 package com.example.animalchipization.util;
 
 import com.example.animalchipization.exception.AccountWithThisEmailAlreadyExistsException;
+import com.example.animalchipization.exception.DuplicateItemException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,4 +39,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> onAccountWithThisEmailAlreadyExistsException(AccountWithThisEmailAlreadyExistsException exception) {
         return new ResponseEntity<>(HttpStatus.valueOf(409));
     }
+
+    @ExceptionHandler(DuplicateItemException.class)
+    public ResponseEntity<?> onDuplicateItemException(DuplicateItemException exception) {
+        return new ResponseEntity<>(HttpStatus.valueOf(409));
+    }
+
 }

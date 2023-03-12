@@ -1,5 +1,7 @@
 package com.example.animalchipization.data.specification;
 
+import com.example.animalchipization.model.enums.LifeStatus;
+import com.example.animalchipization.model.enums.Gender;
 import com.example.animalchipization.model.Animal;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -47,7 +49,7 @@ public class AnimalSpecification {
         };
     }
 
-    public static Specification<Animal> hasLifeStatus(Animal.LifeStatus lifeStatus) {
+    public static Specification<Animal> hasLifeStatus(LifeStatus lifeStatus) {
         return (root, criteriaQuery, criteriaBuilder) -> {
             if (lifeStatus != null) {
                 return criteriaBuilder.equal(root.get("lifeStatus"), lifeStatus);
@@ -57,7 +59,7 @@ public class AnimalSpecification {
         };
     }
 
-    public static Specification<Animal> hasGender(Animal.Gender gender) {
+    public static Specification<Animal> hasGender(Gender gender) {
         return (root, criteriaQuery, criteriaBuilder) -> {
             if (gender != null) {
                 return criteriaBuilder.equal(root.get("gender"), gender);
