@@ -1,6 +1,6 @@
 package com.example.animalchipization.validation.annotations.implementation;
 
-import com.example.animalchipization.exception.DuplicateItemException;
+import com.example.animalchipization.exception.DuplicateCollectionItemException;
 import com.example.animalchipization.validation.annotations.UniqueElements;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -20,7 +20,7 @@ public class UniqueElementsValidator implements ConstraintValidator<UniqueElemen
         if (collection.stream().distinct().count() == collection.size()) {
             return true;
         } else {
-            throw new DuplicateItemException();
+            throw new DuplicateCollectionItemException();
         }
     }
 }

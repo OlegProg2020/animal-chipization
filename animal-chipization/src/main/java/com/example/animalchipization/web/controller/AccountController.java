@@ -41,7 +41,7 @@ public class AccountController {
     }
 
     @PutMapping(path = "/{accountId}", consumes = "application/json")
-    public ResponseEntity<Account> updateAccount(@PathVariable("accountId") @Min(1) Long accountId,
+    public ResponseEntity<Account> updateAccountById(@PathVariable("accountId") @Min(1) Long accountId,
                                                  @RequestBody @Valid AccountForm accountForm) {
         Account updatedAccount = accountService.updateAccountById(accountId, accountForm);
         return new ResponseEntity<>(updatedAccount, HttpStatus.valueOf(200));
@@ -49,7 +49,7 @@ public class AccountController {
 
     @DeleteMapping(path = "/{accountId}", consumes = "application/json")
     @ResponseStatus(value = HttpStatus.OK)
-    public void deleteAccount(@PathVariable("accountId") @Min(1) Long accountId) {
+    public void deleteAccountById(@PathVariable("accountId") @Min(1) Long accountId) {
         accountService.deleteAccountById(accountId);
     }
 
