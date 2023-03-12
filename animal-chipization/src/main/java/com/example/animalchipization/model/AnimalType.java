@@ -2,6 +2,7 @@ package com.example.animalchipization.model;
 
 import com.example.animalchipization.validation.annotations.UniqueAnimalType;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,5 +16,6 @@ public class AnimalType {
     private Long id;
     @Column(unique = true)
     @UniqueAnimalType
+    @NotBlank
     private String type;
 }

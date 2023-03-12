@@ -5,16 +5,14 @@ import com.example.animalchipization.exception.AccountWithThisEmailAlreadyExists
 import com.example.animalchipization.model.Account;
 import com.example.animalchipization.service.AccountService;
 import com.example.animalchipization.util.OffsetBasedPageRequest;
-import com.example.animalchipization.web.form.AccountForm;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 import static com.example.animalchipization.data.specification.AccountSpecification.*;
 
@@ -22,27 +20,20 @@ import static com.example.animalchipization.data.specification.AccountSpecificat
 public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
-    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AccountServiceImpl(AccountRepository accountRepository, PasswordEncoder passwordEncoder) {
+    public AccountServiceImpl(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public Account findAccountById(Long accountId) {
-        Optional<Account> optionalAccount = accountRepository.findById(accountId);
-        if (optionalAccount.isPresent()) {
-            return optionalAccount.get();
-        } else {
-            throw new NoSuchElementException();
-        }
+        return accountRepository.findById(accountId).orElseThrow(NoSuchElementException::new);
     }
 
     @Override
-    public Iterable<Account> searchForAccounts(
-            String firstName, String lastName, String email, Integer from, Integer size) {
+    public Iterable<Account> searchForAccounts(String firstName, String lastName,
+                                               String email, Integer from, Integer size) {
         OffsetBasedPageRequest pageRequest =
                 new OffsetBasedPageRequest(from, size, Sort.by("id").ascending());
         Specification<Account> specifications =
@@ -52,16 +43,11 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    @PreAuthorize("#accountId == authentication.principal.getId()")
-    public Account updateAccountById(Long accountId, AccountForm accountForm) {
-        Account currentAccountDetails =
-                accountRepository.findById(accountId).orElseThrow(NoSuchElementException::new);
-        Account newAccountDetails = accountForm.toAccount(passwordEncoder);
-        if (!accountRepository.existsByEmail(newAccountDetails.getEmail())
-                || currentAccountDetails.getEmail().equals(newAccountDetails.getEmail())) {
-
-            newAccountDetails.setId(accountId);
-            return accountRepository.save(newAccountDetails);
+    @PreAuthorize("#account.id == authentication.principal.getId()")
+    public Account updateAccount(@Valid Account account) {
+        //TODO || currentAccountDetails.getEmail().equals(account.getEmail())
+        if (!accountRepository.existsByEmail(account.getEmail())) {
+            return accountRepository.save(account);
         } else {
             throw new AccountWithThisEmailAlreadyExistsException();
         }
@@ -74,9 +60,9 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Account registry(AccountForm accountForm) {
-        if (!accountRepository.existsByEmail(accountForm.getEmail())) {
-            return accountRepository.save(accountForm.toAccount(passwordEncoder));
+    public Account registry(@Valid Account account) {
+        if (!accountRepository.existsByEmail(account.getEmail())) {
+            return accountRepository.save(account);
         } else {
             throw new AccountWithThisEmailAlreadyExistsException();
         }

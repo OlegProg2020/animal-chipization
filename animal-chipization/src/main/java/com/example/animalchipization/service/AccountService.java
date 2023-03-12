@@ -1,7 +1,6 @@
 package com.example.animalchipization.service;
 
 import com.example.animalchipization.model.Account;
-import com.example.animalchipization.web.form.AccountForm;
 
 public interface AccountService {
 
@@ -9,9 +8,9 @@ public interface AccountService {
 
     Iterable<Account> searchForAccounts(String firstName, String lastName, String email, Integer from, Integer size);
 
-    Account updateAccountById(Long accountId, AccountForm accountForm);
+    Account updateAccount(Account account);
 
     void deleteAccountById(Long accountId);
 
-    Account registry(AccountForm accountForm);
+    Account registry(Account account);
 }

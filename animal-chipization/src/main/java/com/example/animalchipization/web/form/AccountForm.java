@@ -2,6 +2,7 @@ package com.example.animalchipization.web.form;
 
 
 import com.example.animalchipization.model.Account;
+import com.example.animalchipization.validation.annotations.UniqueAccountEmail;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -19,6 +20,7 @@ public class AccountForm {
     private String lastName;
     @NotBlank
     @Email
+    @UniqueAccountEmail
     private String email;
     @NotBlank
     private String password;

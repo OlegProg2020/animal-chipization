@@ -1,16 +1,16 @@
 package com.example.animalchipization.validation.annotations;
 
-import com.example.animalchipization.validation.annotations.implementation.UniqueAnimalTypeValidator;
+import com.example.animalchipization.validation.annotations.implementation.UniqueAccountEmailValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
 import java.lang.annotation.*;
 
 @Documented
-@Constraint(validatedBy = UniqueAnimalTypeValidator.class)
+@Constraint(validatedBy = UniqueAccountEmailValidator.class)
 @Target(value = {ElementType.FIELD})
 @Retention(value = RetentionPolicy.RUNTIME)
-public @interface UniqueAnimalType {
+public @interface UniqueAccountEmail {
     String message() default "";
 
     Class<?>[] groups() default {};

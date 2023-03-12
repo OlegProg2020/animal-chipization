@@ -1,8 +1,8 @@
 package com.example.animalchipization.web.form;
 
-import com.example.animalchipization.model.enums.Gender;
-
 import com.example.animalchipization.model.Animal;
+import com.example.animalchipization.model.enums.Gender;
+import com.example.animalchipization.model.enums.LifeStatus;
 import com.example.animalchipization.validation.annotations.UniqueElements;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
@@ -33,6 +33,7 @@ public class AnimalForm {
     private Float height;
     @NotNull
     private Gender gender;
+    private LifeStatus lifeStatus;
     @NotNull
     @Min(1)
     private Long chipperId;
@@ -41,14 +42,12 @@ public class AnimalForm {
     private Long chippingLocationId;
 
     public Animal toAnimal() {
-        Animal animal = new Animal();
-        animal.setAnimalTypes(new HashSet<>(animalTypes));
-        animal.setWeight(weight);
-        animal.setLength(length);
-        animal.setHeight(height);
-        animal.setGender(gender);
-        animal.setChipperId(chipperId);
-        animal.setChippingLocationId(chippingLocationId);
+        Animal animal = new Animal(new HashSet<>(animalTypes), weight, length, height,
+                gender, chipperId, chippingLocationId);
+        if (this.lifeStatus == LifeStatus.DEAD) {
+            animal.setLifeStatusToDeadAndSetDeathDateTime();
+        }
         return animal;
     }
+
 }

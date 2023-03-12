@@ -2,6 +2,8 @@ package com.example.animalchipization.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,11 +21,16 @@ public class Account implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @NotBlank
     private String firstName;
+    @NotBlank
     private String lastName;
     @Column(unique = true)
+    @NotBlank
+    @Email
     private String email;
     @JsonIgnore
+    @NotBlank
     private String password;
 
     @Override
@@ -64,10 +71,10 @@ public class Account implements UserDetails {
 
 
     public Account(String firstName, String lastName, String email, String password) {
-        this.setFirstName(firstName);
-        this.setLastName(lastName);
-        this.setEmail(email);
-        this.setPassword(password);
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
     }
 
 }

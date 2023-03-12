@@ -1,9 +1,8 @@
 package com.example.animalchipization.service;
 
-import com.example.animalchipization.web.form.AnimalForm;
 import com.example.animalchipization.model.Animal;
-import com.example.animalchipization.model.enums.LifeStatus;
 import com.example.animalchipization.model.enums.Gender;
+import com.example.animalchipization.model.enums.LifeStatus;
 
 import java.time.LocalDateTime;
 
@@ -15,5 +14,5 @@ public interface AnimalService {
                                       Long chipperId, Long chippingLocationId, LifeStatus lifeStatus,
                                       Gender gender, Integer from, Integer size);
 
-    Animal addAnimal(AnimalForm animalForm);
+    Animal addAnimal(Animal animal);
 }

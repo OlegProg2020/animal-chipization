@@ -1,9 +1,8 @@
 package com.example.animalchipization.web.controller;
 
-import com.example.animalchipization.model.enums.LifeStatus;
-import com.example.animalchipization.model.enums.Gender;
-
 import com.example.animalchipization.model.Animal;
+import com.example.animalchipization.model.enums.Gender;
+import com.example.animalchipization.model.enums.LifeStatus;
 import com.example.animalchipization.service.AnimalService;
 import com.example.animalchipization.web.form.AnimalForm;
 import jakarta.validation.Valid;
@@ -51,7 +50,8 @@ public class AnimalController {
 
     @PostMapping(consumes = "application/json")
     public ResponseEntity<Animal> addAnimal(@RequestBody @Valid AnimalForm animalForm) {
-        return new ResponseEntity<>(animalService.addAnimal(animalForm), HttpStatus.valueOf(201));
+        Animal animal = animalForm.toAnimal();
+        return new ResponseEntity<>(animalService.addAnimal(animal), HttpStatus.valueOf(201));
     }
 
 }

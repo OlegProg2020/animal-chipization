@@ -24,7 +24,7 @@ public class UniqueAnimalTypeValidator implements ConstraintValidator<UniqueAnim
 
     @Override
     public boolean isValid(String type, ConstraintValidatorContext constraintValidatorContext) {
-        if(!animalTypeRepository.existsByType(type)) {
+        if (!animalTypeRepository.existsByType(type)) {
             return true;
         } else {
             throw new AnimalTypeWithThisTypeAlreadyExistsException();

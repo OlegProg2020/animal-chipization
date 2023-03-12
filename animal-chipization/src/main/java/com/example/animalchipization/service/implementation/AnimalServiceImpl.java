@@ -1,23 +1,20 @@
 package com.example.animalchipization.service.implementation;
 
-import com.example.animalchipization.model.enums.LifeStatus;
-import com.example.animalchipization.model.enums.Gender;
-import com.example.animalchipization.web.form.AnimalForm;
-
 import com.example.animalchipization.data.repository.AnimalRepository;
 import com.example.animalchipization.model.Animal;
+import com.example.animalchipization.model.enums.Gender;
+import com.example.animalchipization.model.enums.LifeStatus;
 import com.example.animalchipization.service.AnimalService;
 import com.example.animalchipization.util.OffsetBasedPageRequest;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.Set;
 
 import static com.example.animalchipization.data.specification.AnimalSpecification.*;
 
@@ -59,8 +56,7 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public Animal addAnimal(AnimalForm animalForm) {
-        Animal animal = animalForm.toAnimal();
+    public Animal addAnimal(@Valid Animal animal) {
         return animalRepository.save(animal);
     }
 

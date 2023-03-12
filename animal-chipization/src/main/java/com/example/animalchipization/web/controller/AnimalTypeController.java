@@ -30,14 +30,17 @@ public class AnimalTypeController {
 
     @PostMapping(consumes = "application/json")
     public ResponseEntity<AnimalType> addAnimalType(@RequestBody @Valid AnimalTypeForm animalTypeForm) {
-        return new ResponseEntity<>(animalTypeService.addAnimalType(animalTypeForm), HttpStatus.valueOf(201));
+        AnimalType animalType = animalTypeForm.toAnimalType();
+        return new ResponseEntity<>(animalTypeService.addAnimalType(animalType), HttpStatus.valueOf(201));
     }
 
     @PutMapping(path = "/{typeId}", consumes = "application/json")
     public ResponseEntity<AnimalType> updateAnimalTypeById(@PathVariable("typeId") @Min(1) Long typeId,
                                                            @RequestBody @Valid AnimalTypeForm animalTypeForm) {
-        AnimalType updatedAnimalType = animalTypeService.updateAnimalTypeById(typeId, animalTypeForm);
-        return new ResponseEntity<>(updatedAnimalType, HttpStatus.valueOf(200));
+        AnimalType animalType = animalTypeForm.toAnimalType();
+        animalType.setId(typeId);
+        return new ResponseEntity<>(animalTypeService.updateAnimalType(animalType),
+                HttpStatus.valueOf(200));
     }
 
     @DeleteMapping(path = "/{typeId}")
