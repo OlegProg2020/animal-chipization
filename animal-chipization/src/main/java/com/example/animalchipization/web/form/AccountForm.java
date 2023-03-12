@@ -20,7 +20,6 @@ public class AccountForm {
     private String lastName;
     @NotBlank
     @Email
-    @UniqueAccountEmail
     private String email;
     @NotBlank
     private String password;

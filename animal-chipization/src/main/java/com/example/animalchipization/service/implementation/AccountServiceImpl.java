@@ -45,8 +45,10 @@ public class AccountServiceImpl implements AccountService {
     @Override
     @PreAuthorize("#account.id == authentication.principal.getId()")
     public Account updateAccount(@Valid Account account) {
-        //TODO || currentAccountDetails.getEmail().equals(account.getEmail())
-        if (!accountRepository.existsByEmail(account.getEmail())) {
+        Account currentAccountDetails = accountRepository.findById(account.getId())
+                .orElseThrow(NoSuchElementException::new);
+        if (!accountRepository.existsByEmail(account.getEmail())
+                || currentAccountDetails.getEmail().equals(account.getEmail())) {
             return accountRepository.save(account);
         } else {
             throw new AccountWithThisEmailAlreadyExistsException();
