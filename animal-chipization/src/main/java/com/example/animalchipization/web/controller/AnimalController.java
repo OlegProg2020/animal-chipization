@@ -4,7 +4,6 @@ import com.example.animalchipization.model.Animal;
 import com.example.animalchipization.model.enums.Gender;
 import com.example.animalchipization.model.enums.LifeStatus;
 import com.example.animalchipization.service.AnimalService;
-import com.example.animalchipization.util.AnimalFormToAnimalConverter;
 import com.example.animalchipization.web.form.AnimalForm;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;

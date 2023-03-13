@@ -4,22 +4,19 @@ import com.example.animalchipization.model.enums.Gender;
 import com.example.animalchipization.model.enums.LifeStatus;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Fetch;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @NoArgsConstructor
@@ -32,6 +29,12 @@ public class Animal {
     @ManyToMany(fetch = FetchType.LAZY)
     @NotEmpty
     private Set<AnimalType> animalTypes = new HashSet<>();
+
+    @JsonGetter("animalTypes")
+    public Iterable<Long> getAnimalTypesIds() {
+        return animalTypes.stream().map(AnimalType::getId).collect(Collectors.toList());
+    }
+
     @NotNull
     @Min(1)
     private Float weight;
@@ -51,13 +54,30 @@ public class Animal {
     @NotNull
     @JsonProperty("chipperId")
     private Account chipper;
-    @ManyToOne(targetEntity = LocationPoint.class)
+
+    @JsonGetter("chipperId")
+    public Long getChipperId() {
+        return chipper.getId();
+    }
+
+    @ManyToOne
     @NotNull
     @JsonProperty("chippingLocationId")
     private LocationPoint chippingLocation;
-    @OneToMany(targetEntity = AnimalVisitedLocation.class)
+
+    @JsonGetter("chippingLocationId")
+    public Long getChippingLocationId() {
+        return chippingLocation.getId();
+    }
+
+    @OneToMany
     @JoinColumn(name = "animal_id")
-    private List<Long> visitedLocations = new ArrayList<>();
+    private List<AnimalVisitedLocation> visitedLocations = new ArrayList<>();
+    @JsonGetter("visitedLocations")
+    public Iterable<Long> getVisitedLocationsIds() {
+        return visitedLocations.stream().map(AnimalVisitedLocation::getId).collect(Collectors.toList());
+    }
+
     private ZonedDateTime deathDateTime = null;
 
     public Animal(Set<AnimalType> animalTypes, Float weight, Float length, Float height,
