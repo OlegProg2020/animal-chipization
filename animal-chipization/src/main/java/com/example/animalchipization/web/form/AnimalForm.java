@@ -3,13 +3,13 @@ package com.example.animalchipization.web.form;
 import com.example.animalchipization.model.Animal;
 import com.example.animalchipization.model.enums.Gender;
 import com.example.animalchipization.model.enums.LifeStatus;
-import com.example.animalchipization.validation.annotations.UniqueElements;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -20,7 +20,6 @@ import java.util.List;
 @NoArgsConstructor
 public class AnimalForm {
     @NotEmpty
-    @UniqueElements
     private List<@NotNull @Min(1) Long> animalTypes = new ArrayList<>();
     @NotNull
     @Min(1)
