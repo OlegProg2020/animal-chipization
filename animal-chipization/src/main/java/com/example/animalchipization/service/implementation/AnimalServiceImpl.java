@@ -1,11 +1,13 @@
 package com.example.animalchipization.service.implementation;
 
 import com.example.animalchipization.data.repository.AnimalRepository;
+import com.example.animalchipization.model.Account;
 import com.example.animalchipization.model.Animal;
 import com.example.animalchipization.model.enums.Gender;
 import com.example.animalchipization.model.enums.LifeStatus;
 import com.example.animalchipization.service.AnimalService;
 import com.example.animalchipization.util.OffsetBasedPageRequest;
+import jakarta.persistence.EntityManager;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;

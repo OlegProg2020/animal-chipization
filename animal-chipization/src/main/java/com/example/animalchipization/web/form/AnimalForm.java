@@ -3,21 +3,23 @@ package com.example.animalchipization.web.form;
 import com.example.animalchipization.model.Animal;
 import com.example.animalchipization.model.enums.Gender;
 import com.example.animalchipization.model.enums.LifeStatus;
+import com.example.animalchipization.util.AnimalFormToAnimalConverter;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.validator.constraints.UniqueElements;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@Component
 public class AnimalForm {
     @NotEmpty
     private List<@NotNull @Min(1) Long> animalTypes = new ArrayList<>();
@@ -39,14 +41,5 @@ public class AnimalForm {
     @NotNull
     @Min(1)
     private Long chippingLocationId;
-
-    public Animal toAnimal() {
-        Animal animal = new Animal(new HashSet<>(animalTypes), weight, length, height,
-                gender, chipperId, chippingLocationId);
-        if (this.lifeStatus == LifeStatus.DEAD) {
-            animal.setLifeStatusToDeadAndSetDeathDateTime();
-        }
-        return animal;
-    }
 
 }

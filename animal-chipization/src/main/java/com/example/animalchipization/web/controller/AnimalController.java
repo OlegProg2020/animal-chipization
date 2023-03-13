@@ -4,10 +4,12 @@ import com.example.animalchipization.model.Animal;
 import com.example.animalchipization.model.enums.Gender;
 import com.example.animalchipization.model.enums.LifeStatus;
 import com.example.animalchipization.service.AnimalService;
+import com.example.animalchipization.util.AnimalFormToAnimalConverter;
 import com.example.animalchipization.web.form.AnimalForm;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -21,10 +23,12 @@ import java.time.LocalDateTime;
 public class AnimalController {
 
     private final AnimalService animalService;
+    private Converter<AnimalForm, Animal> animalFormToAnimalConverter;
 
     @Autowired
-    public AnimalController(AnimalService animalService) {
+    public AnimalController(AnimalService animalService, Converter<AnimalForm, Animal> animalFormToAnimalConverter) {
         this.animalService = animalService;
+        this.animalFormToAnimalConverter = animalFormToAnimalConverter;
     }
 
     @GetMapping("/{animalId}")
@@ -50,7 +54,7 @@ public class AnimalController {
 
     @PostMapping(consumes = "application/json")
     public ResponseEntity<Animal> addAnimal(@RequestBody @Valid AnimalForm animalForm) {
-        Animal animal = animalForm.toAnimal();
+        Animal animal = animalFormToAnimalConverter.convert(animalForm);
         return new ResponseEntity<>(animalService.addAnimal(animal), HttpStatus.valueOf(201));
     }
 
