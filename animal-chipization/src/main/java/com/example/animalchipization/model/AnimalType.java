@@ -1,6 +1,5 @@
 package com.example.animalchipization.model;
 
-import com.example.animalchipization.validation.annotations.UniqueAnimalType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -15,7 +14,6 @@ public class AnimalType {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Column(unique = true)
-    @UniqueAnimalType
     @NotBlank
     private String type;
 }

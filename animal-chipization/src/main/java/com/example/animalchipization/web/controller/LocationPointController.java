@@ -5,7 +5,6 @@ import com.example.animalchipization.service.LocationPointService;
 import com.example.animalchipization.web.form.LocationPointForm;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +37,7 @@ public class LocationPointController {
     }
 
     @PutMapping(path = "/{pointId}", consumes = "application/json")
-    public ResponseEntity<LocationPoint> updateLocationPoint(@PathVariable(name = "pointId") Long pointId,
+    public ResponseEntity<LocationPoint> updateLocationPoint(@PathVariable(name = "pointId") @Min(1) Long pointId,
                                                              @RequestBody @Valid LocationPointForm locationPointForm) {
         LocationPoint locationPoint = locationPointForm.toLocationPoint();
         locationPoint.setId(pointId);

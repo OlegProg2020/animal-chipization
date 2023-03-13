@@ -1,7 +1,6 @@
 package com.example.animalchipization.model;
 
 
-import com.example.animalchipization.validation.annotations.UniqueLocationPoint;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
@@ -12,19 +11,18 @@ import lombok.NoArgsConstructor;
 @Entity
 @Data
 @NoArgsConstructor
-@UniqueLocationPoint
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames={"latitude", "longitude"})})
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"latitude", "longitude"})})
 public class LocationPoint {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @NotNull
-    @DecimalMin(value = "-90", inclusive = false)
-    @DecimalMax(value = "90", inclusive = false)
+    @DecimalMin(value = "-90")
+    @DecimalMax(value = "90")
     private Double latitude;
     @NotNull
-    @DecimalMin(value = "-180", inclusive = false)
-    @DecimalMin(value = "-180", inclusive = false)
+    @DecimalMin(value = "-180")
+    @DecimalMax(value = "180")
     private Double longitude;
 
     public LocationPoint(Double latitude, Double longitude) {

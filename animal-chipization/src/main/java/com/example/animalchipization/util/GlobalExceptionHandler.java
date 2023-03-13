@@ -3,6 +3,7 @@ package com.example.animalchipization.util;
 import com.example.animalchipization.exception.AccountWithThisEmailAlreadyExistsException;
 import com.example.animalchipization.exception.AnimalTypeWithThisTypeAlreadyExistsException;
 import com.example.animalchipization.exception.DuplicateCollectionItemException;
+import com.example.animalchipization.exception.LocationPointWithThisCoordinatesAlreadyExistsException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,6 +52,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AnimalTypeWithThisTypeAlreadyExistsException.class)
     public ResponseEntity<?> onAnimalTypeWithThisTypeAlreadyExistsException(
             AnimalTypeWithThisTypeAlreadyExistsException exception) {
+
+        return new ResponseEntity<>(HttpStatus.valueOf(409));
+    }
+
+    @ExceptionHandler(LocationPointWithThisCoordinatesAlreadyExistsException.class)
+    public ResponseEntity<?> onLocationPointWithThisCoordinatesAlreadyExistsException(
+            LocationPointWithThisCoordinatesAlreadyExistsException exception) {
 
         return new ResponseEntity<>(HttpStatus.valueOf(409));
     }

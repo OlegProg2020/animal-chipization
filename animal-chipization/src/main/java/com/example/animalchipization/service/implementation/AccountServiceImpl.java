@@ -47,8 +47,8 @@ public class AccountServiceImpl implements AccountService {
     public Account updateAccount(@Valid Account account) {
         Account currentAccountDetails = accountRepository.findById(account.getId())
                 .orElseThrow(NoSuchElementException::new);
-        if (!accountRepository.existsByEmail(account.getEmail())
-                || currentAccountDetails.getEmail().equals(account.getEmail())) {
+        if (currentAccountDetails.getEmail().equals(account.getEmail())
+                || !accountRepository.existsByEmail(account.getEmail())) {
             return accountRepository.save(account);
         } else {
             throw new AccountWithThisEmailAlreadyExistsException();

@@ -13,12 +13,12 @@ import lombok.Setter;
 @NoArgsConstructor
 public class LocationPointForm {
     @NotNull
-    @DecimalMin(value = "-90", inclusive = false)
-    @DecimalMax(value = "90", inclusive = false)
+    @DecimalMin(value = "-90")
+    @DecimalMax(value = "90")
     private Double latitude;
     @NotNull
-    @DecimalMin(value = "-180", inclusive = false)
-    @DecimalMin(value = "-180", inclusive = false)
+    @DecimalMin(value = "-180")
+    @DecimalMax(value = "180")
     private Double longitude;
 
     public LocationPoint toLocationPoint() {
