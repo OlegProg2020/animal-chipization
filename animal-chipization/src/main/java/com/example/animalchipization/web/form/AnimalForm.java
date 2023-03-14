@@ -2,6 +2,7 @@ package com.example.animalchipization.web.form;
 
 import com.example.animalchipization.model.enums.Gender;
 import com.example.animalchipization.model.enums.LifeStatus;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -21,13 +22,13 @@ public class AnimalForm {
     @NotEmpty
     private List<@NotNull @Min(1) Long> animalTypes = new ArrayList<>();
     @NotNull
-    @Min(1)
+    @DecimalMin(value = "0", inclusive = false)
     private Float weight;
     @NotNull
-    @Min(1)
+    @DecimalMin(value = "0", inclusive = false)
     private Float length;
     @NotNull
-    @Min(1)
+    @DecimalMin(value = "0", inclusive = false)
     private Float height;
     @NotNull
     private Gender gender;

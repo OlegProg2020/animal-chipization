@@ -60,7 +60,8 @@ public class AnimalVisitedLocationServiceImpl implements AnimalVisitedLocationSe
         if (visitedLocations.size() == 0 && animal.getChippingLocation().equals(animalVisitedLocation.getLocationPoint())) {
             throw new FirstLocationPointCoincidesWithChippingPointException();
         }
-        if (visitedLocations.get(visitedLocations.size() - 1).equals(animalVisitedLocation)) {
+        if (visitedLocations.size() != 0
+                && visitedLocations.get(visitedLocations.size() - 1).equals(animalVisitedLocation)) {
             throw new AnimalIsAlreadyAtThisPointException();
         }
         return animalVisitedLocationRepository.save(animalVisitedLocation);

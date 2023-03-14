@@ -2,6 +2,7 @@ package com.example.animalchipization.model;
 
 import com.example.animalchipization.model.enums.Gender;
 import com.example.animalchipization.model.enums.LifeStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -50,9 +51,10 @@ public class Animal {
     @Enumerated(EnumType.STRING)
     private LifeStatus lifeStatus = LifeStatus.ALIVE;
     private ZonedDateTime chippingDateTime = ZonedDateTime.now();
-    @ManyToOne(optional = false)
+    @ManyToOne(targetEntity = Account.class, fetch = FetchType.LAZY)
     @NotNull
     @JsonProperty("chipperId")
+    @JoinColumn(name = "chipperId")
     private Account chipper;
 
     @JsonGetter("chipperId")
@@ -60,7 +62,7 @@ public class Animal {
         return chipper.getId();
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @NotNull
     @JsonProperty("chippingLocationId")
     private LocationPoint chippingLocation;
