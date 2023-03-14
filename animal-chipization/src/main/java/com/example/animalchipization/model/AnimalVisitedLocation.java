@@ -7,8 +7,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.CompositionType;
-import org.hibernate.validator.constraints.ConstraintComposition;
 
 import java.time.ZonedDateTime;
 
@@ -24,10 +22,12 @@ public class AnimalVisitedLocation {
     @JsonProperty("locationPointId")
     @NotNull
     private LocationPoint locationPoint;
+
     @JsonGetter("locationPointId")
     public Long getLocationPointId() {
         return this.locationPoint.getId();
     }
+
     @ManyToOne
     @JsonIgnore
     @NotNull

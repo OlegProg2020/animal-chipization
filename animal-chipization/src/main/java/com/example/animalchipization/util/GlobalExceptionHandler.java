@@ -27,6 +27,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> onMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
         return new ResponseEntity<>(HttpStatus.valueOf(400));
     }
+
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<?> onValidationException(ValidationException exception) {
         return new ResponseEntity<>(HttpStatus.valueOf(400));

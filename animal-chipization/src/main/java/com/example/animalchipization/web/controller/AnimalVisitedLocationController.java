@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 
 @RestController
-@RequestMapping(path = "/animals", produces = "application/json")
+@RequestMapping(path = "/animals/{animalId}/locations", produces = "application/json")
 @Validated
 public class AnimalVisitedLocationController {
 
@@ -31,7 +31,7 @@ public class AnimalVisitedLocationController {
         this.AnimalVisitedLocationFormToAnimalVisitedLocationConverter = AnimalVisitedLocationFormToAnimalVisitedLocationConverter;
     }
 
-    @GetMapping("/{animalId}/locations")
+    @GetMapping
     public ResponseEntity<Iterable<AnimalVisitedLocation>> searchForAnimalVisitedLocations(
             @PathVariable("animalId") @Min(1) Long animalId,
             @RequestParam(name = "startDateTime", required = false) LocalDateTime startDateTime,
@@ -44,7 +44,7 @@ public class AnimalVisitedLocationController {
         return new ResponseEntity<>(animalVisitedLocations, HttpStatus.valueOf(200));
     }
 
-    @PostMapping("/{animalId}/locations/{pointId}")
+    @PostMapping("/{pointId}")
     public ResponseEntity<AnimalVisitedLocation> addAnimalVisitedLocation(
             @PathVariable("animalId") @Min(1) Long animalId,
             @PathVariable("pointId") @Min(1) Long pointId) {
@@ -56,7 +56,7 @@ public class AnimalVisitedLocationController {
         return new ResponseEntity<>(animalVisitedLocation, HttpStatus.valueOf(201));
     }
 
-    @PutMapping("/{animalId}/locations")
+    @PutMapping(consumes = "application/json")
     public ResponseEntity<AnimalVisitedLocation> updateAnimalVisitedLocation(
             @PathVariable("animalId") @Min(1) Long animalId,
             @RequestBody @Valid AnimalVisitedLocationPutForm animalVisitedLocationPutForm) {
@@ -66,4 +66,12 @@ public class AnimalVisitedLocationController {
                         animalVisitedLocationPutForm.getLocationPointId());
         return new ResponseEntity<>(animalVisitedLocation, HttpStatus.valueOf(200));
     }
+
+    @DeleteMapping("/{pointId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteAnimalVisitedLocationById(@PathVariable("animalId") @Min(1) Long animalId,
+                                                @PathVariable("pointId") @Min(1) Long pointId) {
+        animalVisitedLocationService.deleteAnimalVisitedLocation(animalId, pointId);
+    }
+
 }

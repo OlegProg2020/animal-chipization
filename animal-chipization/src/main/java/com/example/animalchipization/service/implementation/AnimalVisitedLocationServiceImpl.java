@@ -6,7 +6,6 @@ import com.example.animalchipization.data.repository.LocationPointRepository;
 import com.example.animalchipization.exception.AnimalIsAlreadyAtThisPointException;
 import com.example.animalchipization.exception.AttemptAddingLocationToAnimalWithDeadStatusException;
 import com.example.animalchipization.exception.FirstLocationPointCoincidesWithChippingPointException;
-import com.example.animalchipization.exception.UpdatingPointToSamePointException;
 import com.example.animalchipization.model.Animal;
 import com.example.animalchipization.model.AnimalVisitedLocation;
 import com.example.animalchipization.model.LocationPoint;
@@ -20,7 +19,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
@@ -35,26 +33,17 @@ public class AnimalVisitedLocationServiceImpl implements AnimalVisitedLocationSe
     private final LocationPointRepository locationPointRepository;
 
     @Autowired
-    public AnimalVisitedLocationServiceImpl(AnimalRepository animalRepository,
-                                            AnimalVisitedLocationRepository animalVisitedLocationRepository,
-                                            LocationPointRepository locationPointRepository) {
+    public AnimalVisitedLocationServiceImpl(AnimalRepository animalRepository, AnimalVisitedLocationRepository animalVisitedLocationRepository, LocationPointRepository locationPointRepository) {
         this.animalRepository = animalRepository;
         this.animalVisitedLocationRepository = animalVisitedLocationRepository;
         this.locationPointRepository = locationPointRepository;
     }
 
     @Override
-    public Iterable<AnimalVisitedLocation> searchForAnimalVisitedLocations(Long animalId, LocalDateTime startDateTime,
-                                                                           LocalDateTime endDateTime, Integer from,
-                                                                           Integer size) {
+    public Iterable<AnimalVisitedLocation> searchForAnimalVisitedLocations(Long animalId, LocalDateTime startDateTime, LocalDateTime endDateTime, Integer from, Integer size) {
         if (animalRepository.existsById(animalId)) {
-            OffsetBasedPageRequest pageRequest = new OffsetBasedPageRequest(from, size,
-                    Sort.by("dateTimeOfVisitLocationPoint").ascending());
-            Specification<AnimalVisitedLocation> specifications = Specification.where(
-                    hasAnimalId(animalId)
-                            .and(hasDateTimeOfVisitLocationPointGreaterThanOrEqualTo(startDateTime))
-                            .and(hasDateTimeOfVisitLocationPointLessThanOrEqualTo(endDateTime))
-            );
+            OffsetBasedPageRequest pageRequest = new OffsetBasedPageRequest(from, size, Sort.by("dateTimeOfVisitLocationPoint").ascending());
+            Specification<AnimalVisitedLocation> specifications = Specification.where(hasAnimalId(animalId).and(hasDateTimeOfVisitLocationPointGreaterThanOrEqualTo(startDateTime)).and(hasDateTimeOfVisitLocationPointLessThanOrEqualTo(endDateTime)));
             return animalVisitedLocationRepository.findAll(specifications, pageRequest).getContent();
         } else {
             throw new NoSuchElementException();
@@ -64,47 +53,46 @@ public class AnimalVisitedLocationServiceImpl implements AnimalVisitedLocationSe
     @Override
     public AnimalVisitedLocation addAnimalVisitedLocation(@Valid AnimalVisitedLocation animalVisitedLocation) {
         Animal animal = animalVisitedLocation.getAnimal();
-        if(animal.getLifeStatus() == LifeStatus.DEAD) {
+        if (animal.getLifeStatus() == LifeStatus.DEAD) {
             throw new AttemptAddingLocationToAnimalWithDeadStatusException();
         }
         List<AnimalVisitedLocation> visitedLocations = animal.getVisitedLocations();
-        if(visitedLocations.size() == 0 &&
-            animal.getChippingLocation().equals(animalVisitedLocation.getLocationPoint())) {
+        if (visitedLocations.size() == 0 && animal.getChippingLocation().equals(animalVisitedLocation.getLocationPoint())) {
             throw new FirstLocationPointCoincidesWithChippingPointException();
         }
-        if(visitedLocations.get(visitedLocations.size() - 1)
-                .equals(animalVisitedLocation)) {
+        if (visitedLocations.get(visitedLocations.size() - 1).equals(animalVisitedLocation)) {
             throw new AnimalIsAlreadyAtThisPointException();
         }
         return animalVisitedLocationRepository.save(animalVisitedLocation);
     }
 
     @Override
-    public AnimalVisitedLocation updateAnimalVisitedLocation(Long animalId, Long visitedLocationPointId, Long locationPointId) {
+    public AnimalVisitedLocation updateAnimalVisitedLocation(Long animalId,
+                                                             Long visitedLocationPointId,
+                                                             Long locationPointId) {
         Animal animal = animalRepository.findById(animalId)
                 .orElseThrow(NoSuchElementException::new);
         AnimalVisitedLocation visitedLocationPoint = animalVisitedLocationRepository
                 .findByAnimal_IdAndLocationPoint_Id(animalId, visitedLocationPointId)
                 .orElseThrow(NoSuchElementException::new);
-        LocationPoint locationPoint = locationPointRepository.findById(locationPointId)
-                .orElseThrow(NoSuchElementException::new);
+        LocationPoint locationPoint = locationPointRepository
+                .findById(locationPointId).orElseThrow(NoSuchElementException::new);
 
-        List<LocationPoint> visitedLocations = animal.getVisitedLocations()
-                .stream().map(AnimalVisitedLocation::getLocationPoint).toList();
-        if(locationPoint.equals(visitedLocations.get(0)) &&
-                locationPoint.equals(animal.getChippingLocation())) {
+        ListIterator<LocationPoint> pointsIterator = animal.getVisitedLocations()
+                .stream().map(AnimalVisitedLocation::getLocationPoint).toList().listIterator();
+        if (locationPoint.equals(pointsIterator.next())
+                && locationPoint.equals(animal.getChippingLocation())) {
             throw new FirstLocationPointCoincidesWithChippingPointException();
         }
-        ListIterator<LocationPoint> iterator = visitedLocations.listIterator();
-        iterator.set(visitedLocationPoint.getLocationPoint());
-        if(visitedLocationPoint.getLocationPoint().equals(locationPoint)) {
+        if (visitedLocationPoint.getLocationPoint().equals(locationPoint)) {
             throw new AnimalIsAlreadyAtThisPointException();
         }
-        if(iterator.hasNext() && iterator.next().equals(locationPoint)) {
+        pointsIterator.set(visitedLocationPoint.getLocationPoint());
+        if (pointsIterator.hasNext() && pointsIterator.next().equals(locationPoint)) {
             throw new AnimalIsAlreadyAtThisPointException();
         }
-        iterator.set(visitedLocationPoint.getLocationPoint());
-        if(iterator.hasPrevious() && iterator.previous().equals(locationPoint)) {
+        pointsIterator.set(visitedLocationPoint.getLocationPoint());
+        if (pointsIterator.hasPrevious() && pointsIterator.previous().equals(locationPoint)) {
             throw new AnimalIsAlreadyAtThisPointException();
         }
 
@@ -112,5 +100,20 @@ public class AnimalVisitedLocationServiceImpl implements AnimalVisitedLocationSe
         return animalVisitedLocationRepository.save(visitedLocationPoint);
     }
 
+    @Override
+    public void deleteAnimalVisitedLocation(Long animalId, Long pointId) {
+        Animal animal = animalRepository.findById(animalId).orElseThrow(NoSuchElementException::new);
+        AnimalVisitedLocation visitedLocationPoint = animalVisitedLocationRepository
+                .findByAnimal_IdAndLocationPoint_Id(animalId, pointId).orElseThrow(NoSuchElementException::new);
+
+        ListIterator<AnimalVisitedLocation> visitedLocationsIterator = animal.getVisitedLocations().listIterator();
+        visitedLocationsIterator.set(visitedLocationPoint);
+        if (visitedLocationsIterator.nextIndex() == 0 && visitedLocationsIterator.hasNext()
+                && visitedLocationsIterator.next().getLocationPoint().equals(animal.getChippingLocation())) {
+            animalVisitedLocationRepository.delete(visitedLocationsIterator.previous());
+        }
+        animalVisitedLocationRepository.delete(visitedLocationPoint);
+
+    }
 
 }

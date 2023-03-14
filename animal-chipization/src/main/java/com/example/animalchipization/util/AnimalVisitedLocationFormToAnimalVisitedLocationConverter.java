@@ -5,7 +5,6 @@ import com.example.animalchipization.data.repository.LocationPointRepository;
 import com.example.animalchipization.model.Animal;
 import com.example.animalchipization.model.AnimalVisitedLocation;
 import com.example.animalchipization.model.LocationPoint;
-import com.example.animalchipization.web.form.AnimalForm;
 import com.example.animalchipization.web.form.AnimalVisitedLocationForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;

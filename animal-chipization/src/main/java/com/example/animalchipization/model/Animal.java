@@ -2,7 +2,6 @@ package com.example.animalchipization.model;
 
 import com.example.animalchipization.model.enums.Gender;
 import com.example.animalchipization.model.enums.LifeStatus;
-import com.example.animalchipization.validation.annotations.UniqueElements;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -74,6 +73,7 @@ public class Animal {
     @OneToMany
     @JoinColumn(name = "animal_id")
     private List<AnimalVisitedLocation> visitedLocations = new ArrayList<>();
+
     @JsonGetter("visitedLocations")
     public Iterable<Long> getVisitedLocationsIds() {
         return visitedLocations.stream().map(AnimalVisitedLocation::getId).collect(Collectors.toList());
