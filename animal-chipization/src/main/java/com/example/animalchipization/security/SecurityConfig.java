@@ -41,7 +41,7 @@ public class SecurityConfig {
         return httpSecurity
                 .csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/registration").permitAll()
+                .requestMatchers("/registration").anonymous()
                 .requestMatchers(HttpMethod.POST).authenticated()
                 .requestMatchers(HttpMethod.PUT).authenticated()
                 .requestMatchers(HttpMethod.DELETE).authenticated()

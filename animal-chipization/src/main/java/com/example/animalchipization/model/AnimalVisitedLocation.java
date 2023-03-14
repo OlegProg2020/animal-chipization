@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
 @Entity
@@ -17,7 +18,7 @@ public class AnimalVisitedLocation {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private ZonedDateTime dateTimeOfVisitLocationPoint = ZonedDateTime.now();
+    private LocalDateTime dateTimeOfVisitLocationPoint = LocalDateTime.now(ZonedDateTime.now().getZone());
     @OneToOne
     @JsonProperty("locationPointId")
     @NotNull

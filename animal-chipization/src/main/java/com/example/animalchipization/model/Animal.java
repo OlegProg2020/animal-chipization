@@ -2,7 +2,6 @@ package com.example.animalchipization.model;
 
 import com.example.animalchipization.model.enums.Gender;
 import com.example.animalchipization.model.enums.LifeStatus;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -12,6 +11,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -50,7 +50,7 @@ public class Animal {
     private Gender gender;
     @Enumerated(EnumType.STRING)
     private LifeStatus lifeStatus = LifeStatus.ALIVE;
-    private ZonedDateTime chippingDateTime = ZonedDateTime.now();
+    private LocalDateTime chippingDateTime = LocalDateTime.now(ZonedDateTime.now().getZone());
     @ManyToOne(targetEntity = Account.class, fetch = FetchType.LAZY)
     @NotNull
     @JsonProperty("chipperId")
@@ -81,7 +81,7 @@ public class Animal {
         return visitedLocations.stream().map(AnimalVisitedLocation::getId).collect(Collectors.toList());
     }
 
-    private ZonedDateTime deathDateTime = null;
+    private LocalDateTime deathDateTime = null;
 
     public Animal(Set<AnimalType> animalTypes, Float weight, Float length, Float height,
                   Gender gender, Account chipper, LocationPoint chippingLocation) {
@@ -96,7 +96,7 @@ public class Animal {
 
     public void setLifeStatusToDeadAndSetDeathDateTime() {
         this.lifeStatus = LifeStatus.DEAD;
-        this.deathDateTime = ZonedDateTime.now();
+        this.deathDateTime = LocalDateTime.now(ZonedDateTime.now().getZone());
     }
 
 }
