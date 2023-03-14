@@ -1,7 +1,7 @@
 package com.example.animalchipization.service.implementation;
 
 import com.example.animalchipization.data.repository.AccountRepository;
-import com.example.animalchipization.exception.AccountWithThisEmailAlreadyExistsException;
+import com.example.animalchipization.exception.AccountWithSuchEmailAlreadyExistsException;
 import com.example.animalchipization.model.Account;
 import com.example.animalchipization.service.AccountService;
 import com.example.animalchipization.util.OffsetBasedPageRequest;
@@ -51,7 +51,7 @@ public class AccountServiceImpl implements AccountService {
                 || !accountRepository.existsByEmail(account.getEmail())) {
             return accountRepository.save(account);
         } else {
-            throw new AccountWithThisEmailAlreadyExistsException();
+            throw new AccountWithSuchEmailAlreadyExistsException();
         }
     }
 
@@ -66,7 +66,7 @@ public class AccountServiceImpl implements AccountService {
         if (!accountRepository.existsByEmail(account.getEmail())) {
             return accountRepository.save(account);
         } else {
-            throw new AccountWithThisEmailAlreadyExistsException();
+            throw new AccountWithSuchEmailAlreadyExistsException();
         }
     }
 }

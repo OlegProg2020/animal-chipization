@@ -1,7 +1,7 @@
 package com.example.animalchipization.service.implementation;
 
 import com.example.animalchipization.data.repository.AnimalTypeRepository;
-import com.example.animalchipization.exception.AnimalTypeWithThisTypeAlreadyExistsException;
+import com.example.animalchipization.exception.AnimalTypeWithSuchTypeAlreadyExistsException;
 import com.example.animalchipization.model.AnimalType;
 import com.example.animalchipization.service.AnimalTypeService;
 import jakarta.validation.Valid;
@@ -31,7 +31,7 @@ public class AnimalTypeServiceImpl implements AnimalTypeService {
         if (!animalTypeRepository.existsByType(animalType.getType())) {
             return animalTypeRepository.save(animalType);
         } else {
-            throw new AnimalTypeWithThisTypeAlreadyExistsException();
+            throw new AnimalTypeWithSuchTypeAlreadyExistsException();
         }
     }
 
@@ -44,7 +44,7 @@ public class AnimalTypeServiceImpl implements AnimalTypeService {
                 throw new NoSuchElementException();
             }
         } else {
-            throw new AnimalTypeWithThisTypeAlreadyExistsException();
+            throw new AnimalTypeWithSuchTypeAlreadyExistsException();
         }
     }
 

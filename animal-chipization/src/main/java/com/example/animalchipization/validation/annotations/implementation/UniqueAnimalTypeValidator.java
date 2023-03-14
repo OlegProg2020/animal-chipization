@@ -1,7 +1,7 @@
 package com.example.animalchipization.validation.annotations.implementation;
 
 import com.example.animalchipization.data.repository.AnimalTypeRepository;
-import com.example.animalchipization.exception.AnimalTypeWithThisTypeAlreadyExistsException;
+import com.example.animalchipization.exception.AnimalTypeWithSuchTypeAlreadyExistsException;
 import com.example.animalchipization.validation.annotations.UniqueAnimalType;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -27,7 +27,7 @@ public class UniqueAnimalTypeValidator implements ConstraintValidator<UniqueAnim
         if (!animalTypeRepository.existsByType(type)) {
             return true;
         } else {
-            throw new AnimalTypeWithThisTypeAlreadyExistsException();
+            throw new AnimalTypeWithSuchTypeAlreadyExistsException();
         }
     }
 }

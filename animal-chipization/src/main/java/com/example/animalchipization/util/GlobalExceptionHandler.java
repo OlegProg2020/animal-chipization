@@ -1,9 +1,9 @@
 package com.example.animalchipization.util;
 
-import com.example.animalchipization.exception.AccountWithThisEmailAlreadyExistsException;
-import com.example.animalchipization.exception.AnimalTypeWithThisTypeAlreadyExistsException;
+import com.example.animalchipization.exception.AccountWithSuchEmailAlreadyExistsException;
+import com.example.animalchipization.exception.AnimalTypeWithSuchTypeAlreadyExistsException;
 import com.example.animalchipization.exception.DuplicateCollectionItemException;
-import com.example.animalchipization.exception.LocationPointWithThisCoordinatesAlreadyExistsException;
+import com.example.animalchipization.exception.LocationPointWithSuchCoordinatesAlreadyExistsException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,9 +37,9 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(HttpStatus.valueOf(401));
     }
 
-    @ExceptionHandler(AccountWithThisEmailAlreadyExistsException.class)
+    @ExceptionHandler(AccountWithSuchEmailAlreadyExistsException.class)
     public ResponseEntity<?> onAccountWithThisEmailAlreadyExistsException(
-            AccountWithThisEmailAlreadyExistsException exception) {
+            AccountWithSuchEmailAlreadyExistsException exception) {
 
         return new ResponseEntity<>(HttpStatus.valueOf(409));
     }
@@ -49,16 +49,16 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(HttpStatus.valueOf(409));
     }
 
-    @ExceptionHandler(AnimalTypeWithThisTypeAlreadyExistsException.class)
+    @ExceptionHandler(AnimalTypeWithSuchTypeAlreadyExistsException.class)
     public ResponseEntity<?> onAnimalTypeWithThisTypeAlreadyExistsException(
-            AnimalTypeWithThisTypeAlreadyExistsException exception) {
+            AnimalTypeWithSuchTypeAlreadyExistsException exception) {
 
         return new ResponseEntity<>(HttpStatus.valueOf(409));
     }
 
-    @ExceptionHandler(LocationPointWithThisCoordinatesAlreadyExistsException.class)
+    @ExceptionHandler(LocationPointWithSuchCoordinatesAlreadyExistsException.class)
     public ResponseEntity<?> onLocationPointWithThisCoordinatesAlreadyExistsException(
-            LocationPointWithThisCoordinatesAlreadyExistsException exception) {
+            LocationPointWithSuchCoordinatesAlreadyExistsException exception) {
 
         return new ResponseEntity<>(HttpStatus.valueOf(409));
     }

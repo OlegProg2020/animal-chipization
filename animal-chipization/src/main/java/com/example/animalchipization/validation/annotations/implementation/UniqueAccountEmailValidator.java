@@ -1,7 +1,7 @@
 package com.example.animalchipization.validation.annotations.implementation;
 
 import com.example.animalchipization.data.repository.AccountRepository;
-import com.example.animalchipization.exception.AccountWithThisEmailAlreadyExistsException;
+import com.example.animalchipization.exception.AccountWithSuchEmailAlreadyExistsException;
 import com.example.animalchipization.validation.annotations.UniqueAccountEmail;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -27,7 +27,7 @@ public class UniqueAccountEmailValidator implements ConstraintValidator<UniqueAc
         if (!accountRepository.existsByEmail(email)) {
             return true;
         } else {
-            throw new AccountWithThisEmailAlreadyExistsException();
+            throw new AccountWithSuchEmailAlreadyExistsException();
         }
     }
 }

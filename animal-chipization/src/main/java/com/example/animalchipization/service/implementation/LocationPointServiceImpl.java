@@ -1,7 +1,7 @@
 package com.example.animalchipization.service.implementation;
 
 import com.example.animalchipization.data.repository.LocationPointRepository;
-import com.example.animalchipization.exception.LocationPointWithThisCoordinatesAlreadyExistsException;
+import com.example.animalchipization.exception.LocationPointWithSuchCoordinatesAlreadyExistsException;
 import com.example.animalchipization.model.LocationPoint;
 import com.example.animalchipization.service.LocationPointService;
 import jakarta.validation.Valid;
@@ -38,7 +38,7 @@ public class LocationPointServiceImpl implements LocationPointService {
                 locationPoint.getLongitude())) {
             return locationPointRepository.save(locationPoint);
         } else {
-            throw new LocationPointWithThisCoordinatesAlreadyExistsException();
+            throw new LocationPointWithSuchCoordinatesAlreadyExistsException();
         }
     }
 
@@ -49,7 +49,7 @@ public class LocationPointServiceImpl implements LocationPointService {
                     locationPoint.getLongitude())) {
                 return locationPointRepository.save(locationPoint);
             } else {
-                throw new LocationPointWithThisCoordinatesAlreadyExistsException();
+                throw new LocationPointWithSuchCoordinatesAlreadyExistsException();
             }
         } else {
             throw new NoSuchElementException();
