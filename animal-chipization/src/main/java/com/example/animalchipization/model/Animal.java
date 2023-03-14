@@ -73,7 +73,6 @@ public class Animal {
 
     @OneToMany
     @JoinColumn(name = "animal_id")
-    @UniqueElements
     private List<AnimalVisitedLocation> visitedLocations = new ArrayList<>();
     @JsonGetter("visitedLocations")
     public Iterable<Long> getVisitedLocationsIds() {

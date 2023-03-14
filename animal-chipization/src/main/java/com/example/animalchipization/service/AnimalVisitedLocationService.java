@@ -10,4 +10,5 @@ public interface AnimalVisitedLocationService {
                                                                     LocalDateTime endDateTime, Integer from,
                                                                     Integer size);
     AnimalVisitedLocation addAnimalVisitedLocation(AnimalVisitedLocation animalVisitedLocation);
+    AnimalVisitedLocation updateAnimalVisitedLocation(Long animalId, Long visitedLocationPointId, Long locationPointId);
 }

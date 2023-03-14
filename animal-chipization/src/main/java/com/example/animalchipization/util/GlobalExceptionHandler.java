@@ -5,6 +5,7 @@ import com.example.animalchipization.exception.AnimalTypeWithSuchTypeAlreadyExis
 import com.example.animalchipization.exception.DuplicateCollectionItemException;
 import com.example.animalchipization.exception.LocationPointWithSuchCoordinatesAlreadyExistsException;
 import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.ValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -24,6 +25,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> onMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
+        return new ResponseEntity<>(HttpStatus.valueOf(400));
+    }
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<?> onValidationException(ValidationException exception) {
         return new ResponseEntity<>(HttpStatus.valueOf(400));
     }
 

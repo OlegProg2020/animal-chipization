@@ -2,15 +2,18 @@ package com.example.animalchipization.web.form;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-public class AnimalVisitedLocationForm {
-    private Long animalId;
-    private Long pointId;
+public class AnimalVisitedLocationPutForm {
+    @NotNull
+    @Min(1)
+    private Long visitedLocationPointId;
+    @NotNull
+    @Min(1)
+    private Long locationPointId;
 }

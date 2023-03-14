@@ -2,8 +2,12 @@ package com.example.animalchipization.web.controller;
 
 import com.example.animalchipization.model.AnimalVisitedLocation;
 import com.example.animalchipization.service.AnimalVisitedLocationService;
+import com.example.animalchipization.web.form.AnimalVisitedLocationForm;
+import com.example.animalchipization.web.form.AnimalVisitedLocationPutForm;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -17,10 +21,14 @@ import java.time.LocalDateTime;
 public class AnimalVisitedLocationController {
 
     private final AnimalVisitedLocationService animalVisitedLocationService;
+    private final Converter<AnimalVisitedLocationForm, AnimalVisitedLocation> AnimalVisitedLocationFormToAnimalVisitedLocationConverter;
 
     @Autowired
-    public AnimalVisitedLocationController(AnimalVisitedLocationService animalVisitedLocationService) {
+    public AnimalVisitedLocationController(AnimalVisitedLocationService animalVisitedLocationService,
+                                           Converter<AnimalVisitedLocationForm, AnimalVisitedLocation>
+                                                   AnimalVisitedLocationFormToAnimalVisitedLocationConverter) {
         this.animalVisitedLocationService = animalVisitedLocationService;
+        this.AnimalVisitedLocationFormToAnimalVisitedLocationConverter = AnimalVisitedLocationFormToAnimalVisitedLocationConverter;
     }
 
     @GetMapping("/{animalId}/locations")
@@ -36,4 +44,26 @@ public class AnimalVisitedLocationController {
         return new ResponseEntity<>(animalVisitedLocations, HttpStatus.valueOf(200));
     }
 
+    @PostMapping("/{animalId}/locations/{pointId}")
+    public ResponseEntity<AnimalVisitedLocation> addAnimalVisitedLocation(
+            @PathVariable("animalId") @Min(1) Long animalId,
+            @PathVariable("pointId") @Min(1) Long pointId) {
+
+        AnimalVisitedLocationForm animalVisitedLocationForm = new AnimalVisitedLocationForm(animalId, pointId);
+        AnimalVisitedLocation animalVisitedLocation = animalVisitedLocationService.addAnimalVisitedLocation(
+                AnimalVisitedLocationFormToAnimalVisitedLocationConverter
+                        .convert(animalVisitedLocationForm));
+        return new ResponseEntity<>(animalVisitedLocation, HttpStatus.valueOf(201));
+    }
+
+    @PutMapping("/{animalId}/locations")
+    public ResponseEntity<AnimalVisitedLocation> updateAnimalVisitedLocation(
+            @PathVariable("animalId") @Min(1) Long animalId,
+            @RequestBody @Valid AnimalVisitedLocationPutForm animalVisitedLocationPutForm) {
+
+        AnimalVisitedLocation animalVisitedLocation = animalVisitedLocationService
+                .updateAnimalVisitedLocation(animalId, animalVisitedLocationPutForm.getVisitedLocationPointId(),
+                        animalVisitedLocationPutForm.getLocationPointId());
+        return new ResponseEntity<>(animalVisitedLocation, HttpStatus.valueOf(200));
+    }
 }

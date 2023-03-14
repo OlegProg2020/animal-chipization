@@ -4,8 +4,11 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.CompositionType;
+import org.hibernate.validator.constraints.ConstraintComposition;
 
 import java.time.ZonedDateTime;
 
@@ -19,6 +22,7 @@ public class AnimalVisitedLocation {
     private ZonedDateTime dateTimeOfVisitLocationPoint = ZonedDateTime.now();
     @OneToOne
     @JsonProperty("locationPointId")
+    @NotNull
     private LocationPoint locationPoint;
     @JsonGetter("locationPointId")
     public Long getLocationPointId() {
@@ -26,6 +30,7 @@ public class AnimalVisitedLocation {
     }
     @ManyToOne
     @JsonIgnore
+    @NotNull
     private Animal animal;
 
     public AnimalVisitedLocation(Animal animal, LocationPoint locationPoint) {
