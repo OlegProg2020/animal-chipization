@@ -45,4 +45,9 @@ public class AnimalVisitedLocationServiceImpl implements AnimalVisitedLocationSe
             throw new NoSuchElementException();
         }
     }
+
+    @Override
+    public AnimalVisitedLocation addAnimalVisitedLocation(AnimalVisitedLocation animalVisitedLocation) {
+        if()
+    }
 }

@@ -9,4 +9,5 @@ public interface AnimalVisitedLocationService {
     Iterable<AnimalVisitedLocation> searchForAnimalVisitedLocations(Long animalId, LocalDateTime startDateTime,
                                                                     LocalDateTime endDateTime, Integer from,
                                                                     Integer size);
+    AnimalVisitedLocation addAnimalVisitedLocation(AnimalVisitedLocation animalVisitedLocation);
 }
