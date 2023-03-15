@@ -15,4 +15,5 @@ public interface AnimalService {
                                       Gender gender, Integer from, Integer size);
 
     Animal addAnimal(Animal animal);
+    Animal addTypeToAnimal(Long animalId, Long typeId);
 }

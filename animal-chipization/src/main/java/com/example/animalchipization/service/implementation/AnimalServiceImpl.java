@@ -1,7 +1,10 @@
 package com.example.animalchipization.service.implementation;
 
 import com.example.animalchipization.data.repository.AnimalRepository;
+import com.example.animalchipization.data.repository.AnimalTypeRepository;
+import com.example.animalchipization.exception.DuplicateCollectionItemException;
 import com.example.animalchipization.model.Animal;
+import com.example.animalchipization.model.AnimalType;
 import com.example.animalchipization.model.enums.Gender;
 import com.example.animalchipization.model.enums.LifeStatus;
 import com.example.animalchipization.service.AnimalService;
@@ -22,10 +25,12 @@ import static com.example.animalchipization.data.specification.AnimalSpecificati
 public class AnimalServiceImpl implements AnimalService {
 
     private final AnimalRepository animalRepository;
+    private final AnimalTypeRepository animalTypeRepository;
 
     @Autowired
-    public AnimalServiceImpl(AnimalRepository animalRepository) {
+    public AnimalServiceImpl(AnimalRepository animalRepository, AnimalTypeRepository animalTypeRepository) {
         this.animalRepository = animalRepository;
+        this.animalTypeRepository = animalTypeRepository;
     }
 
     @Override
@@ -57,6 +62,15 @@ public class AnimalServiceImpl implements AnimalService {
 
     @Override
     public Animal addAnimal(@Valid Animal animal) {
+        return animalRepository.save(animal);
+    }
+
+    public Animal addTypeToAnimal(Long animalId, Long typeId) {
+        Animal animal = animalRepository.findById(animalId).orElseThrow(NoSuchElementException::new);
+        AnimalType type = animalTypeRepository.findById(typeId).orElseThrow(NoSuchElementException::new);
+        if(!animal.addAnimalType(type)) {
+            throw new DuplicateCollectionItemException();
+        }
         return animalRepository.save(animal);
     }
 

@@ -100,5 +100,8 @@ public class Animal {
         this.lifeStatus = LifeStatus.DEAD;
         this.deathDateTime = ZonedDateTime.now().truncatedTo(ChronoUnit.SECONDS);
     }
+    public Boolean addAnimalType(AnimalType animalType) {
+        return this.animalTypes.add(animalType);
+    }
 
 }

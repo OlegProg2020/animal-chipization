@@ -57,4 +57,10 @@ public class AnimalController {
         return new ResponseEntity<>(animalService.addAnimal(animal), HttpStatus.valueOf(201));
     }
 
+    @PostMapping("/{animalId}/types/{typeId}")
+    public ResponseEntity<Animal> addTypeToAnimal(@PathVariable("animalId") @Min(1) Long animalId,
+                                                  @PathVariable("typeId") @Min(1) Long typeId) {
+        return new ResponseEntity<>(animalService.addTypeToAnimal(animalId, typeId), HttpStatus.valueOf(201));
+    }
+
 }
