@@ -93,6 +93,7 @@ public class Animal {
         this.chipper = chipper;
         this.chippingLocation = chippingLocation;
     }
+
     public Animal(Float weight, Float length, Float height, Gender gender,
                   Account chipper, LocationPoint chippingLocation) {
         this.weight = weight;

@@ -68,7 +68,7 @@ public class AnimalController {
                                                @RequestBody @Valid AnimalPutForm animalPutForm) {
         Animal newAnimalDetails = animalPutFormToAnimalConverter.convert(animalPutForm);
         return new ResponseEntity<>(animalService.updateAnimal(animalId, newAnimalDetails),
-                HttpStatus.valueOf(201));
+                HttpStatus.valueOf(200));
     }
 
     @DeleteMapping("/{animalId}")

@@ -6,7 +6,6 @@ import com.example.animalchipization.exception.*;
 import com.example.animalchipization.model.Animal;
 import com.example.animalchipization.model.AnimalType;
 import com.example.animalchipization.model.AnimalVisitedLocation;
-import com.example.animalchipization.model.LocationPoint;
 import com.example.animalchipization.model.enums.Gender;
 import com.example.animalchipization.model.enums.LifeStatus;
 import com.example.animalchipization.service.AnimalService;
@@ -74,9 +73,9 @@ public class AnimalServiceImpl implements AnimalService {
                 .orElseThrow(NoSuchElementException::new);
         Optional<AnimalVisitedLocation> optFirstVisitedLocation =
                 oldAnimalDetails.getVisitedLocations().stream().findFirst();
-        if(optFirstVisitedLocation.isPresent()
+        if (optFirstVisitedLocation.isPresent()
                 && optFirstVisitedLocation.get().getLocationPoint()
-                    .equals(newAnimalDetails.getChippingLocation())) {
+                .equals(newAnimalDetails.getChippingLocation())) {
             throw new AnimalIsAlreadyAtThisPointException();
         }
         oldAnimalDetails.setWeight(newAnimalDetails.getWeight());
@@ -84,12 +83,12 @@ public class AnimalServiceImpl implements AnimalService {
         oldAnimalDetails.setHeight(newAnimalDetails.getHeight());
         oldAnimalDetails.setGender(newAnimalDetails.getGender());
         //TODO обновляется ли deathDateTime и chippingDateTime? сейчас нет (см. код внизу)
-        if(oldAnimalDetails.getLifeStatus() == LifeStatus.ALIVE) {
-            if(newAnimalDetails.getLifeStatus() == LifeStatus.DEAD) {
+        if (oldAnimalDetails.getLifeStatus() == LifeStatus.ALIVE) {
+            if (newAnimalDetails.getLifeStatus() == LifeStatus.DEAD) {
                 oldAnimalDetails.setLifeStatusToDeadAndSetDeathDateTime();
             }
         } else {
-            if(newAnimalDetails.getLifeStatus() == LifeStatus.ALIVE) {
+            if (newAnimalDetails.getLifeStatus() == LifeStatus.ALIVE) {
                 throw new SettingLifeStatusInAliveFromDeadException();
             }
         }
@@ -102,10 +101,10 @@ public class AnimalServiceImpl implements AnimalService {
         Animal animal = animalRepository.findById(animalId)
                 .orElseThrow(NoSuchElementException::new);
         List<AnimalVisitedLocation> visitedLocations = animal.getVisitedLocations();
-        if(!visitedLocations.isEmpty()) {
+        if (!visitedLocations.isEmpty()) {
             int visitedLocationsSize = visitedLocations.size();
             AnimalVisitedLocation lastVisitedLocation = visitedLocations.get(visitedLocationsSize - 1);
-            if(!lastVisitedLocation.getLocationPoint().equals(animal.getChippingLocation())) {
+            if (!lastVisitedLocation.getLocationPoint().equals(animal.getChippingLocation())) {
                 throw new AttemptToRemoveAnimalNotAtTheChippingPointException();
             }
         }
@@ -143,7 +142,7 @@ public class AnimalServiceImpl implements AnimalService {
         if (!animal.removeAnimalType(type)) {
             throw new NoSuchElementException();
         }
-        if(animal.getAnimalTypes().size() == 0) {
+        if (animal.getAnimalTypes().size() == 0) {
             throw new RemovingSingleTypeOfAnimalException();
         }
         return animalRepository.save(animal);

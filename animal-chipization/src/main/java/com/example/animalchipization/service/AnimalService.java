@@ -21,6 +21,8 @@ public interface AnimalService {
     Animal updateTypeOfAnimal(Long animalId, Long oldTypeId, Long newTypeId);
 
     Animal deleteTypeOfAnimal(Long animalId, Long typeId);
+
     Animal updateAnimal(Long animalId, Animal newAnimalDetails);
+
     void deleteAnimalById(Long animalId);
 }

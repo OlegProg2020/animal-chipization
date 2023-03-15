@@ -7,7 +7,6 @@ import com.example.animalchipization.model.Account;
 import com.example.animalchipization.model.Animal;
 import com.example.animalchipization.model.AnimalType;
 import com.example.animalchipization.model.LocationPoint;
-import com.example.animalchipization.model.enums.LifeStatus;
 import com.example.animalchipization.web.form.AnimalForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
