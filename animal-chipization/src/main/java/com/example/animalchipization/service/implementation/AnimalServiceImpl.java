@@ -92,7 +92,9 @@ public class AnimalServiceImpl implements AnimalService {
         Animal animal = animalRepository.findById(animalId).orElseThrow(NoSuchElementException::new);
         AnimalType type = animalTypeRepository.findById(typeId).orElseThrow(NoSuchElementException::new);
         if (!animal.removeAnimalType(type)) {
-            //TODO работает ли validation?
+            throw new NoSuchElementException();
+        }
+        if(animal.getAnimalTypes().size() == 0) {
             throw new RemovingSingleTypeOfAnimalException();
         }
         return animalRepository.save(animal);
