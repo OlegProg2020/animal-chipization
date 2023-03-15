@@ -3,6 +3,7 @@ package com.example.animalchipization.service.implementation;
 import com.example.animalchipization.data.repository.AnimalRepository;
 import com.example.animalchipization.data.repository.AnimalTypeRepository;
 import com.example.animalchipization.exception.DuplicateCollectionItemException;
+import com.example.animalchipization.exception.RemovingSingleTypeOfAnimalException;
 import com.example.animalchipization.model.Animal;
 import com.example.animalchipization.model.AnimalType;
 import com.example.animalchipization.model.enums.Gender;
@@ -68,8 +69,31 @@ public class AnimalServiceImpl implements AnimalService {
     public Animal addTypeToAnimal(Long animalId, Long typeId) {
         Animal animal = animalRepository.findById(animalId).orElseThrow(NoSuchElementException::new);
         AnimalType type = animalTypeRepository.findById(typeId).orElseThrow(NoSuchElementException::new);
-        if(!animal.addAnimalType(type)) {
+        if (!animal.addAnimalType(type)) {
             throw new DuplicateCollectionItemException();
+        }
+        return animalRepository.save(animal);
+    }
+
+    public Animal updateTypeOfAnimal(Long animalId, Long oldTypeId, Long newTypeId) {
+        Animal animal = animalRepository.findById(animalId).orElseThrow(NoSuchElementException::new);
+        AnimalType oldType = animalTypeRepository.findById(oldTypeId).orElseThrow(NoSuchElementException::new);
+        AnimalType newType = animalTypeRepository.findById(newTypeId).orElseThrow(NoSuchElementException::new);
+        if (!animal.removeAnimalType(oldType)) {
+            throw new NoSuchElementException();
+        }
+        if (!animal.addAnimalType(newType)) {
+            throw new DuplicateCollectionItemException();
+        }
+        return animalRepository.save(animal);
+    }
+
+    public Animal deleteTypeOfAnimal(Long animalId, Long typeId) {
+        Animal animal = animalRepository.findById(animalId).orElseThrow(NoSuchElementException::new);
+        AnimalType type = animalTypeRepository.findById(typeId).orElseThrow(NoSuchElementException::new);
+        if (!animal.removeAnimalType(type)) {
+            //TODO работает ли validation?
+            throw new RemovingSingleTypeOfAnimalException();
         }
         return animalRepository.save(animal);
     }

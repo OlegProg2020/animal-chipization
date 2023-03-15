@@ -6,13 +6,11 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -100,8 +98,13 @@ public class Animal {
         this.lifeStatus = LifeStatus.DEAD;
         this.deathDateTime = ZonedDateTime.now().truncatedTo(ChronoUnit.SECONDS);
     }
+
     public Boolean addAnimalType(AnimalType animalType) {
         return this.animalTypes.add(animalType);
+    }
+
+    public Boolean removeAnimalType(AnimalType animalType) {
+        return this.animalTypes.remove(animalType);
     }
 
 }

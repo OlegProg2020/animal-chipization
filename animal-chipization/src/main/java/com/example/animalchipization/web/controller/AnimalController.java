@@ -5,6 +5,7 @@ import com.example.animalchipization.model.enums.Gender;
 import com.example.animalchipization.model.enums.LifeStatus;
 import com.example.animalchipization.service.AnimalService;
 import com.example.animalchipization.web.form.AnimalForm;
+import com.example.animalchipization.web.form.AnimalTypePutForm;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ import java.time.LocalDateTime;
 public class AnimalController {
 
     private final AnimalService animalService;
-    private Converter<AnimalForm, Animal> animalFormToAnimalConverter;
+    private final Converter<AnimalForm, Animal> animalFormToAnimalConverter;
 
     @Autowired
     public AnimalController(AnimalService animalService, Converter<AnimalForm, Animal> animalFormToAnimalConverter) {
@@ -61,6 +62,21 @@ public class AnimalController {
     public ResponseEntity<Animal> addTypeToAnimal(@PathVariable("animalId") @Min(1) Long animalId,
                                                   @PathVariable("typeId") @Min(1) Long typeId) {
         return new ResponseEntity<>(animalService.addTypeToAnimal(animalId, typeId), HttpStatus.valueOf(201));
+    }
+
+    @PutMapping(path = "/{animalId}/types", consumes = "application/json")
+    public ResponseEntity<Animal> updateTypeOfAnimal(@PathVariable("animalId") @Min(1) Long animalId,
+                                                     @RequestBody @Valid AnimalTypePutForm animalTypePutForm) {
+        Animal animal = animalService.updateTypeOfAnimal(animalId, animalTypePutForm.getOldTypeId(),
+                animalTypePutForm.getNewTypeId());
+        return new ResponseEntity<>(animal, HttpStatus.valueOf(200));
+    }
+
+    @DeleteMapping("/{animalId}/types/{typeId}")
+    public ResponseEntity<Animal> deleteTypeOfAnimal(@PathVariable("animalId") @Min(1) Long animalId,
+                                                     @PathVariable("typeId") @Min(1) Long typeId) {
+        return new ResponseEntity<>(animalService.deleteTypeOfAnimal(animalId, typeId),
+                HttpStatus.valueOf(200));
     }
 
 }
