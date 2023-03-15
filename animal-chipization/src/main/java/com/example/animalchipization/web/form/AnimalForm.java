@@ -22,13 +22,13 @@ public class AnimalForm {
     @NotEmpty
     private List<@NotNull @Min(1) Long> animalTypes = new ArrayList<>();
     @NotNull
-    @DecimalMin(value = "0.0", inclusive = false)
+    @DecimalMin(value = "0", inclusive = false)
     private Float weight;
     @NotNull
-    @DecimalMin(value = "0.0", inclusive = false)
+    @DecimalMin(value = "0", inclusive = false)
     private Float length;
     @NotNull
-    @DecimalMin(value = "0.0", inclusive = false)
+    @DecimalMin(value = "0", inclusive = false)
     private Float height;
     @NotNull
     private Gender gender;

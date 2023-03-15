@@ -5,6 +5,7 @@ import com.example.animalchipization.model.enums.LifeStatus;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -38,13 +39,13 @@ public class Animal {
     }
 
     @NotNull
-    @Min(1)
+    @DecimalMin(value = "0", inclusive = false)
     private Float weight;
     @NotNull
-    @Min(1)
+    @DecimalMin(value = "0", inclusive = false)
     private Float length;
     @NotNull
-    @Min(1)
+    @DecimalMin(value = "0", inclusive = false)
     private Float height;
     @Enumerated(EnumType.STRING)
     @NotNull
