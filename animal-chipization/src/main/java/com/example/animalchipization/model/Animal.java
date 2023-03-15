@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -50,7 +51,7 @@ public class Animal {
     private Gender gender;
     @Enumerated(EnumType.STRING)
     private LifeStatus lifeStatus = LifeStatus.ALIVE;
-    private LocalDateTime chippingDateTime = LocalDateTime.now(ZonedDateTime.now().getZone());
+    private ZonedDateTime chippingDateTime = ZonedDateTime.now().truncatedTo(ChronoUnit.SECONDS);
     @ManyToOne(targetEntity = Account.class, fetch = FetchType.LAZY)
     @NotNull
     @JsonProperty("chipperId")
@@ -81,7 +82,7 @@ public class Animal {
         return visitedLocations.stream().map(AnimalVisitedLocation::getId).collect(Collectors.toList());
     }
 
-    private LocalDateTime deathDateTime = null;
+    private ZonedDateTime deathDateTime = null;
 
     public Animal(Set<AnimalType> animalTypes, Float weight, Float length, Float height,
                   Gender gender, Account chipper, LocationPoint chippingLocation) {
@@ -96,7 +97,7 @@ public class Animal {
 
     public void setLifeStatusToDeadAndSetDeathDateTime() {
         this.lifeStatus = LifeStatus.DEAD;
-        this.deathDateTime = LocalDateTime.now(ZonedDateTime.now().getZone());
+        this.deathDateTime = ZonedDateTime.now().truncatedTo(ChronoUnit.SECONDS);
     }
 
 }

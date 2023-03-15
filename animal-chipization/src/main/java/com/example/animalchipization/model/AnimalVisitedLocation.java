@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 
 @Entity
 @NoArgsConstructor
@@ -18,7 +20,7 @@ public class AnimalVisitedLocation {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private LocalDateTime dateTimeOfVisitLocationPoint = LocalDateTime.now(ZonedDateTime.now().getZone());
+    private ZonedDateTime dateTimeOfVisitLocationPoint = ZonedDateTime.now().truncatedTo(ChronoUnit.SECONDS);
     @OneToOne
     @JsonProperty("locationPointId")
     @NotNull
