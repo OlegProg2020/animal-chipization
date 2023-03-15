@@ -16,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @RestController
 @RequestMapping(path = "/animals", produces = "application/json")
@@ -43,8 +43,8 @@ public class AnimalController {
 
     @GetMapping("/search")
     public ResponseEntity<Iterable<Animal>> searchForAnimals(
-            @RequestParam(name = "startDateTime", required = false) LocalDateTime startDateTime,
-            @RequestParam(name = "endDateTime", required = false) LocalDateTime endDateTime,
+            @RequestParam(name = "startDateTime", required = false) ZonedDateTime startDateTime,
+            @RequestParam(name = "endDateTime", required = false) ZonedDateTime endDateTime,
             @RequestParam(name = "chipperId", required = false) @Min(1) Long chipperId,
             @RequestParam(name = "chippingLocationId", required = false) @Min(1) Long chippingLocationId,
             @RequestParam(name = "lifeStatus", required = false) LifeStatus lifeStatus,

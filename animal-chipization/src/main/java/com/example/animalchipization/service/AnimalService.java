@@ -4,13 +4,13 @@ import com.example.animalchipization.model.Animal;
 import com.example.animalchipization.model.enums.Gender;
 import com.example.animalchipization.model.enums.LifeStatus;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 public interface AnimalService {
 
     Animal findAnimalById(Long animalId);
 
-    Iterable<Animal> searchForAnimals(LocalDateTime startDateTime, LocalDateTime endDateTime,
+    Iterable<Animal> searchForAnimals(ZonedDateTime startDateTime, ZonedDateTime endDateTime,
                                       Long chipperId, Long chippingLocationId, LifeStatus lifeStatus,
                                       Gender gender, Integer from, Integer size);
 

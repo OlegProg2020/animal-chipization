@@ -61,7 +61,8 @@ public class AnimalVisitedLocationServiceImpl implements AnimalVisitedLocationSe
             throw new FirstLocationPointCoincidesWithChippingPointException();
         }
         if (visitedLocations.size() != 0
-                && visitedLocations.get(visitedLocations.size() - 1).equals(animalVisitedLocation)) {
+                && visitedLocations.get(visitedLocations.size() - 1).getLocationPoint()
+                .equals(animalVisitedLocation.getLocationPoint())) {
             throw new AnimalIsAlreadyAtThisPointException();
         }
         return animalVisitedLocationRepository.save(animalVisitedLocation);
@@ -79,21 +80,21 @@ public class AnimalVisitedLocationServiceImpl implements AnimalVisitedLocationSe
         LocationPoint locationPoint = locationPointRepository
                 .findById(locationPointId).orElseThrow(NoSuchElementException::new);
 
-        ListIterator<LocationPoint> pointsIterator = animal.getVisitedLocations()
+        ListIterator<LocationPoint> locationsIterator = animal.getVisitedLocations()
                 .stream().map(AnimalVisitedLocation::getLocationPoint).toList().listIterator();
-        if (locationPoint.equals(pointsIterator.next())
-                && locationPoint.equals(animal.getChippingLocation())) {
+        if (locationPoint.equals(animal.getChippingLocation())
+                && locationPoint.equals(locationsIterator.next())) {
             throw new FirstLocationPointCoincidesWithChippingPointException();
         }
         if (visitedLocationPoint.getLocationPoint().equals(locationPoint)) {
             throw new AnimalIsAlreadyAtThisPointException();
         }
-        pointsIterator.set(visitedLocationPoint.getLocationPoint());
-        if (pointsIterator.hasNext() && pointsIterator.next().equals(locationPoint)) {
+        locationsIterator.set(visitedLocationPoint.getLocationPoint());
+        if (locationsIterator.hasNext() && locationsIterator.next().equals(locationPoint)) {
             throw new AnimalIsAlreadyAtThisPointException();
         }
-        pointsIterator.set(visitedLocationPoint.getLocationPoint());
-        if (pointsIterator.hasPrevious() && pointsIterator.previous().equals(locationPoint)) {
+        locationsIterator.set(visitedLocationPoint.getLocationPoint());
+        if (locationsIterator.hasPrevious() && locationsIterator.previous().equals(locationPoint)) {
             throw new AnimalIsAlreadyAtThisPointException();
         }
 

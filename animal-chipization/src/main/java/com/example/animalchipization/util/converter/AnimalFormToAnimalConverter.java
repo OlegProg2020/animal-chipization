@@ -1,4 +1,4 @@
-package com.example.animalchipization.util;
+package com.example.animalchipization.util.converter;
 
 import com.example.animalchipization.data.repository.AccountRepository;
 import com.example.animalchipization.data.repository.AnimalTypeRepository;

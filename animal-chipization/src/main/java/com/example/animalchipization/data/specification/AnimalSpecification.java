@@ -5,11 +5,11 @@ import com.example.animalchipization.model.enums.Gender;
 import com.example.animalchipization.model.enums.LifeStatus;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 public class AnimalSpecification {
 
-    public static Specification<Animal> hasChippingDateTimeGreaterThanOrEqualTo(LocalDateTime startDateTime) {
+    public static Specification<Animal> hasChippingDateTimeGreaterThanOrEqualTo(ZonedDateTime startDateTime) {
         return (root, criteriaQuery, criteriaBuilder) -> {
             if (startDateTime != null) {
                 return criteriaBuilder.greaterThanOrEqualTo(root.get("chippingDateTime"), startDateTime);
@@ -19,7 +19,7 @@ public class AnimalSpecification {
         };
     }
 
-    public static Specification<Animal> hasChippingDateTimeLessThanOrEqualTo(LocalDateTime endDateTime) {
+    public static Specification<Animal> hasChippingDateTimeLessThanOrEqualTo(ZonedDateTime endDateTime) {
         return (root, criteriaQuery, criteriaBuilder) -> {
             if (endDateTime != null) {
                 return criteriaBuilder.lessThanOrEqualTo(root.get("chippingDateTime"), endDateTime);

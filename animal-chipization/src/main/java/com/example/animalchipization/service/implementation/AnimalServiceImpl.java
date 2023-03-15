@@ -16,7 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -46,7 +46,7 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public Iterable<Animal> searchForAnimals(LocalDateTime startDateTime, LocalDateTime endDateTime,
+    public Iterable<Animal> searchForAnimals(ZonedDateTime startDateTime, ZonedDateTime endDateTime,
                                              Long chipperId, Long chippingLocationId, LifeStatus lifeStatus,
                                              Gender gender, Integer from, Integer size) {
 
@@ -82,7 +82,6 @@ public class AnimalServiceImpl implements AnimalService {
         oldAnimalDetails.setLength(newAnimalDetails.getLength());
         oldAnimalDetails.setHeight(newAnimalDetails.getHeight());
         oldAnimalDetails.setGender(newAnimalDetails.getGender());
-        //TODO обновляется ли deathDateTime и chippingDateTime? сейчас нет (см. код внизу)
         if (oldAnimalDetails.getLifeStatus() == LifeStatus.ALIVE) {
             if (newAnimalDetails.getLifeStatus() == LifeStatus.DEAD) {
                 oldAnimalDetails.setLifeStatusToDeadAndSetDeathDateTime();

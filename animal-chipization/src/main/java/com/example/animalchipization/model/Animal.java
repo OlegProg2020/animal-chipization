@@ -51,7 +51,7 @@ public class Animal {
     @Enumerated(EnumType.STRING)
     private LifeStatus lifeStatus = LifeStatus.ALIVE;
     private ZonedDateTime chippingDateTime = ZonedDateTime.now().truncatedTo(ChronoUnit.SECONDS);
-    @ManyToOne(targetEntity = Account.class, fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = Account.class, fetch = FetchType.LAZY, optional = false)
     @NotNull
     @JsonProperty("chipperId")
     @JoinColumn(name = "chipperId")
@@ -62,7 +62,7 @@ public class Animal {
         return chipper.getId();
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @NotNull
     @JsonProperty("chippingLocationId")
     private LocationPoint chippingLocation;
