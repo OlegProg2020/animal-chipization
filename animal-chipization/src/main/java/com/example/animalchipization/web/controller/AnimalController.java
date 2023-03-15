@@ -5,6 +5,7 @@ import com.example.animalchipization.model.enums.Gender;
 import com.example.animalchipization.model.enums.LifeStatus;
 import com.example.animalchipization.service.AnimalService;
 import com.example.animalchipization.web.form.AnimalForm;
+import com.example.animalchipization.web.form.AnimalPutForm;
 import com.example.animalchipization.web.form.AnimalTypePutForm;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -24,11 +25,15 @@ public class AnimalController {
 
     private final AnimalService animalService;
     private final Converter<AnimalForm, Animal> animalFormToAnimalConverter;
+    private final Converter<AnimalPutForm, Animal> animalPutFormToAnimalConverter;
 
     @Autowired
-    public AnimalController(AnimalService animalService, Converter<AnimalForm, Animal> animalFormToAnimalConverter) {
+    public AnimalController(AnimalService animalService,
+                            Converter<AnimalForm, Animal> animalFormToAnimalConverter,
+                            Converter<AnimalPutForm, Animal> animalPutFormToAnimalConverter) {
         this.animalService = animalService;
         this.animalFormToAnimalConverter = animalFormToAnimalConverter;
+        this.animalPutFormToAnimalConverter = animalPutFormToAnimalConverter;
     }
 
     @GetMapping("/{animalId}")
@@ -56,6 +61,20 @@ public class AnimalController {
     public ResponseEntity<Animal> addAnimal(@RequestBody @Valid AnimalForm animalForm) {
         Animal animal = animalFormToAnimalConverter.convert(animalForm);
         return new ResponseEntity<>(animalService.addAnimal(animal), HttpStatus.valueOf(201));
+    }
+
+    @PutMapping(path = "/{animalId}", consumes = "application/json")
+    public ResponseEntity<Animal> updateAnimal(@PathVariable("animalId") @Min(1) Long animalId,
+                                               @RequestBody @Valid AnimalPutForm animalPutForm) {
+        Animal newAnimalDetails = animalPutFormToAnimalConverter.convert(animalPutForm);
+        return new ResponseEntity<>(animalService.updateAnimal(animalId, newAnimalDetails),
+                HttpStatus.valueOf(201));
+    }
+
+    @DeleteMapping("/{animalId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteAnimalById(@PathVariable("animalId") @Min(1) Long animalId) {
+        animalService.deleteAnimalById(animalId);
     }
 
     @PostMapping("/{animalId}/types/{typeId}")

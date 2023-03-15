@@ -93,6 +93,15 @@ public class Animal {
         this.chipper = chipper;
         this.chippingLocation = chippingLocation;
     }
+    public Animal(Float weight, Float length, Float height, Gender gender,
+                  Account chipper, LocationPoint chippingLocation) {
+        this.weight = weight;
+        this.length = length;
+        this.height = height;
+        this.gender = gender;
+        this.chipper = chipper;
+        this.chippingLocation = chippingLocation;
+    }
 
     public void setLifeStatusToDeadAndSetDeathDateTime() {
         this.lifeStatus = LifeStatus.DEAD;
