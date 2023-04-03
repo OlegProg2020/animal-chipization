@@ -3,13 +3,15 @@ package com.example.animalchipization.model;
 import com.example.animalchipization.model.enums.Gender;
 import com.example.animalchipization.model.enums.LifeStatus;
 import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
@@ -21,7 +23,9 @@ import java.util.stream.Collectors;
 
 @Entity
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
 public class Animal {
 
     @Id
@@ -72,8 +76,9 @@ public class Animal {
         return chippingLocation.getId();
     }
 
-    @OneToMany
-    @JoinColumn(name = "animal_id")
+    @OneToMany(mappedBy = "animal", fetch = FetchType.LAZY)
+    @JsonManagedReference
+    @OrderBy("dateTimeOfVisitLocationPoint ASC, id ASC")
     private List<AnimalVisitedLocation> visitedLocations = new ArrayList<>();
 
     @JsonGetter("visitedLocations")

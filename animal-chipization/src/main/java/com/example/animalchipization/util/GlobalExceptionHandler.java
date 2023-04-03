@@ -6,6 +6,7 @@ import com.example.animalchipization.exception.DuplicateCollectionItemException;
 import com.example.animalchipization.exception.LocationPointWithSuchCoordinatesAlreadyExistsException;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.ValidationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -69,4 +70,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(HttpStatus.valueOf(409));
     }
 
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<?> onDataIntegrityViolationException(DataIntegrityViolationException exception) {
+        return new ResponseEntity<>(HttpStatus.valueOf(400));
+    }
 }

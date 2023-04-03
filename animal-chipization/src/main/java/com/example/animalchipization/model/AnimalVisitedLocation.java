@@ -1,19 +1,21 @@
 package com.example.animalchipization.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 
 @Entity
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
 public class AnimalVisitedLocation {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -31,7 +33,8 @@ public class AnimalVisitedLocation {
 
     @ManyToOne
     @JsonIgnore
-    @NotNull
+    @JsonBackReference
+    @JoinColumn(name = "animal_id")
     private Animal animal;
 
     public AnimalVisitedLocation(Animal animal, LocationPoint locationPoint) {
