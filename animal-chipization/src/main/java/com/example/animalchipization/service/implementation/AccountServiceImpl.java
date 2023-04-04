@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
@@ -20,10 +21,12 @@ import static com.example.animalchipization.data.specification.AccountSpecificat
 public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AccountServiceImpl(AccountRepository accountRepository) {
+    public AccountServiceImpl(AccountRepository accountRepository, PasswordEncoder passwordEncoder) {
         this.accountRepository = accountRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -36,15 +39,14 @@ public class AccountServiceImpl implements AccountService {
                                                String email, Integer from, Integer size) {
         OffsetBasedPageRequest pageRequest =
                 new OffsetBasedPageRequest(from, size, Sort.by("id").ascending());
-        Specification<Account> specifications =
-                Specification.where(
-                        firstNameLike(firstName).and(lastNameLike(lastName)).and(emailLike(email)));
+        Specification<Account> specifications = Specification.where(
+                firstNameLike(firstName).and(lastNameLike(lastName)).and(emailLike(email)));
         return accountRepository.findAll(specifications, pageRequest).getContent();
     }
 
     @Override
-    @PreAuthorize("#account.id == authentication.principal.getId()")
-    public Account updateAccount(@Valid Account account) {
+    @PreAuthorize("#account.id.equals(authentication.principal.getId())")
+    public Account updateAccount(Account account) {
         Account currentAccountDetails = accountRepository.findById(account.getId())
                 .orElseThrow(NoSuchElementException::new);
         if (currentAccountDetails.getEmail().equals(account.getEmail())
@@ -56,7 +58,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    @PreAuthorize("#accountId == authentication.principal.getId()")
+    @PreAuthorize("#accountId.equals(authentication.principal.getId())")
     public void deleteAccountById(Long accountId) {
         accountRepository.deleteById(accountId);
     }
@@ -64,6 +66,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account registry(@Valid Account account) {
         if (!accountRepository.existsByEmail(account.getEmail())) {
+            account.setPassword(passwordEncoder.encode(account.getPassword()));
             return accountRepository.save(account);
         } else {
             throw new AccountWithSuchEmailAlreadyExistsException();

@@ -1,6 +1,7 @@
 package com.example.animalchipization.web.controller;
 
 import com.example.animalchipization.model.Account;
+import com.example.animalchipization.model.enums.Role;
 import com.example.animalchipization.service.AccountService;
 import com.example.animalchipization.web.form.AccountForm;
 import jakarta.validation.Valid;
@@ -8,7 +9,9 @@ import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,20 +21,21 @@ import org.springframework.web.bind.annotation.*;
 public class AccountController {
 
     private final AccountService accountService;
-    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AccountController(AccountService accountService, PasswordEncoder passwordEncoder) {
+    public AccountController(AccountService accountService) {
         this.accountService = accountService;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/{accountId}")
+    @PostAuthorize("#accountId.equals(authentication.principal.getId()) " +
+            "or hasRole('ADMIN')")
     public ResponseEntity<Account> findAccountById(@PathVariable("accountId") @Min(1) Long accountId) {
         return new ResponseEntity<>(accountService.findAccountById(accountId), HttpStatus.valueOf(200));
     }
 
     @GetMapping("/search")
+    @PreAuthorize("#hasRole('ADMIN')")
     public ResponseEntity<Iterable<Account>> searchForAccounts(
             @RequestParam(name = "firstName", required = false) String firstName,
             @RequestParam(name = "lastName", required = false) String lastName,
@@ -43,11 +47,22 @@ public class AccountController {
         return new ResponseEntity<>(accounts, HttpStatus.valueOf(200));
     }
 
+    @PostMapping
+    @PreAuthorize("#hasRole('ADMIN')")
+    public ResponseEntity<Account> addAccount(@RequestBody @Valid AccountForm accountForm) {
+        Account account = accountForm.toAccount();
+        account.setRole(accountForm.getRole());
+        return new ResponseEntity<>(accountService.registry(account), HttpStatus.valueOf(201));
+    }
+
     @PutMapping(path = "/{accountId}", consumes = "application/json")
+    @PostAuthorize("#accountId.equals(authentication.principal.getId()) " +
+            "or hasRole('ADMIN')")
     public ResponseEntity<Account> updateAccountById(@PathVariable("accountId") @Min(1) Long accountId,
                                                      @RequestBody @Valid AccountForm accountForm) {
-        Account account = accountForm.toAccount(passwordEncoder);
+        Account account = accountForm.toAccount();
         account.setId(accountId);
+        account.setRole(accountForm.getRole());
         return new ResponseEntity<>(accountService.updateAccount(account), HttpStatus.valueOf(200));
     }
 

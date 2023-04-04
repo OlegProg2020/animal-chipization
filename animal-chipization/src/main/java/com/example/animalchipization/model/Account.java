@@ -1,5 +1,6 @@
 package com.example.animalchipization.model;
 
+import com.example.animalchipization.model.enums.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -32,11 +33,13 @@ public class Account implements UserDetails {
     @JsonIgnore
     @NotBlank
     private String password;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @Override
     @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        return List.of(new SimpleGrantedAuthority("ROLE_" + this.role.toString()));
     }
 
     @Override

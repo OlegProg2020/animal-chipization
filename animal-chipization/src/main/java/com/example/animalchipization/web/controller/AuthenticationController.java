@@ -20,17 +20,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthenticationController {
 
     private final AccountService accountService;
-    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AuthenticationController(AccountService accountService, PasswordEncoder passwordEncoder) {
+    public AuthenticationController(AccountService accountService) {
         this.accountService = accountService;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping(consumes = "application/json")
     public ResponseEntity<Account> registry(@RequestBody @Valid AccountForm accountForm) {
-        Account account = accountForm.toAccount(passwordEncoder);
+        Account account = accountForm.toAccount();
         return new ResponseEntity<>(accountService.registry(account), HttpStatus.valueOf(201));
     }
 
