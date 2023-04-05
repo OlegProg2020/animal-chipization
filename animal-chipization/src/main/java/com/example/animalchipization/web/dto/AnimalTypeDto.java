@@ -1,0 +1,43 @@
+package com.example.animalchipization.web.dto;
+
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@JsonDeserialize(builder = AnimalTypeDto.Builder.class)
+@Getter
+@NoArgsConstructor
+public class AnimalTypeDto {
+
+    @Min(1)
+    @Setter
+    private Long id;
+    @NotBlank
+    private String type;
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    private AnimalTypeDto(Builder builder) {
+        this.type = builder.type;
+    }
+
+    public static class Builder {
+        private String type;
+
+        public Builder withType(String type) {
+            this.type = type;
+            return this;
+        }
+
+        public AnimalTypeDto build() {
+            return new AnimalTypeDto(this);
+        }
+    }
+
+}

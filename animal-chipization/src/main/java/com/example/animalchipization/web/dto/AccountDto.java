@@ -30,16 +30,16 @@ public class AccountDto {
     private String password;
     private Role role;
 
-    public static Builder builder() {
-        return new Builder();
-    }
-
     private AccountDto(Builder builder) {
         this.firstName = builder.firstName;
         this.lastName = builder.lastName;
         this.email = builder.email;
         this.password = builder.password;
         this.role = builder.role;
+    }
+
+    public static Builder builder() {
+        return new Builder();
     }
 
     public static class Builder {

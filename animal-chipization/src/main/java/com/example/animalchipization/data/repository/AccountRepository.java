@@ -11,6 +11,4 @@ import java.util.Optional;
 public interface AccountRepository extends CrudRepository<Account, Long>, JpaSpecificationExecutor<Account> {
     Optional<Account> findByEmail(String email);
 
-    Boolean existsByEmail(String email);
-
 }

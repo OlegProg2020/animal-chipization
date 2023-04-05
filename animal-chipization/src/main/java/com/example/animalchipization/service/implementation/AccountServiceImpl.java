@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -69,7 +70,12 @@ public class AccountServiceImpl implements AccountService {
     @Override
     @Transactional
     public void deleteAccountById(@Min(1) Long accountId) {
-        accountRepository.deleteById(accountId);
+        try {
+            accountRepository.deleteById(accountId);
+        } catch (EmptyResultDataAccessException exception) {
+            throw new NoSuchElementException();
+        }
+
     }
 
     @Override

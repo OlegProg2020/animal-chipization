@@ -1,8 +1,7 @@
 package com.example.animalchipization.web.controller;
 
-import com.example.animalchipization.model.AnimalType;
 import com.example.animalchipization.service.AnimalTypeService;
-import com.example.animalchipization.web.form.AnimalTypeForm;
+import com.example.animalchipization.web.dto.AnimalTypeDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,22 +23,22 @@ public class AnimalTypeController {
     }
 
     @GetMapping("/{typeId}")
-    public ResponseEntity<AnimalType> findAnimalTypeById(@PathVariable("typeId") @Min(1) Long typeId) {
-        return new ResponseEntity<>(animalTypeService.findAnimalTypeById(typeId), HttpStatus.valueOf(200));
+    public ResponseEntity<AnimalTypeDto> findAnimalTypeById(@PathVariable("typeId") @Min(1) Long typeId) {
+        return new ResponseEntity<>(animalTypeService.findAnimalTypeById(typeId),
+                HttpStatus.valueOf(200));
     }
 
     @PostMapping(consumes = "application/json")
-    public ResponseEntity<AnimalType> addAnimalType(@RequestBody @Valid AnimalTypeForm animalTypeForm) {
-        AnimalType animalType = animalTypeForm.toAnimalType();
-        return new ResponseEntity<>(animalTypeService.addAnimalType(animalType), HttpStatus.valueOf(201));
+    public ResponseEntity<AnimalTypeDto> addAnimalType(@RequestBody @Valid AnimalTypeDto animalTypeDto) {
+        return new ResponseEntity<>(animalTypeService.addAnimalType(animalTypeDto),
+                HttpStatus.valueOf(201));
     }
 
     @PutMapping(path = "/{typeId}", consumes = "application/json")
-    public ResponseEntity<AnimalType> updateAnimalTypeById(@PathVariable("typeId") @Min(1) Long typeId,
-                                                           @RequestBody @Valid AnimalTypeForm animalTypeForm) {
-        AnimalType animalType = animalTypeForm.toAnimalType();
-        animalType.setId(typeId);
-        return new ResponseEntity<>(animalTypeService.updateAnimalType(animalType),
+    public ResponseEntity<AnimalTypeDto> updateAnimalType(@PathVariable("typeId") @Min(1) Long typeId,
+                                                          @RequestBody @Valid AnimalTypeDto animalTypeDto) {
+        animalTypeDto.setId(typeId);
+        return new ResponseEntity<>(animalTypeService.updateAnimalType(animalTypeDto),
                 HttpStatus.valueOf(200));
     }
 

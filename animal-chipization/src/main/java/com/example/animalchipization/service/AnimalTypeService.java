@@ -1,14 +1,14 @@
 package com.example.animalchipization.service;
 
-import com.example.animalchipization.model.AnimalType;
+import com.example.animalchipization.web.dto.AnimalTypeDto;
 
 public interface AnimalTypeService {
 
-    AnimalType findAnimalTypeById(Long typeId);
+    AnimalTypeDto findAnimalTypeById(Long typeId);
 
-    AnimalType addAnimalType(AnimalType animalType);
+    AnimalTypeDto addAnimalType(AnimalTypeDto animalTypeDto);
 
-    AnimalType updateAnimalType(AnimalType animalType);
+    AnimalTypeDto updateAnimalType(AnimalTypeDto animalTypeDto);
 
     void deleteAnimalTypeById(Long typeId);
 }
