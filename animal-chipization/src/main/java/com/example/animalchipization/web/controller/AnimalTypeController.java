@@ -30,14 +30,14 @@ public class AnimalTypeController {
     }
 
     @PostMapping(consumes = "application/json")
-    @PreAuthorize("#hasAnyRole({'ADMIN', 'CHIPPER'})")
+    @PreAuthorize("hasAnyRole({'ADMIN', 'CHIPPER'})")
     public ResponseEntity<AnimalTypeDto> addAnimalType(@RequestBody @Valid AnimalTypeDto animalTypeDto) {
         return new ResponseEntity<>(animalTypeService.addAnimalType(animalTypeDto),
                 HttpStatus.valueOf(201));
     }
 
     @PutMapping(path = "/{typeId}", consumes = "application/json")
-    @PreAuthorize("#hasAnyRole({'ADMIN', 'CHIPPER'})")
+    @PreAuthorize("hasAnyRole({'ADMIN', 'CHIPPER'})")
     public ResponseEntity<AnimalTypeDto> updateAnimalType(@PathVariable("typeId") @Min(1) Long typeId,
                                                           @RequestBody @Valid AnimalTypeDto animalTypeDto) {
         animalTypeDto.setId(typeId);
@@ -47,7 +47,7 @@ public class AnimalTypeController {
 
     @DeleteMapping(path = "/{typeId}")
     @ResponseStatus(value = HttpStatus.OK)
-    @PreAuthorize("#hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteAnimalTypeById(@PathVariable("typeId") @Min(1) Long typeId) {
         animalTypeService.deleteAnimalTypeById(typeId);
     }

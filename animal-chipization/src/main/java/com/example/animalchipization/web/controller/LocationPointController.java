@@ -30,7 +30,7 @@ public class LocationPointController {
     }
 
     @PostMapping(consumes = "application/json")
-    @PreAuthorize("#hasAnyRole({'ADMIN', 'CHIPPER'})")
+    @PreAuthorize("hasAnyRole({'ADMIN', 'CHIPPER'})")
     public ResponseEntity<LocationPointDto> addLocationPoint(
             @RequestBody @Valid LocationPointDto locationPointDto) {
 
@@ -39,7 +39,7 @@ public class LocationPointController {
     }
 
     @PutMapping(path = "/{pointId}", consumes = "application/json")
-    @PreAuthorize("#hasAnyRole({'ADMIN', 'CHIPPER'})")
+    @PreAuthorize("hasAnyRole({'ADMIN', 'CHIPPER'})")
     public ResponseEntity<LocationPointDto> updateLocationPoint(
             @PathVariable(name = "pointId") @Min(1) Long pointId,
             @RequestBody @Valid LocationPointDto locationPointDto) {
@@ -51,7 +51,7 @@ public class LocationPointController {
 
     @DeleteMapping(path = "/{pointId}", consumes = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("#hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteLocationPointById(@PathVariable(name = "pointId") @Min(1) Long pointId) {
         locationPointService.deleteLocationPointById(pointId);
     }

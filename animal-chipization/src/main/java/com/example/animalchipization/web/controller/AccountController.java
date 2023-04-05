@@ -32,7 +32,7 @@ public class AccountController {
     }
 
     @GetMapping("/search")
-    @PreAuthorize("#hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Iterable<AccountDto>> searchForAccounts(
             @RequestParam(name = "firstName", required = false) String firstName,
             @RequestParam(name = "lastName", required = false) String lastName,
@@ -46,13 +46,13 @@ public class AccountController {
     }
 
     @PostMapping
-    @PreAuthorize("#hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<AccountDto> addAccount(@RequestBody @Valid AccountDto accountDto) {
         return new ResponseEntity<>(accountService.registry(accountDto), HttpStatus.valueOf(201));
     }
 
     @PutMapping(path = "/{accountId}", consumes = "application/json")
-    @PostAuthorize("#accountId.equals(authentication.principal.getId()) " +
+    @PostAuthorize("accountId.equals(authentication.principal.getId()) " +
             "or hasRole('ADMIN')")
     public ResponseEntity<AccountDto> updateAccount(@PathVariable("accountId") @Min(1) Long accountId,
                                                     @RequestBody @Valid AccountDto accountDto) {
