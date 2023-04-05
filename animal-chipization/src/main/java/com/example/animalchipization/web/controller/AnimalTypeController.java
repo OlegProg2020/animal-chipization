@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,12 +30,14 @@ public class AnimalTypeController {
     }
 
     @PostMapping(consumes = "application/json")
+    @PreAuthorize("#hasAnyRole({'ADMIN', 'CHIPPER'})")
     public ResponseEntity<AnimalTypeDto> addAnimalType(@RequestBody @Valid AnimalTypeDto animalTypeDto) {
         return new ResponseEntity<>(animalTypeService.addAnimalType(animalTypeDto),
                 HttpStatus.valueOf(201));
     }
 
     @PutMapping(path = "/{typeId}", consumes = "application/json")
+    @PreAuthorize("#hasAnyRole({'ADMIN', 'CHIPPER'})")
     public ResponseEntity<AnimalTypeDto> updateAnimalType(@PathVariable("typeId") @Min(1) Long typeId,
                                                           @RequestBody @Valid AnimalTypeDto animalTypeDto) {
         animalTypeDto.setId(typeId);
@@ -44,6 +47,7 @@ public class AnimalTypeController {
 
     @DeleteMapping(path = "/{typeId}")
     @ResponseStatus(value = HttpStatus.OK)
+    @PreAuthorize("#hasRole('ADMIN')")
     public void deleteAnimalTypeById(@PathVariable("typeId") @Min(1) Long typeId) {
         animalTypeService.deleteAnimalTypeById(typeId);
     }

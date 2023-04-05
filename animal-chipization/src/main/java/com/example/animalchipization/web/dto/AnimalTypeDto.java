@@ -6,15 +6,12 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @JsonDeserialize(builder = AnimalTypeDto.Builder.class)
 @Getter
 @NoArgsConstructor
 public class AnimalTypeDto {
 
-    @Min(1)
-    @Setter
     private Long id;
     @NotBlank
     private String type;
@@ -40,4 +37,7 @@ public class AnimalTypeDto {
         }
     }
 
+    public void setId(@Min(1) Long id) {
+        this.id = id;
+    }
 }

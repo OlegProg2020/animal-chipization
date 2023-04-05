@@ -8,15 +8,12 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @JsonDeserialize(builder = AccountDto.Builder.class)
 @Getter
 @NoArgsConstructor
 public class AccountDto {
 
-    @Setter
-    @Min(1)
     private Long id;
     @NotBlank
     private String firstName;
@@ -79,4 +76,7 @@ public class AccountDto {
         }
     }
 
+    public void setId(@Min(1) Long id) {
+        this.id = id;
+    }
 }
