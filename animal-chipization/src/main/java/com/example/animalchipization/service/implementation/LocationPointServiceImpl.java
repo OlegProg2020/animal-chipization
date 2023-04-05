@@ -2,53 +2,57 @@ package com.example.animalchipization.service.implementation;
 
 import com.example.animalchipization.data.repository.LocationPointRepository;
 import com.example.animalchipization.exception.LocationPointWithSuchCoordinatesAlreadyExistsException;
+import com.example.animalchipization.mapper.Mapper;
 import com.example.animalchipization.model.LocationPoint;
 import com.example.animalchipization.service.LocationPointService;
+import com.example.animalchipization.web.dto.LocationPointDto;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 public class LocationPointServiceImpl implements LocationPointService {
 
     private final LocationPointRepository locationPointRepository;
+    private final Mapper<LocationPoint, LocationPointDto> mapper;
 
     @Autowired
-    public LocationPointServiceImpl(LocationPointRepository locationPointRepository) {
+    public LocationPointServiceImpl(LocationPointRepository locationPointRepository,
+                                    Mapper<LocationPoint, LocationPointDto> mapper) {
         this.locationPointRepository = locationPointRepository;
+        this.mapper = mapper;
     }
 
     @Override
-    public LocationPoint findLocationPointById(Long pointId) {
-        Optional<LocationPoint> optionalLocationPoint = locationPointRepository.findById(pointId);
-        if (optionalLocationPoint.isPresent()) {
-            return optionalLocationPoint.get();
-        } else {
-            throw new NoSuchElementException();
-        }
+    public LocationPointDto findLocationPointById(@Min(1) Long pointId) {
+        return mapper.toDto(locationPointRepository.findById(pointId)
+                .orElseThrow(NoSuchElementException::new));
     }
 
     @Override
-    public LocationPoint addLocationPoint(@Valid LocationPoint locationPoint) {
-        if (!locationPointRepository.existsByLatitudeAndLongitudeIs(locationPoint.getLatitude(),
-                locationPoint.getLongitude())) {
-            return locationPointRepository.save(locationPoint);
-        } else {
+    @Transactional
+    public LocationPointDto addLocationPoint(@Valid LocationPointDto locationPointDto) {
+        try {
+            return mapper.toDto(locationPointRepository.save(mapper.toEntity(locationPointDto)));
+        } catch (DataIntegrityViolationException exception) {
             throw new LocationPointWithSuchCoordinatesAlreadyExistsException();
         }
     }
 
     @Override
-    public LocationPoint updateLocationPoint(@Valid LocationPoint locationPoint) {
-        if (locationPointRepository.existsById(locationPoint.getId())) {
-            if (!locationPointRepository.existsByLatitudeAndLongitudeIs(locationPoint.getLatitude(),
-                    locationPoint.getLongitude())) {
-                return locationPointRepository.save(locationPoint);
-            } else {
+    @Transactional
+    public LocationPointDto updateLocationPoint(@Valid LocationPointDto locationPointDto) {
+        LocationPoint updatingLocationPoint = mapper.toEntity(locationPointDto);
+        if (locationPointRepository.existsById(updatingLocationPoint.getId())) {
+            try {
+                return mapper.toDto(locationPointRepository.save(updatingLocationPoint));
+            } catch (DataIntegrityViolationException exception) {
                 throw new LocationPointWithSuchCoordinatesAlreadyExistsException();
             }
         } else {
@@ -57,7 +61,8 @@ public class LocationPointServiceImpl implements LocationPointService {
     }
 
     @Override
-    public void deleteLocationPointById(Long id) {
+    @Transactional
+    public void deleteLocationPointById(@Min(1) Long id) {
         try {
             locationPointRepository.deleteById(id);
         } catch (EmptyResultDataAccessException ignoredException) {

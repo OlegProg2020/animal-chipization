@@ -1,14 +1,14 @@
 package com.example.animalchipization.service;
 
-import com.example.animalchipization.model.LocationPoint;
+import com.example.animalchipization.web.dto.LocationPointDto;
 
 public interface LocationPointService {
 
-    LocationPoint findLocationPointById(Long pointId);
+    LocationPointDto findLocationPointById(Long pointId);
 
-    LocationPoint addLocationPoint(LocationPoint locationPoint);
+    LocationPointDto addLocationPoint(LocationPointDto locationPoint);
 
-    LocationPoint updateLocationPoint(LocationPoint locationPoint);
+    LocationPointDto updateLocationPoint(LocationPointDto locationPoint);
 
     void deleteLocationPointById(Long id);
 }

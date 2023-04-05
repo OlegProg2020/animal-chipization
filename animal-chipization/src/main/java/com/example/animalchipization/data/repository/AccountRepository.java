@@ -10,5 +10,4 @@ import java.util.Optional;
 @Repository
 public interface AccountRepository extends CrudRepository<Account, Long>, JpaSpecificationExecutor<Account> {
     Optional<Account> findByEmail(String email);
-
 }

@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LocationPointRepository extends CrudRepository<LocationPoint, Long> {
-    Boolean existsByLatitudeAndLongitudeIs(Double latitude, Double longitude);
+
 }

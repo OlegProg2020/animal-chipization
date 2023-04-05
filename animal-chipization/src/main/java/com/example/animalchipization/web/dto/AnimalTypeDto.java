@@ -16,12 +16,12 @@ public class AnimalTypeDto {
     @NotBlank
     private String type;
 
-    public static Builder builder() {
-        return new Builder();
-    }
-
     private AnimalTypeDto(Builder builder) {
         this.type = builder.type;
+    }
+
+    public static Builder builder() {
+        return new Builder();
     }
 
     public static class Builder {
