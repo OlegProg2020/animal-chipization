@@ -1,10 +1,8 @@
-package com.example.animalchipization.security;
+package com.example.animalchipization.config;
 
 import com.example.animalchipization.data.repository.AccountRepository;
-import com.example.animalchipization.model.Account;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,8 +10,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
-import java.util.Optional;
 
 @Configuration
 @EnableMethodSecurity
@@ -27,12 +23,8 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService(AccountRepository accountRepository) {
         return email -> {
-            Optional<Account> optionalAccount = accountRepository.findByEmail(email);
-            if (optionalAccount.isPresent()) {
-                return optionalAccount.get();
-            } else {
-                throw new UsernameNotFoundException("User '" + email + "' not found");
-            }
+            return accountRepository.findByEmail(email)
+                    .orElseThrow(() -> new UsernameNotFoundException("User '" + email + "' not found"));
         };
     }
 

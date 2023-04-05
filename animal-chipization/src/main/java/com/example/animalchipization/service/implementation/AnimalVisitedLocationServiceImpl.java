@@ -20,9 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 import static com.example.animalchipization.data.specification.AnimalVisitedLocationSpecification.*;
 

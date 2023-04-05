@@ -2,18 +2,23 @@ package com.example.animalchipization.service.implementation;
 
 import com.example.animalchipization.data.repository.AccountRepository;
 import com.example.animalchipization.exception.AccountWithSuchEmailAlreadyExistsException;
+import com.example.animalchipization.mapper.Mapper;
 import com.example.animalchipization.model.Account;
 import com.example.animalchipization.service.AccountService;
 import com.example.animalchipization.util.OffsetBasedPageRequest;
+import com.example.animalchipization.web.dto.AccountDto;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 import static com.example.animalchipization.data.specification.AccountSpecification.*;
 
@@ -22,54 +27,61 @@ public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
+    private final Mapper<Account, AccountDto> mapper;
 
     @Autowired
-    public AccountServiceImpl(AccountRepository accountRepository, PasswordEncoder passwordEncoder) {
+    public AccountServiceImpl(AccountRepository accountRepository, PasswordEncoder passwordEncoder,
+                              Mapper<Account, AccountDto> mapper) {
         this.accountRepository = accountRepository;
         this.passwordEncoder = passwordEncoder;
+        this.mapper = mapper;
     }
 
     @Override
-    public Account findAccountById(Long accountId) {
-        return accountRepository.findById(accountId).orElseThrow(NoSuchElementException::new);
+    public AccountDto findAccountById(@Min(1) Long accountId) {
+        return mapper.toDto(accountRepository.findById(accountId).orElseThrow(NoSuchElementException::new));
     }
 
     @Override
-    public Iterable<Account> searchForAccounts(String firstName, String lastName,
-                                               String email, Integer from, Integer size) {
+    public Iterable<AccountDto> searchForAccounts(String firstName, String lastName,
+                                                  String email, @Min(0) Integer from, @Min(1) Integer size) {
         OffsetBasedPageRequest pageRequest =
                 new OffsetBasedPageRequest(from, size, Sort.by("id").ascending());
         Specification<Account> specifications = Specification.where(
                 firstNameLike(firstName).and(lastNameLike(lastName)).and(emailLike(email)));
-        return accountRepository.findAll(specifications, pageRequest).getContent();
+        return accountRepository.findAll(specifications, pageRequest).getContent()
+                .stream().map(account -> mapper.toDto(account))
+                .collect(Collectors.toList());
     }
 
     @Override
-    @PreAuthorize("#account.id.equals(authentication.principal.getId())")
-    public Account updateAccount(Account account) {
-        Account currentAccountDetails = accountRepository.findById(account.getId())
-                .orElseThrow(NoSuchElementException::new);
-        if (currentAccountDetails.getEmail().equals(account.getEmail())
-                || !accountRepository.existsByEmail(account.getEmail())) {
-            return accountRepository.save(account);
-        } else {
+    @Transactional
+    public AccountDto updateAccount(@Valid AccountDto accountDto) {
+        Account updatingAccount = mapper.toEntity(accountDto);
+        updatingAccount.setPassword(passwordEncoder.encode(updatingAccount.getPassword()));
+        try {
+            return mapper.toDto(accountRepository.save(updatingAccount));
+        } catch (DataIntegrityViolationException exception) {
             throw new AccountWithSuchEmailAlreadyExistsException();
         }
     }
 
     @Override
-    @PreAuthorize("#accountId.equals(authentication.principal.getId())")
-    public void deleteAccountById(Long accountId) {
+    @Transactional
+    public void deleteAccountById(@Min(1) Long accountId) {
         accountRepository.deleteById(accountId);
     }
 
     @Override
-    public Account registry(@Valid Account account) {
-        if (!accountRepository.existsByEmail(account.getEmail())) {
-            account.setPassword(passwordEncoder.encode(account.getPassword()));
-            return accountRepository.save(account);
-        } else {
+    @Transactional
+    public AccountDto registry(@Valid AccountDto accountDto) {
+        Account newAccount = mapper.toEntity(accountDto);
+        newAccount.setPassword(passwordEncoder.encode(newAccount.getPassword()));
+        try {
+            return mapper.toDto(accountRepository.save(newAccount));
+        } catch (DataIntegrityViolationException exception) {
             throw new AccountWithSuchEmailAlreadyExistsException();
         }
     }
+
 }

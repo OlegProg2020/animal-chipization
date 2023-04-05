@@ -1,16 +1,16 @@
 package com.example.animalchipization.service;
 
-import com.example.animalchipization.model.Account;
+import com.example.animalchipization.web.dto.AccountDto;
 
 public interface AccountService {
 
-    Account findAccountById(Long accountId);
+    AccountDto findAccountById(Long accountId);
 
-    Iterable<Account> searchForAccounts(String firstName, String lastName, String email, Integer from, Integer size);
+    Iterable<AccountDto> searchForAccounts(String firstName, String lastName, String email, Integer from, Integer size);
 
-    Account updateAccount(Account account);
+    AccountDto updateAccount(AccountDto accountDto);
 
     void deleteAccountById(Long accountId);
 
-    Account registry(Account account);
+    AccountDto registry(AccountDto accountDto);
 }

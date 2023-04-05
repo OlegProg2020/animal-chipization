@@ -12,7 +12,6 @@ import com.example.animalchipization.service.AnimalService;
 import com.example.animalchipization.util.OffsetBasedPageRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;

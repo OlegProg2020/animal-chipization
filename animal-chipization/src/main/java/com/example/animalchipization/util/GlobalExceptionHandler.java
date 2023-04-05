@@ -1,6 +1,9 @@
 package com.example.animalchipization.util;
 
-import com.example.animalchipization.exception.*;
+import com.example.animalchipization.exception.AccountWithSuchEmailAlreadyExistsException;
+import com.example.animalchipization.exception.AnimalTypeWithSuchTypeAlreadyExistsException;
+import com.example.animalchipization.exception.DuplicateCollectionItemException;
+import com.example.animalchipization.exception.LocationPointWithSuchCoordinatesAlreadyExistsException;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.ValidationException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -71,5 +74,4 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> onDataIntegrityViolationException(DataIntegrityViolationException exception) {
         return new ResponseEntity<>(HttpStatus.valueOf(400));
     }
-
 }
