@@ -1,4 +1,4 @@
-package com.example.animalchipization.model;
+package com.example.animalchipization.entity;
 
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;

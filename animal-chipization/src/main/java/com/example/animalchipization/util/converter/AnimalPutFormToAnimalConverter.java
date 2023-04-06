@@ -2,9 +2,9 @@ package com.example.animalchipization.util.converter;
 
 import com.example.animalchipization.data.repository.AccountRepository;
 import com.example.animalchipization.data.repository.LocationPointRepository;
-import com.example.animalchipization.model.Account;
-import com.example.animalchipization.model.Animal;
-import com.example.animalchipization.model.LocationPoint;
+import com.example.animalchipization.entity.Account;
+import com.example.animalchipization.entity.Animal;
+import com.example.animalchipization.entity.LocationPoint;
 import com.example.animalchipization.web.form.AnimalPutForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;

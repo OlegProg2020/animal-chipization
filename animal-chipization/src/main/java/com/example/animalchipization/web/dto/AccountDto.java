@@ -1,6 +1,6 @@
 package com.example.animalchipization.web.dto;
 
-import com.example.animalchipization.model.enums.Role;
+import com.example.animalchipization.entity.enums.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.validation.constraints.Email;

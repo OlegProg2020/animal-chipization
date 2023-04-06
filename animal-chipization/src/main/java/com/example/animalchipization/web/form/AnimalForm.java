@@ -1,6 +1,6 @@
 package com.example.animalchipization.web.form;
 
-import com.example.animalchipization.model.enums.Gender;
+import com.example.animalchipization.entity.enums.Gender;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
@@ -35,5 +35,6 @@ public class AnimalForm {
     @NotNull
     @Min(1)
     private Long chippingLocationId;
+
 
 }

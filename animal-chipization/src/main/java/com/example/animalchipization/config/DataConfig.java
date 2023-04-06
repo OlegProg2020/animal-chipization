@@ -1,6 +1,6 @@
 package com.example.animalchipization.config;
 
-import com.example.animalchipization.model.enums.Role;
+import com.example.animalchipization.entity.enums.Role;
 import com.example.animalchipization.service.AccountService;
 import com.example.animalchipization.web.dto.AccountDto;
 import org.springframework.boot.ApplicationRunner;

@@ -1,6 +1,6 @@
 package com.example.animalchipization.data.repository;
 
-import com.example.animalchipization.model.Animal;
+import com.example.animalchipization.entity.Animal;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

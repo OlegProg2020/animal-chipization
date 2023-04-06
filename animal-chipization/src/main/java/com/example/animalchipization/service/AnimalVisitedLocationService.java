@@ -1,6 +1,6 @@
 package com.example.animalchipization.service;
 
-import com.example.animalchipization.model.AnimalVisitedLocation;
+import com.example.animalchipization.entity.AnimalVisitedLocation;
 
 import java.time.LocalDateTime;
 

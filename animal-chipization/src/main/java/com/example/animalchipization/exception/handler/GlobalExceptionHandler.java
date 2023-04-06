@@ -1,4 +1,4 @@
-package com.example.animalchipization.util;
+package com.example.animalchipization.exception.handler;
 
 import com.example.animalchipization.exception.AccountWithSuchEmailAlreadyExistsException;
 import com.example.animalchipization.exception.AnimalTypeWithSuchTypeAlreadyExistsException;
@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<?> onConstraintViolationException(NoSuchElementException exception) {
+    public ResponseEntity<?> onNoSuchElementException(NoSuchElementException exception) {
         return new ResponseEntity<>(HttpStatus.valueOf(404));
     }
 

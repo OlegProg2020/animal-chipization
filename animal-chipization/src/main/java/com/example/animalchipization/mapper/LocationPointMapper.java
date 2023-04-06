@@ -1,6 +1,6 @@
 package com.example.animalchipization.mapper;
 
-import com.example.animalchipization.model.LocationPoint;
+import com.example.animalchipization.entity.LocationPoint;
 import com.example.animalchipization.web.dto.LocationPointDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

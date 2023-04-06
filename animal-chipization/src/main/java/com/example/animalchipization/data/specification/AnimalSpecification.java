@@ -1,8 +1,8 @@
 package com.example.animalchipization.data.specification;
 
-import com.example.animalchipization.model.Animal;
-import com.example.animalchipization.model.enums.Gender;
-import com.example.animalchipization.model.enums.LifeStatus;
+import com.example.animalchipization.entity.Animal;
+import com.example.animalchipization.entity.enums.Gender;
+import com.example.animalchipization.entity.enums.LifeStatus;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.ZonedDateTime;

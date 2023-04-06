@@ -1,6 +1,6 @@
 package com.example.animalchipization.data.specification;
 
-import com.example.animalchipization.model.AnimalVisitedLocation;
+import com.example.animalchipization.entity.AnimalVisitedLocation;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDateTime;

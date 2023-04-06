@@ -1,6 +1,6 @@
 package com.example.animalchipization.mapper;
 
-import com.example.animalchipization.model.Account;
+import com.example.animalchipization.entity.Account;
 import com.example.animalchipization.web.dto.AccountDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

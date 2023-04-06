@@ -10,10 +10,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AnimalVisitedLocationPutForm {
-    @NotNull
     @Min(1)
     private Long visitedLocationPointId;
-    @NotNull
     @Min(1)
     private Long locationPointId;
 }

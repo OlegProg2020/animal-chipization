@@ -1,7 +1,7 @@
 package com.example.animalchipization.web.form;
 
-import com.example.animalchipization.model.enums.Gender;
-import com.example.animalchipization.model.enums.LifeStatus;
+import com.example.animalchipization.entity.enums.Gender;
+import com.example.animalchipization.entity.enums.LifeStatus;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;

@@ -1,6 +1,6 @@
-package com.example.animalchipization.model;
+package com.example.animalchipization.entity;
 
-import com.example.animalchipization.model.enums.Role;
+import com.example.animalchipization.entity.enums.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;

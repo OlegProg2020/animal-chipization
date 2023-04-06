@@ -1,4 +1,4 @@
-package com.example.animalchipization.model;
+package com.example.animalchipization.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonGetter;
@@ -10,38 +10,25 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 
 @Entity
-@NoArgsConstructor
 @Getter
 @Setter
 @EqualsAndHashCode
+@NoArgsConstructor
 public class AnimalVisitedLocation {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private ZonedDateTime dateTimeOfVisitLocationPoint = ZonedDateTime.now().truncatedTo(ChronoUnit.SECONDS);
-    @OneToOne
-    @JsonProperty("locationPointId")
-    @NotNull
+    @ManyToOne(optional = false)
     private LocationPoint locationPoint;
-
-    @JsonGetter("locationPointId")
-    public Long getLocationPointId() {
-        return this.locationPoint.getId();
-    }
-
-    @ManyToOne
-    @JsonIgnore
-    @JsonBackReference
-    @JoinColumn(name = "animal_id")
+    @ManyToOne(optional = false)
     private Animal animal;
 
-    public AnimalVisitedLocation(Animal animal, LocationPoint locationPoint) {
-        this.animal = animal;
-        this.locationPoint = locationPoint;
-    }
 }

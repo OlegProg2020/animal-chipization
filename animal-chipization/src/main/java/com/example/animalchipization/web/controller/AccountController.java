@@ -52,7 +52,7 @@ public class AccountController {
     }
 
     @PutMapping(path = "/{accountId}", consumes = "application/json")
-    @PostAuthorize("accountId.equals(authentication.principal.getId()) " +
+    @PostAuthorize("#accountId.equals(authentication.principal.getId()) " +
             "or hasRole('ADMIN')")
     public ResponseEntity<AccountDto> updateAccount(@PathVariable("accountId") @Min(1) Long accountId,
                                                     @RequestBody @Valid AccountDto accountDto) {

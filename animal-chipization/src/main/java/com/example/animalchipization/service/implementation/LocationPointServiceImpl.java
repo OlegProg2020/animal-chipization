@@ -3,7 +3,7 @@ package com.example.animalchipization.service.implementation;
 import com.example.animalchipization.data.repository.LocationPointRepository;
 import com.example.animalchipization.exception.LocationPointWithSuchCoordinatesAlreadyExistsException;
 import com.example.animalchipization.mapper.Mapper;
-import com.example.animalchipization.model.LocationPoint;
+import com.example.animalchipization.entity.LocationPoint;
 import com.example.animalchipization.service.LocationPointService;
 import com.example.animalchipization.web.dto.LocationPointDto;
 import jakarta.validation.Valid;
