@@ -2,7 +2,6 @@ package com.example.animalchipization.web.controller;
 
 import com.example.animalchipization.entity.AnimalVisitedLocation;
 import com.example.animalchipization.service.AnimalVisitedLocationService;
-import com.example.animalchipization.web.form.AnimalVisitedLocationForm;
 import com.example.animalchipization.web.form.AnimalVisitedLocationPutForm;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;

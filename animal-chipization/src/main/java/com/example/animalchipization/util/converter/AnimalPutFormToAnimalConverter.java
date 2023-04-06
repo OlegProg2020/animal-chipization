@@ -5,7 +5,6 @@ import com.example.animalchipization.data.repository.LocationPointRepository;
 import com.example.animalchipization.entity.Account;
 import com.example.animalchipization.entity.Animal;
 import com.example.animalchipization.entity.LocationPoint;
-import com.example.animalchipization.web.form.AnimalPutForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;

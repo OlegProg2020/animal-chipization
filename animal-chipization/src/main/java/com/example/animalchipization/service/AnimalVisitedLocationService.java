@@ -1,6 +1,7 @@
 package com.example.animalchipization.service;
 
 import com.example.animalchipization.entity.AnimalVisitedLocation;
+import com.example.animalchipization.web.dto.AnimalVisitedLocationDto;
 
 import java.time.LocalDateTime;
 
@@ -15,4 +16,6 @@ public interface AnimalVisitedLocationService {
     AnimalVisitedLocation updateAnimalVisitedLocation(Long animalId, Long visitedLocationPointId, Long locationPointId);
 
     void deleteAnimalVisitedLocation(Long animalId, Long pointId);
+
+    AnimalVisitedLocationDto findById(Long id);
 }

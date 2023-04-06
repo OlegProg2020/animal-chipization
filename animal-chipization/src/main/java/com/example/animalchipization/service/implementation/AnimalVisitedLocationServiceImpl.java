@@ -10,8 +10,10 @@ import com.example.animalchipization.entity.Animal;
 import com.example.animalchipization.entity.AnimalVisitedLocation;
 import com.example.animalchipization.entity.LocationPoint;
 import com.example.animalchipization.entity.enums.LifeStatus;
+import com.example.animalchipization.mapper.Mapper;
 import com.example.animalchipization.service.AnimalVisitedLocationService;
 import com.example.animalchipization.util.OffsetBasedPageRequest;
+import com.example.animalchipization.web.dto.AnimalVisitedLocationDto;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -30,12 +32,19 @@ public class AnimalVisitedLocationServiceImpl implements AnimalVisitedLocationSe
     private final AnimalRepository animalRepository;
     private final AnimalVisitedLocationRepository animalVisitedLocationRepository;
     private final LocationPointRepository locationPointRepository;
+    private final Mapper<AnimalVisitedLocation, AnimalVisitedLocationDto> mapper;
 
     @Autowired
-    public AnimalVisitedLocationServiceImpl(AnimalRepository animalRepository, AnimalVisitedLocationRepository animalVisitedLocationRepository, LocationPointRepository locationPointRepository) {
+    public AnimalVisitedLocationServiceImpl(
+            AnimalRepository animalRepository,
+            AnimalVisitedLocationRepository animalVisitedLocationRepository,
+            LocationPointRepository locationPointRepository,
+            Mapper<AnimalVisitedLocation, AnimalVisitedLocationDto> mapper) {
+
         this.animalRepository = animalRepository;
         this.animalVisitedLocationRepository = animalVisitedLocationRepository;
         this.locationPointRepository = locationPointRepository;
+        this.mapper = mapper;
     }
 
     @Override
@@ -130,6 +139,11 @@ public class AnimalVisitedLocationServiceImpl implements AnimalVisitedLocationSe
             animalVisitedLocationRepository.delete(visitedLocations.get(1));
         }
         animalVisitedLocationRepository.delete(visitedLocationPoint);
+    }
+
+    public AnimalVisitedLocationDto findById(Long id) {
+        return mapper.toDto(animalVisitedLocationRepository.findById(id)
+                .orElseThrow(NoSuchElementException::new));
     }
 
 }

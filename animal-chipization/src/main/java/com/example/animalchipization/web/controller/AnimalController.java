@@ -3,9 +3,9 @@ package com.example.animalchipization.web.controller;
 import com.example.animalchipization.entity.Animal;
 import com.example.animalchipization.entity.enums.Gender;
 import com.example.animalchipization.entity.enums.LifeStatus;
+import com.example.animalchipization.mapper.Mapper;
 import com.example.animalchipization.service.AnimalService;
-import com.example.animalchipization.web.form.AnimalForm;
-import com.example.animalchipization.web.form.AnimalPutForm;
+import com.example.animalchipization.web.dto.AnimalDto;
 import com.example.animalchipization.web.form.AnimalTypePutForm;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -24,16 +24,13 @@ import java.time.ZonedDateTime;
 public class AnimalController {
 
     private final AnimalService animalService;
-    private final Converter<AnimalForm, Animal> animalFormToAnimalConverter;
-    private final Converter<AnimalPutForm, Animal> animalPutFormToAnimalConverter;
+    private final Mapper<Animal, AnimalDto> mapper;
 
     @Autowired
     public AnimalController(AnimalService animalService,
-                            Converter<AnimalForm, Animal> animalFormToAnimalConverter,
-                            Converter<AnimalPutForm, Animal> animalPutFormToAnimalConverter) {
+                            Mapper<Animal, AnimalDto> mapper) {
         this.animalService = animalService;
-        this.animalFormToAnimalConverter = animalFormToAnimalConverter;
-        this.animalPutFormToAnimalConverter = animalPutFormToAnimalConverter;
+        this.mapper = mapper;
     }
 
     @GetMapping("/{animalId}")

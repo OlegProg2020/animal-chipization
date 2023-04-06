@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.validation.constraints.Min;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.ZonedDateTime;
 
@@ -17,6 +18,7 @@ import java.time.ZonedDateTime;
 public class AnimalVisitedLocationDto {
 
     private Long id;
+    @Setter
     private ZonedDateTime dateTimeOfVisitLocationPoint;
     @Min(1)
     private Long locationPointId;
@@ -29,7 +31,7 @@ public class AnimalVisitedLocationDto {
         this.animalId = builder.animalId;
     }
 
-    public Builder builder() {
+    public static Builder builder() {
         return new Builder();
     }
 

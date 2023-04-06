@@ -1,5 +1,6 @@
 package com.example.animalchipization.service;
 
+import com.example.animalchipization.entity.LocationPoint;
 import com.example.animalchipization.web.dto.LocationPointDto;
 
 public interface LocationPointService {
@@ -11,4 +12,5 @@ public interface LocationPointService {
     LocationPointDto updateLocationPoint(LocationPointDto locationPoint);
 
     void deleteLocationPointById(Long id);
+
 }

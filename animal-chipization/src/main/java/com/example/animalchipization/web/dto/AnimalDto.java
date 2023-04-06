@@ -52,7 +52,7 @@ public class AnimalDto {
         this.chippingLocationId = builder.chippingLocationId;
     }
 
-    public Builder builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
