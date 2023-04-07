@@ -53,7 +53,7 @@ public class AnimalVisitedLocationDtoToAnimalVisitedLocationConverter
         );
         entity.setAnimal(
                 animalMapper.toEntity(
-                        animalService.findAnimalById(dto.getAnimalId())
+                        animalService.findById(dto.getAnimalId())
                 )
         );
         return entity;

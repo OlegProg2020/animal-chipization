@@ -10,7 +10,6 @@ import com.example.animalchipization.web.form.AnimalTypePutForm;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -35,7 +34,7 @@ public class AnimalController {
 
     @GetMapping("/{animalId}")
     public ResponseEntity<Animal> animalById(@PathVariable("animalId") @Min(1) Long animalId) {
-        return new ResponseEntity<>(animalService.findAnimalById(animalId), HttpStatus.valueOf(200));
+        return new ResponseEntity<>(animalService.findById(animalId), HttpStatus.valueOf(200));
     }
 
     @GetMapping("/search")

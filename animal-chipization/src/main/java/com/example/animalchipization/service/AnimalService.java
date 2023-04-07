@@ -3,18 +3,24 @@ package com.example.animalchipization.service;
 import com.example.animalchipization.entity.Animal;
 import com.example.animalchipization.entity.enums.Gender;
 import com.example.animalchipization.entity.enums.LifeStatus;
+import com.example.animalchipization.web.dto.AnimalDto;
 
 import java.time.ZonedDateTime;
+import java.util.Collection;
 
 public interface AnimalService {
 
-    Animal findAnimalById(Long animalId);
+    AnimalDto findById(Long animalId);
 
-    Iterable<Animal> searchForAnimals(ZonedDateTime startDateTime, ZonedDateTime endDateTime,
-                                      Long chipperId, Long chippingLocationId, LifeStatus lifeStatus,
-                                      Gender gender, Integer from, Integer size);
+    Collection<AnimalDto> searchForAnimals(ZonedDateTime startDateTime, ZonedDateTime endDateTime,
+                                           Long chipperId, Long chippingLocationId, LifeStatus lifeStatus,
+                                           Gender gender, Integer from, Integer size);
 
-    Animal addAnimal(Animal animal);
+    AnimalDto addAnimal(AnimalDto animalDto);
+
+    Animal updateAnimal(Long animalId, Animal newAnimalDetails);
+
+    void deleteAnimalById(Long animalId);
 
     Animal addTypeToAnimal(Long animalId, Long typeId);
 
@@ -22,7 +28,4 @@ public interface AnimalService {
 
     Animal deleteTypeOfAnimal(Long animalId, Long typeId);
 
-    Animal updateAnimal(Long animalId, Animal newAnimalDetails);
-
-    void deleteAnimalById(Long animalId);
 }

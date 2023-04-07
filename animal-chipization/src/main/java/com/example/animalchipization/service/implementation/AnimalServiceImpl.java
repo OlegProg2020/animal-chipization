@@ -2,55 +2,67 @@ package com.example.animalchipization.service.implementation;
 
 import com.example.animalchipization.data.repository.AnimalRepository;
 import com.example.animalchipization.data.repository.AnimalTypeRepository;
-import com.example.animalchipization.exception.*;
 import com.example.animalchipization.entity.Animal;
 import com.example.animalchipization.entity.AnimalType;
 import com.example.animalchipization.entity.AnimalVisitedLocation;
 import com.example.animalchipization.entity.enums.Gender;
 import com.example.animalchipization.entity.enums.LifeStatus;
+import com.example.animalchipization.exception.*;
+import com.example.animalchipization.mapper.Mapper;
 import com.example.animalchipization.service.AnimalService;
+import com.example.animalchipization.util.AnimalUtils;
 import com.example.animalchipization.util.OffsetBasedPageRequest;
+import com.example.animalchipization.web.dto.AnimalDto;
 import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
+import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
-import java.util.List;
+import java.time.temporal.ChronoUnit;
+import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.example.animalchipization.data.specification.AnimalSpecification.*;
 
 @Service
 public class AnimalServiceImpl implements AnimalService {
 
+    private final AnimalUtils animalUtils;
     private final AnimalRepository animalRepository;
     private final AnimalTypeRepository animalTypeRepository;
+    private final Mapper<Animal, AnimalDto> animalMapper;
 
     @Autowired
-    public AnimalServiceImpl(AnimalRepository animalRepository, AnimalTypeRepository animalTypeRepository) {
+    public AnimalServiceImpl(AnimalUtils animalUtils,
+                             AnimalRepository animalRepository,
+                             AnimalTypeRepository animalTypeRepository,
+                             Mapper<Animal, AnimalDto> animalMapper) {
+        this.animalUtils = animalUtils;
         this.animalRepository = animalRepository;
         this.animalTypeRepository = animalTypeRepository;
+        this.animalMapper = animalMapper;
     }
 
     @Override
-    public Animal findAnimalById(Long animalId) {
-        Optional<Animal> optionalAnimal = animalRepository.findById(animalId);
-        if (optionalAnimal.isPresent()) {
-            return optionalAnimal.get();
-        } else {
-            throw new NoSuchElementException();
-        }
+    public AnimalDto findById(@Min(1) Long animalId) {
+        return animalMapper.toDto(animalRepository.findById(animalId)
+                .orElseThrow(NoSuchElementException::new));
     }
 
     @Override
-    public Iterable<Animal> searchForAnimals(ZonedDateTime startDateTime, ZonedDateTime endDateTime,
-                                             Long chipperId, Long chippingLocationId, LifeStatus lifeStatus,
-                                             Gender gender, Integer from, Integer size) {
+    public Collection<AnimalDto> searchForAnimals(ZonedDateTime startDateTime, ZonedDateTime endDateTime,
+                                                  Long chipperId, Long chippingLocationId, LifeStatus lifeStatus,
+                                                  Gender gender, Integer from, Integer size) {
 
-        OffsetBasedPageRequest pageRequest = new OffsetBasedPageRequest(from, size, Sort.by("id").ascending());
+        OffsetBasedPageRequest pageRequest = new OffsetBasedPageRequest(
+                from, size, Sort.by("id").ascending());
         Specification<Animal> specifications = Specification.where(
                 hasChippingDateTimeGreaterThanOrEqualTo(startDateTime)
                         .and(hasChippingDateTimeLessThanOrEqualTo(endDateTime))
@@ -59,12 +71,20 @@ public class AnimalServiceImpl implements AnimalService {
                         .and(hasLifeStatus(lifeStatus))
                         .and(hasGender(gender))
         );
-        return animalRepository.findAll(specifications, pageRequest).getContent();
+        return animalRepository.findAll(specifications, pageRequest).getContent().stream()
+                .map(animalMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
-    public Animal addAnimal(@Valid Animal animal) {
-        return animalRepository.save(animal);
+    @Transactional
+    public AnimalDto addAnimal(@Valid AnimalDto animalDto) {
+        Animal animal = animalMapper.toEntity(animalDto);
+        if (animal.getAnimalTypes().isEmpty()) {
+            throw new ValidationException();
+        }
+        animal.setLifeStatus(LifeStatus.ALIVE);
+        animal.setChippingDateTime(ZonedDateTime.now().truncatedTo(ChronoUnit.SECONDS));
+        return animalMapper.toDto(animalRepository.save(animal));
     }
 
     @Override
@@ -96,18 +116,15 @@ public class AnimalServiceImpl implements AnimalService {
         return animalRepository.save(oldAnimalDetails);
     }
 
-    public void deleteAnimalById(Long animalId) {
-        Animal animal = animalRepository.findById(animalId)
-                .orElseThrow(NoSuchElementException::new);
-        List<AnimalVisitedLocation> visitedLocations = animal.getVisitedLocations();
-        if (!visitedLocations.isEmpty()) {
-            int visitedLocationsSize = visitedLocations.size();
-            AnimalVisitedLocation lastVisitedLocation = visitedLocations.get(visitedLocationsSize - 1);
-            if (!lastVisitedLocation.getLocationPoint().equals(animal.getChippingLocation())) {
-                throw new AttemptToRemoveAnimalNotAtTheChippingPointException();
-            }
+    @Override
+    @Transactional
+    public void deleteAnimalById(@Min(1) Long animalId) {
+        Animal animal = animalRepository.findById(animalId).orElseThrow(NoSuchElementException::new);
+        if (animalUtils.checkAnimalAtChippingLocation(animalMapper.toDto(animal))) {
+            animalRepository.delete(animal);
+        } else {
+            throw new AttemptToRemoveAnimalNotAtTheChippingPointException();
         }
-        animalRepository.delete(animal);
     }
 
     @Override

@@ -1,9 +1,9 @@
 package com.example.animalchipization.service.implementation;
 
 import com.example.animalchipization.data.repository.AnimalTypeRepository;
+import com.example.animalchipization.entity.AnimalType;
 import com.example.animalchipization.exception.AnimalTypeWithSuchTypeAlreadyExistsException;
 import com.example.animalchipization.mapper.Mapper;
-import com.example.animalchipization.entity.AnimalType;
 import com.example.animalchipization.service.AnimalTypeService;
 import com.example.animalchipization.web.dto.AnimalTypeDto;
 import jakarta.validation.Valid;

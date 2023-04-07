@@ -4,10 +4,8 @@ import com.example.animalchipization.entity.enums.Gender;
 import com.example.animalchipization.entity.enums.LifeStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import jakarta.persistence.OrderBy;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,10 +22,8 @@ import java.util.Set;
 @NoArgsConstructor
 public class AnimalDto {
 
-    // TODO @Min(1) нужно перенести в сервисный слой
     @Setter
     private Long id;
-    // TODO @NotEmpty нужно перенести в сервисный слой
     private Set<@Min(1) Long> animalTypes = new HashSet<>();
     @DecimalMin(value = "0", inclusive = false)
     private Float weight;
