@@ -2,6 +2,7 @@ package com.example.animalchipization.web.dto;
 
 import com.example.animalchipization.entity.enums.Gender;
 import com.example.animalchipization.entity.enums.LifeStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.persistence.OrderBy;
 import jakarta.validation.constraints.DecimalMin;
@@ -10,6 +11,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -22,8 +24,10 @@ import java.util.Set;
 @NoArgsConstructor
 public class AnimalDto {
 
+    // TODO @Min(1) нужно перенести в сервисный слой
+    @Setter
     private Long id;
-    @NotEmpty
+    // TODO @NotEmpty нужно перенести в сервисный слой
     private Set<@Min(1) Long> animalTypes = new HashSet<>();
     @DecimalMin(value = "0", inclusive = false)
     private Float weight;
@@ -34,22 +38,27 @@ public class AnimalDto {
     @NotNull
     private Gender gender;
     private LifeStatus lifeStatus;
+    private ZonedDateTime chippingDateTime;
     @Min(1)
     private Long chipperId;
     @Min(1)
     private Long chippingLocationId;
-    private List<Long> visitedLocations = new ArrayList<>();
+    private List<@Min(1) Long> visitedLocations = new ArrayList<>();
     private ZonedDateTime deathDateTime;
 
     private AnimalDto(Builder builder) {
+        this.id = builder.id;
         this.animalTypes = builder.animalTypes;
         this.weight = builder.weight;
         this.length = builder.length;
         this.height = builder.height;
         this.gender = builder.gender;
         this.lifeStatus = builder.lifeStatus;
+        this.chippingDateTime = builder.chippingDateTime;
         this.chipperId = builder.chipperId;
         this.chippingLocationId = builder.chippingLocationId;
+        this.visitedLocations = builder.visitedLocations;
+        this.deathDateTime = builder.deathDateTime;
     }
 
     public static Builder builder() {
@@ -57,14 +66,24 @@ public class AnimalDto {
     }
 
     public static class Builder {
-        private Set<Long> animalTypes;
+        private Long id;
+        private Set<Long> animalTypes = new HashSet<>();
         private Float weight;
         private Float length;
         private Float height;
         private Gender gender;
         private LifeStatus lifeStatus;
+        private ZonedDateTime chippingDateTime;
         private Long chipperId;
         private Long chippingLocationId;
+        private List<Long> visitedLocations = new ArrayList<>();
+        private ZonedDateTime deathDateTime;
+
+        @JsonIgnore
+        public Builder withId(Long id) {
+            this.id = id;
+            return this;
+        }
 
         public Builder withAnimalTypes(Set<Long> animalTypes) {
             this.animalTypes = animalTypes;
@@ -91,8 +110,14 @@ public class AnimalDto {
             return this;
         }
 
-        public Builder withLifeStatus(@NotNull LifeStatus lifeStatus) {
+        public Builder withLifeStatus(LifeStatus lifeStatus) {
             this.lifeStatus = lifeStatus;
+            return this;
+        }
+
+        @JsonIgnore
+        public Builder withChippingDateTime(ZonedDateTime chippingDateTime) {
+            this.chippingDateTime = chippingDateTime;
             return this;
         }
 
@@ -106,13 +131,21 @@ public class AnimalDto {
             return this;
         }
 
+        @JsonIgnore
+        public Builder withVisitedLocations(List<Long> visitedLocations) {
+            this.visitedLocations = visitedLocations;
+            return this;
+        }
+
+        @JsonIgnore
+        public Builder withDeathDateTime(ZonedDateTime deathDateTime) {
+            this.deathDateTime = deathDateTime;
+            return this;
+        }
+
         public AnimalDto build() {
             return new AnimalDto(this);
         }
-    }
-
-    public void setId(@Min(1) Long id) {
-        this.id = id;
     }
 
 }

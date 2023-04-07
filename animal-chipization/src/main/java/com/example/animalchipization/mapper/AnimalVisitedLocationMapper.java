@@ -13,7 +13,7 @@ public class AnimalVisitedLocationMapper extends DefaultMapper<AnimalVisitedLoca
 
     private final ModelMapper mapper;
     private final Converter<AnimalVisitedLocation, AnimalVisitedLocationDto> entityToDtoConverter;
-    private final Converter<AnimalVisitedLocationDto, AnimalVisitedLocation> DtoToEntityConverter;
+    private final Converter<AnimalVisitedLocationDto, AnimalVisitedLocation> dtoToEntityConverter;
 
     @Autowired
     public AnimalVisitedLocationMapper(
@@ -24,7 +24,7 @@ public class AnimalVisitedLocationMapper extends DefaultMapper<AnimalVisitedLoca
         super(mapper, AnimalVisitedLocation.class, AnimalVisitedLocationDto.class);
         this.mapper = mapper;
         this.entityToDtoConverter = entityToDtoConverter;
-        this.DtoToEntityConverter = DtoToEntityConverter;
+        this.dtoToEntityConverter = DtoToEntityConverter;
     }
 
     @PostConstruct
@@ -32,6 +32,6 @@ public class AnimalVisitedLocationMapper extends DefaultMapper<AnimalVisitedLoca
         mapper.createTypeMap(AnimalVisitedLocation.class, AnimalVisitedLocationDto.class)
                 .setConverter(entityToDtoConverter);
         mapper.createTypeMap(AnimalVisitedLocationDto.class, AnimalVisitedLocation.class)
-                .setConverter(DtoToEntityConverter);
+                .setConverter(dtoToEntityConverter);
     }
 }

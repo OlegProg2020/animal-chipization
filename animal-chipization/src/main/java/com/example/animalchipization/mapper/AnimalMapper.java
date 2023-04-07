@@ -2,6 +2,8 @@ package com.example.animalchipization.mapper;
 
 import com.example.animalchipization.entity.Animal;
 import com.example.animalchipization.web.dto.AnimalDto;
+import jakarta.annotation.PostConstruct;
+import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,13 +12,26 @@ import org.springframework.stereotype.Component;
 public class AnimalMapper extends DefaultMapper<Animal, AnimalDto> {
 
     private final ModelMapper mapper;
+    private final Converter<Animal, AnimalDto> entityToDtoConverter;
+    private final Converter<AnimalDto, Animal> dtoToEntityConverter;
 
     @Autowired
-    public AnimalMapper(ModelMapper mapper) {
+    public AnimalMapper(ModelMapper mapper,
+                        Converter<Animal, AnimalDto> entityToDtoConverter,
+                        Converter<AnimalDto, Animal> dtoToEntityConverter) {
+
         super(mapper, Animal.class, AnimalDto.class);
         this.mapper = mapper;
+        this.entityToDtoConverter = entityToDtoConverter;
+        this.dtoToEntityConverter = dtoToEntityConverter;
     }
 
-
+    @PostConstruct
+    public void setupMapper() {
+        mapper.createTypeMap(Animal.class, AnimalDto.class)
+                .setConverter(entityToDtoConverter);
+        mapper.createTypeMap(AnimalDto.class, Animal.class)
+                .setConverter(dtoToEntityConverter);
+    }
 
 }

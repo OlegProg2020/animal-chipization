@@ -43,7 +43,9 @@ public class Animal {
     @Enumerated(EnumType.STRING)
     private Gender gender;
     @Enumerated(EnumType.STRING)
+    //TODO перенести значение по умолчанию в сервисный слой
     private LifeStatus lifeStatus = LifeStatus.ALIVE;
+    //TODO перенести значение по умолчанию в сервисный слой
     private ZonedDateTime chippingDateTime = ZonedDateTime.now().truncatedTo(ChronoUnit.SECONDS);
     @ManyToOne(optional = false)
     private Account chipper;
@@ -52,7 +54,7 @@ public class Animal {
     @OneToMany(mappedBy = "animal", fetch = FetchType.LAZY)
     @OrderBy("dateTimeOfVisitLocationPoint ASC, id ASC")
     private List<AnimalVisitedLocation> visitedLocations = new ArrayList<>();
-    private ZonedDateTime deathDateTime = null;
+    private ZonedDateTime deathDateTime;
 
     public void setLifeStatusToDeadAndSetDeathDateTime() {
         this.lifeStatus = LifeStatus.DEAD;
