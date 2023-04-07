@@ -1,9 +1,6 @@
 package com.example.animalchipization.web.dto;
 
-import com.example.animalchipization.entity.AnimalVisitedLocation;
-import com.example.animalchipization.entity.LocationPoint;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.validation.constraints.Min;
 import lombok.Getter;

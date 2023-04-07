@@ -5,7 +5,6 @@ import com.example.animalchipization.entity.AnimalVisitedLocation;
 import com.example.animalchipization.entity.LocationPoint;
 import com.example.animalchipization.mapper.Mapper;
 import com.example.animalchipization.service.AnimalService;
-import com.example.animalchipization.service.AnimalVisitedLocationService;
 import com.example.animalchipization.service.LocationPointService;
 import com.example.animalchipization.web.dto.AnimalDto;
 import com.example.animalchipization.web.dto.AnimalVisitedLocationDto;
@@ -44,7 +43,7 @@ public class AnimalVisitedLocationDtoToAnimalVisitedLocationConverter
         AnimalVisitedLocationDto dto = mappingContext.getSource();
         AnimalVisitedLocation entity = new AnimalVisitedLocation();
         entity.setId(dto.getId());
-        if(dto.getDateTimeOfVisitLocationPoint() != null) {
+        if (dto.getDateTimeOfVisitLocationPoint() != null) {
             entity.setDateTimeOfVisitLocationPoint(dto.getDateTimeOfVisitLocationPoint());
         }
         entity.setLocationPoint(
@@ -54,10 +53,9 @@ public class AnimalVisitedLocationDtoToAnimalVisitedLocationConverter
         );
         entity.setAnimal(
                 animalMapper.toEntity(
-                    animalService.findAnimalById(dto.getAnimalId())
+                        animalService.findAnimalById(dto.getAnimalId())
                 )
         );
-        //TODO
         return entity;
     }
 
