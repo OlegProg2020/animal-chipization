@@ -12,6 +12,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
+
 @RestController
 @RequestMapping(path = "/accounts", produces = "application/json")
 @Validated
@@ -33,14 +35,14 @@ public class AccountController {
 
     @GetMapping("/search")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Iterable<AccountDto>> searchForAccounts(
+    public ResponseEntity<Collection<AccountDto>> searchForAccounts(
             @RequestParam(name = "firstName", required = false) String firstName,
             @RequestParam(name = "lastName", required = false) String lastName,
             @RequestParam(name = "email", required = false) String email,
             @RequestParam(name = "from", required = false, defaultValue = "0") @Min(0) Integer from,
             @RequestParam(name = "size", required = false, defaultValue = "10") @Min(1) Integer size) {
 
-        Iterable<AccountDto> accounts = accountService
+        Collection<AccountDto> accounts = accountService
                 .searchForAccounts(firstName, lastName, email, from, size);
         return new ResponseEntity<>(accounts, HttpStatus.valueOf(200));
     }

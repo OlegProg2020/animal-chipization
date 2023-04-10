@@ -54,7 +54,7 @@ public class Animal {
     }
 
 
-    public boolean checkAnimalAtChippingLocation() {
+    public boolean isAnimalAtChippingLocation() {
         AnimalVisitedLocation lastVisitedLocation = this.visitedLocations.peekLast();
         if (lastVisitedLocation != null) {
             return this.chippingLocation.equals(lastVisitedLocation.getLocationPoint());

@@ -52,6 +52,7 @@ public class AnimalVisitedLocationDto {
             return this;
         }
 
+        @JsonIgnore
         public Builder withLocationPointId(Long locationPointId) {
             this.locationPointId = locationPointId;
             return this;

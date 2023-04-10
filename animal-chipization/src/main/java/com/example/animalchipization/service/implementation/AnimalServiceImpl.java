@@ -54,8 +54,9 @@ public class AnimalServiceImpl implements AnimalService {
 
     @Override
     public Collection<AnimalDto> searchForAnimals(ZonedDateTime startDateTime, ZonedDateTime endDateTime,
-                                                  Long chipperId, Long chippingLocationId, LifeStatus lifeStatus,
-                                                  Gender gender, Integer from, Integer size) {
+                                                  @Min(1) Long chipperId, @Min(1) Long chippingLocationId,
+                                                  LifeStatus lifeStatus, Gender gender,
+                                                  @Min(0) Integer from, @Min(1) Integer size) {
 
         OffsetBasedPageRequest pageRequest = new OffsetBasedPageRequest(
                 from, size, Sort.by("id").ascending());
@@ -106,7 +107,7 @@ public class AnimalServiceImpl implements AnimalService {
     @Transactional
     public void deleteAnimalById(@Min(1) Long animalId) {
         Animal animal = animalRepository.findById(animalId).orElseThrow(NoSuchElementException::new);
-        if (animal.checkAnimalAtChippingLocation()) {
+        if (animal.isAnimalAtChippingLocation()) {
             animalRepository.delete(animal);
         } else {
             throw new AttemptToRemoveAnimalNotAtTheChippingPointException();

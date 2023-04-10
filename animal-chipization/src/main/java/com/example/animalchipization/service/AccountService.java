@@ -2,11 +2,14 @@ package com.example.animalchipization.service;
 
 import com.example.animalchipization.web.dto.AccountDto;
 
+import java.util.Collection;
+
 public interface AccountService {
 
     AccountDto findAccountById(Long accountId);
 
-    Iterable<AccountDto> searchForAccounts(String firstName, String lastName, String email, Integer from, Integer size);
+    Collection<AccountDto> searchForAccounts(String firstName, String lastName,
+                                             String email, Integer from, Integer size);
 
     AccountDto updateAccount(AccountDto accountDto);
 

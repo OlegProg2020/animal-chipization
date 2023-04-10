@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
@@ -44,12 +45,15 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Iterable<AccountDto> searchForAccounts(String firstName, String lastName,
-                                                  String email, @Min(0) Integer from, @Min(1) Integer size) {
+    public Collection<AccountDto> searchForAccounts(String firstName, String lastName,
+                                                    String email, @Min(0) Integer from, @Min(1) Integer size) {
         OffsetBasedPageRequest pageRequest =
                 new OffsetBasedPageRequest(from, size, Sort.by("id").ascending());
         Specification<Account> specifications = Specification.where(
-                firstNameLike(firstName).and(lastNameLike(lastName)).and(emailLike(email)));
+                firstNameLike(firstName)
+                        .and(lastNameLike(lastName))
+                        .and(emailLike(email)));
+
         return accountRepository.findAll(specifications, pageRequest).getContent()
                 .stream().map(account -> mapper.toDto(account))
                 .collect(Collectors.toList());
