@@ -12,6 +12,7 @@ import com.example.animalchipization.web.dto.LocationPointDto;
 import org.modelmapper.Converter;
 import org.modelmapper.spi.MappingContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -25,10 +26,10 @@ public class AnimalVisitedLocationDtoToAnimalVisitedLocationConverter
 
     @Autowired
     public AnimalVisitedLocationDtoToAnimalVisitedLocationConverter(
-            LocationPointService locationPointService,
-            AnimalService animalService,
+            @Lazy LocationPointService locationPointService,
+            @Lazy AnimalService animalService,
             Mapper<LocationPoint, LocationPointDto> locationPointMapper,
-            Mapper<Animal, AnimalDto> animalMapper) {
+            @Lazy Mapper<Animal, AnimalDto> animalMapper) {
 
         this.locationPointService = locationPointService;
         this.animalService = animalService;
