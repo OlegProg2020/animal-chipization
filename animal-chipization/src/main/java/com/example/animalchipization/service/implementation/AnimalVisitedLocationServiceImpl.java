@@ -10,9 +10,9 @@ import com.example.animalchipization.entity.enums.LifeStatus;
 import com.example.animalchipization.exception.AnimalIsAlreadyAtThisPointException;
 import com.example.animalchipization.exception.AttemptAddingLocationToAnimalWithDeadStatusException;
 import com.example.animalchipization.exception.FirstLocationPointConcidesWithChippingPointException;
-import com.example.animalchipization.mapper.Mapper;
 import com.example.animalchipization.service.AnimalVisitedLocationService;
-import com.example.animalchipization.util.OffsetBasedPageRequest;
+import com.example.animalchipization.service.mapper.Mapper;
+import com.example.animalchipization.util.pagination.OffsetBasedPageRequest;
 import com.example.animalchipization.web.dto.AnimalVisitedLocationDto;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,6 +116,7 @@ public class AnimalVisitedLocationServiceImpl implements AnimalVisitedLocationSe
     }
 
     @Override
+    @Transactional
     public void deleteAnimalVisitedLocation(Long animalId, Long visitedPointId) {
         Animal animal = animalRepository.findById(animalId).orElseThrow(NoSuchElementException::new);
         AnimalVisitedLocation visitedLocationPoint = animalVisitedLocationRepository.findById(visitedPointId)
@@ -131,7 +132,7 @@ public class AnimalVisitedLocationServiceImpl implements AnimalVisitedLocationSe
 
 
 
-    /* helper method */
+    /* helper methods */
 
     private void checkAnimalVisitedLocationBelongsToAnimal(AnimalVisitedLocation animalVisitedLocation,
                                                            Animal animal) {

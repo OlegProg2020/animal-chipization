@@ -1,4 +1,4 @@
-package com.example.animalchipization.mapper;
+package com.example.animalchipization.service.mapper;
 
 import org.modelmapper.ModelMapper;
 

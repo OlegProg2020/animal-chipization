@@ -1,4 +1,4 @@
-package com.example.animalchipization.mapper;
+package com.example.animalchipization.service.mapper;
 
 import com.example.animalchipization.entity.AnimalVisitedLocation;
 import com.example.animalchipization.web.dto.AnimalVisitedLocationDto;

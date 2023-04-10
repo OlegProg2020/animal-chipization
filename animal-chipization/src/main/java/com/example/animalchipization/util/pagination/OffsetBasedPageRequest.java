@@ -1,4 +1,4 @@
-package com.example.animalchipization.util;
+package com.example.animalchipization.util.pagination;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;

@@ -1,4 +1,4 @@
-package com.example.animalchipization.util.converter.animal;
+package com.example.animalchipization.util.converter;
 
 import com.example.animalchipization.entity.Animal;
 import com.example.animalchipization.entity.AnimalType;

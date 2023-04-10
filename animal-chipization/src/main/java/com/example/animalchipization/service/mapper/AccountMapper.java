@@ -1,4 +1,4 @@
-package com.example.animalchipization.mapper;
+package com.example.animalchipization.service.mapper;
 
 import com.example.animalchipization.entity.Account;
 import com.example.animalchipization.web.dto.AccountDto;
