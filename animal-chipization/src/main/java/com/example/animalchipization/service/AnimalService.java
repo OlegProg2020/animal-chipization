@@ -1,9 +1,9 @@
 package com.example.animalchipization.service;
 
-import com.example.animalchipization.entity.Animal;
 import com.example.animalchipization.entity.enums.Gender;
 import com.example.animalchipization.entity.enums.LifeStatus;
 import com.example.animalchipization.web.dto.AnimalDto;
+import com.example.animalchipization.web.dto.AnimalTypeDto;
 
 import java.time.ZonedDateTime;
 import java.util.Collection;
@@ -18,14 +18,14 @@ public interface AnimalService {
 
     AnimalDto addAnimal(AnimalDto animalDto);
 
-    Animal updateAnimal(Long animalId, Animal newAnimalDetails);
+    AnimalDto updateAnimal(Long animalId, AnimalDto updatedAnimalDto);
 
     void deleteAnimalById(Long animalId);
 
-    Animal addTypeToAnimal(Long animalId, Long typeId);
+    AnimalDto addTypeToAnimal(Long animalId, AnimalTypeDto animalTypeDto);
 
-    Animal updateTypeOfAnimal(Long animalId, Long oldTypeId, Long newTypeId);
+    AnimalDto updateTypeOfAnimal(Long animalId, AnimalTypeDto oldTypeDto, AnimalTypeDto newTypeDto);
 
-    Animal deleteTypeOfAnimal(Long animalId, Long typeId);
+    AnimalDto deleteTypeOfAnimal(Long animalId, AnimalTypeDto animalTypeDto);
 
 }

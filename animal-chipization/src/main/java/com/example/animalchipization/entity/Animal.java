@@ -2,6 +2,9 @@ package com.example.animalchipization.entity;
 
 import com.example.animalchipization.entity.enums.Gender;
 import com.example.animalchipization.entity.enums.LifeStatus;
+import com.example.animalchipization.exception.AnimalIsAlreadyAtThisPointException;
+import com.example.animalchipization.exception.DuplicateCollectionItemException;
+import com.example.animalchipization.exception.SettingLifeStatusInAliveFromDeadException;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -9,9 +12,9 @@ import lombok.Setter;
 
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
+import java.util.LinkedList;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 @Entity
@@ -42,25 +45,68 @@ public class Animal {
     private LocationPoint chippingLocation;
     @OneToMany(mappedBy = "animal", fetch = FetchType.LAZY)
     @OrderBy("dateTimeOfVisitLocationPoint ASC, id ASC")
-    private List<AnimalVisitedLocation> visitedLocations;
+    private LinkedList<AnimalVisitedLocation> visitedLocations;
     private ZonedDateTime deathDateTime;
 
     public Animal() {
         this.animalTypes = new HashSet<>();
-        this.visitedLocations = new ArrayList<>();
+        this.visitedLocations = new LinkedList<>();
     }
 
-    public void setLifeStatusToDeadAndSetDeathDateTime() {
-        this.lifeStatus = LifeStatus.DEAD;
-        this.deathDateTime = ZonedDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+    public boolean checkAnimalAtChippingLocation() {
+        AnimalVisitedLocation lastVisitedLocation = this.visitedLocations.peekLast();
+        if (lastVisitedLocation != null) {
+            return this.chippingLocation.equals(lastVisitedLocation.getLocationPoint());
+        }
+        return true;
     }
 
-    public Boolean addAnimalType(AnimalType animalType) {
-        return this.animalTypes.add(animalType);
+    private boolean isChippingLocationEqualsFirstVisitedLocationPoint() {
+        AnimalVisitedLocation firstVisitedLocation = this.visitedLocations.peekFirst();
+        if (firstVisitedLocation != null) {
+            return firstVisitedLocation.getLocationPoint().equals(this.getChippingLocation());
+        }
+        return false;
     }
 
-    public Boolean removeAnimalType(AnimalType animalType) {
-        return this.animalTypes.remove(animalType);
+    public void setAndValidateChippingLocation(LocationPoint locationPoint) {
+        this.chippingLocation = locationPoint;
+        if (this.isChippingLocationEqualsFirstVisitedLocationPoint()) {
+            throw new AnimalIsAlreadyAtThisPointException();
+        }
+    }
+
+    private void setLifeStatusToDeadAndSetDeathDateTime() {
+        if (this.lifeStatus == LifeStatus.ALIVE) {
+            throw new SettingLifeStatusInAliveFromDeadException();
+        } else {
+            this.lifeStatus = LifeStatus.DEAD;
+            this.deathDateTime = ZonedDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+        }
+    }
+
+    public void setAndValidateLifeStatus(LifeStatus newLifeStatus) {
+        if (this.lifeStatus == LifeStatus.ALIVE) {
+            if (newLifeStatus == LifeStatus.DEAD) {
+                this.setLifeStatusToDeadAndSetDeathDateTime();
+            }
+        } else {
+            if (newLifeStatus == LifeStatus.ALIVE) {
+                throw new SettingLifeStatusInAliveFromDeadException();
+            }
+        }
+    }
+
+    public void addAnimalType(AnimalType animalType) {
+        if (!this.animalTypes.add(animalType)) {
+            throw new DuplicateCollectionItemException();
+        }
+    }
+
+    public void removeAnimalType(AnimalType animalType) {
+        if (!this.animalTypes.remove(animalType)) {
+            throw new NoSuchElementException();
+        }
     }
 
 }

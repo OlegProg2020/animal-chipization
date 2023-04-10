@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -39,7 +39,7 @@ public class AnimalDto {
     private Long chipperId;
     @Min(1)
     private Long chippingLocationId;
-    private List<@Min(1) Long> visitedLocations = new ArrayList<>();
+    private List<@Min(1) Long> visitedLocations = new LinkedList<>();
     private ZonedDateTime deathDateTime;
 
     private AnimalDto(Builder builder) {
@@ -72,7 +72,7 @@ public class AnimalDto {
         private ZonedDateTime chippingDateTime;
         private Long chipperId;
         private Long chippingLocationId;
-        private List<Long> visitedLocations = new ArrayList<>();
+        private List<Long> visitedLocations = new LinkedList<>();
         private ZonedDateTime deathDateTime;
 
         @JsonIgnore
