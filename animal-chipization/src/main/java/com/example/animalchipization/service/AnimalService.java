@@ -3,7 +3,6 @@ package com.example.animalchipization.service;
 import com.example.animalchipization.entity.enums.Gender;
 import com.example.animalchipization.entity.enums.LifeStatus;
 import com.example.animalchipization.web.dto.AnimalDto;
-import com.example.animalchipization.web.dto.AnimalTypeDto;
 
 import java.time.ZonedDateTime;
 import java.util.Collection;
@@ -22,10 +21,10 @@ public interface AnimalService {
 
     void deleteAnimalById(Long animalId);
 
-    AnimalDto addTypeToAnimal(Long animalId, AnimalTypeDto animalTypeDto);
+    AnimalDto addTypeToAnimal(Long animalId, Long typeId);
 
-    AnimalDto updateTypeOfAnimal(Long animalId, AnimalTypeDto oldTypeDto, AnimalTypeDto newTypeDto);
+    AnimalDto updateTypeOfAnimal(Long animalId, Long oldTypeId, Long newTypeId);
 
-    AnimalDto deleteTypeOfAnimal(Long animalId, AnimalTypeDto animalTypeDto);
+    AnimalDto deleteTypeOfAnimal(Long animalId, Long typeId);
 
 }

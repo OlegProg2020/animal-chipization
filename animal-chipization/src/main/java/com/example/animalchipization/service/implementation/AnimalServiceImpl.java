@@ -1,19 +1,19 @@
 package com.example.animalchipization.service.implementation;
 
 import com.example.animalchipization.data.repository.AnimalRepository;
+import com.example.animalchipization.data.repository.AnimalTypeRepository;
 import com.example.animalchipization.entity.Animal;
 import com.example.animalchipization.entity.AnimalType;
 import com.example.animalchipization.entity.enums.Gender;
 import com.example.animalchipization.entity.enums.LifeStatus;
 import com.example.animalchipization.exception.AttemptToRemoveAnimalNotAtTheChippingPointException;
+import com.example.animalchipization.exception.EmptyAnimalTypesException;
 import com.example.animalchipization.exception.RemovingSingleTypeOfAnimalException;
 import com.example.animalchipization.mapper.Mapper;
 import com.example.animalchipization.service.AnimalService;
 import com.example.animalchipization.util.OffsetBasedPageRequest;
 import com.example.animalchipization.web.dto.AnimalDto;
-import com.example.animalchipization.web.dto.AnimalTypeDto;
 import jakarta.validation.Valid;
-import jakarta.validation.ValidationException;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -33,16 +33,17 @@ import static com.example.animalchipization.data.specification.AnimalSpecificati
 public class AnimalServiceImpl implements AnimalService {
 
     private final AnimalRepository animalRepository;
+    private final AnimalTypeRepository animalTypeRepository;
     private final Mapper<Animal, AnimalDto> animalMapper;
-    private final Mapper<AnimalType, AnimalTypeDto> animalTypeMapper;
 
     @Autowired
     public AnimalServiceImpl(AnimalRepository animalRepository,
-                             Mapper<Animal, AnimalDto> animalMapper,
-                             Mapper<AnimalType, AnimalTypeDto> animalTypeMapper) {
+                             AnimalTypeRepository animalTypeRepository,
+                             Mapper<Animal, AnimalDto> animalMapper) {
+
         this.animalRepository = animalRepository;
+        this.animalTypeRepository = animalTypeRepository;
         this.animalMapper = animalMapper;
-        this.animalTypeMapper = animalTypeMapper;
     }
 
     @Override
@@ -73,12 +74,14 @@ public class AnimalServiceImpl implements AnimalService {
     @Override
     @Transactional
     public AnimalDto addAnimal(@Valid AnimalDto animalDto) {
-        Animal animal = animalMapper.toEntity(animalDto);
-        if (animal.getAnimalTypes().isEmpty()) {
-            throw new ValidationException();
+        if (animalDto.getAnimalTypes().isEmpty()) {
+            throw new EmptyAnimalTypesException();
         }
+        Animal animal = animalMapper.toEntity(animalDto);
+
         animal.setLifeStatus(LifeStatus.ALIVE);
         animal.setChippingDateTime(ZonedDateTime.now().truncatedTo(ChronoUnit.SECONDS));
+
         return animalMapper.toDto(animalRepository.save(animal));
     }
 
@@ -112,9 +115,9 @@ public class AnimalServiceImpl implements AnimalService {
 
     @Override
     @Transactional
-    public AnimalDto addTypeToAnimal(@Min(1) Long animalId, @Valid AnimalTypeDto animalTypeDto) {
+    public AnimalDto addTypeToAnimal(@Min(1) Long animalId, @Min(1) Long typeId) {
         Animal animal = animalRepository.findById(animalId).orElseThrow(NoSuchElementException::new);
-        AnimalType animalType = animalTypeMapper.toEntity(animalTypeDto);
+        AnimalType animalType = animalTypeRepository.findById(typeId).orElseThrow(NoSuchElementException::new);
 
         animal.addAnimalType(animalType);
 
@@ -123,12 +126,12 @@ public class AnimalServiceImpl implements AnimalService {
 
     @Override
     @Transactional
-    public AnimalDto updateTypeOfAnimal(@Min(1) Long animalId, @Valid AnimalTypeDto oldTypeDto,
-                                        @Valid AnimalTypeDto newTypeDto) {
+    public AnimalDto updateTypeOfAnimal(@Min(1) Long animalId, @Min(1) Long oldTypeId,
+                                        @Min(1) Long newTypeId) {
 
         Animal animal = animalRepository.findById(animalId).orElseThrow(NoSuchElementException::new);
-        AnimalType oldType = animalTypeMapper.toEntity(oldTypeDto);
-        AnimalType newType = animalTypeMapper.toEntity(newTypeDto);
+        AnimalType oldType = animalTypeRepository.findById(oldTypeId).orElseThrow(NoSuchElementException::new);
+        AnimalType newType = animalTypeRepository.findById(newTypeId).orElseThrow(NoSuchElementException::new);
 
         animal.removeAnimalType(oldType);
         animal.addAnimalType(newType);
@@ -137,9 +140,9 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public AnimalDto deleteTypeOfAnimal(@Min(1) Long animalId, @Valid AnimalTypeDto animalTypeDto) {
+    public AnimalDto deleteTypeOfAnimal(@Min(1) Long animalId, @Min(1) Long typeId) {
         Animal animal = animalRepository.findById(animalId).orElseThrow(NoSuchElementException::new);
-        AnimalType type = animalTypeMapper.toEntity(animalTypeDto);
+        AnimalType type = animalTypeRepository.findById(typeId).orElseThrow(NoSuchElementException::new);
 
         animal.removeAnimalType(type);
         if (animal.getAnimalTypes().size() == 0) {

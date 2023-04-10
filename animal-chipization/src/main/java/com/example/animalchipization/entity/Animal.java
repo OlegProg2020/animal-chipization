@@ -53,6 +53,7 @@ public class Animal {
         this.visitedLocations = new LinkedList<>();
     }
 
+
     public boolean checkAnimalAtChippingLocation() {
         AnimalVisitedLocation lastVisitedLocation = this.visitedLocations.peekLast();
         if (lastVisitedLocation != null) {
