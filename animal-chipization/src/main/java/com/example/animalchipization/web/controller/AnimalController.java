@@ -9,6 +9,7 @@ import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,11 +51,13 @@ public class AnimalController {
     }
 
     @PostMapping(consumes = "application/json")
+    @PreAuthorize("hasAnyRole({'ADMIN', 'CHIPPER'})")
     public ResponseEntity<AnimalDto> addAnimal(@RequestBody @Valid AnimalDto animalDto) {
         return new ResponseEntity<>(animalService.addAnimal(animalDto), HttpStatus.valueOf(201));
     }
 
     @PutMapping(path = "/{animalId}", consumes = "application/json")
+    @PreAuthorize("hasAnyRole({'ADMIN', 'CHIPPER'})")
     public ResponseEntity<AnimalDto> updateAnimal(@PathVariable("animalId") @Min(1) Long animalId,
                                                   @RequestBody @Valid AnimalDto updatedAnimalDto) {
         return new ResponseEntity<>(animalService.updateAnimal(animalId, updatedAnimalDto),
@@ -63,11 +66,13 @@ public class AnimalController {
 
     @DeleteMapping("/{animalId}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteAnimalById(@PathVariable("animalId") @Min(1) Long animalId) {
         animalService.deleteAnimalById(animalId);
     }
 
     @PostMapping("/{animalId}/types/{typeId}")
+    @PreAuthorize("hasAnyRole({'ADMIN', 'CHIPPER'})")
     public ResponseEntity<AnimalDto> addTypeToAnimal(@PathVariable("animalId") @Min(1) Long animalId,
                                                      @PathVariable("typeId") @Min(1) Long typeId) {
 
@@ -76,6 +81,7 @@ public class AnimalController {
     }
 
     @PutMapping(path = "/{animalId}/types", consumes = "application/json")
+    @PreAuthorize("hasAnyRole({'ADMIN', 'CHIPPER'})")
     public ResponseEntity<AnimalDto> updateTypeOfAnimal(@PathVariable("animalId") @Min(1) Long animalId,
                                                         @RequestBody Map<String, @Min(1) Long> request) {
 
@@ -86,6 +92,7 @@ public class AnimalController {
     }
 
     @DeleteMapping("/{animalId}/types/{typeId}")
+    @PreAuthorize("hasAnyRole({'ADMIN', 'CHIPPER'})")
     public ResponseEntity<AnimalDto> deleteTypeOfAnimal(@PathVariable("animalId") @Min(1) Long animalId,
                                                         @PathVariable("typeId") @Min(1) Long typeId) {
         return new ResponseEntity<>(animalService.deleteTypeOfAnimal(animalId, typeId),
