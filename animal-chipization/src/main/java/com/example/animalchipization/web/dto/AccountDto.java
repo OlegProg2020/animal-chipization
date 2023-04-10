@@ -4,16 +4,17 @@ import com.example.animalchipization.entity.enums.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @JsonDeserialize(builder = AccountDto.Builder.class)
 @Getter
 @NoArgsConstructor
 public class AccountDto {
 
+    @Setter
     private Long id;
     @NotBlank
     private String firstName;
@@ -28,6 +29,7 @@ public class AccountDto {
     private Role role;
 
     private AccountDto(Builder builder) {
+        this.id = builder.id;
         this.firstName = builder.firstName;
         this.lastName = builder.lastName;
         this.email = builder.email;
@@ -40,11 +42,18 @@ public class AccountDto {
     }
 
     public static class Builder {
+        private Long id;
         private String firstName;
         private String lastName;
         private String email;
         private String password;
         private Role role;
+
+        @JsonIgnore
+        public Builder withId(Long id) {
+            this.id = id;
+            return this;
+        }
 
         public Builder withFirstName(String firstName) {
             this.firstName = firstName;
@@ -76,7 +85,4 @@ public class AccountDto {
         }
     }
 
-    public void setId(@Min(1) Long id) {
-        this.id = id;
-    }
 }

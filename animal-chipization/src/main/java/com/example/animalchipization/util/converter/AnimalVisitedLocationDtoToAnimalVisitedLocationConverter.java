@@ -42,6 +42,7 @@ public class AnimalVisitedLocationDtoToAnimalVisitedLocationConverter
 
         AnimalVisitedLocationDto dto = mappingContext.getSource();
         AnimalVisitedLocation entity = new AnimalVisitedLocation();
+
         entity.setId(dto.getId());
         if (dto.getDateTimeOfVisitLocationPoint() != null) {
             entity.setDateTimeOfVisitLocationPoint(dto.getDateTimeOfVisitLocationPoint());
@@ -56,6 +57,7 @@ public class AnimalVisitedLocationDtoToAnimalVisitedLocationConverter
                         animalService.findById(dto.getAnimalId())
                 )
         );
+
         return entity;
     }
 

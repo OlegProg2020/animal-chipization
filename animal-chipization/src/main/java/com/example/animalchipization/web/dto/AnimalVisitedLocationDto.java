@@ -14,8 +14,8 @@ import java.time.ZonedDateTime;
 @NoArgsConstructor
 public class AnimalVisitedLocationDto {
 
-    private Long id;
     @Setter
+    private Long id;
     private ZonedDateTime dateTimeOfVisitLocationPoint;
     @Min(1)
     private Long locationPointId;
@@ -24,6 +24,8 @@ public class AnimalVisitedLocationDto {
     private Long animalId;
 
     private AnimalVisitedLocationDto(Builder builder) {
+        this.id = builder.id;
+        this.dateTimeOfVisitLocationPoint = builder.dateTimeOfVisitLocationPoint;
         this.locationPointId = builder.locationPointId;
         this.animalId = builder.animalId;
     }
@@ -33,14 +35,29 @@ public class AnimalVisitedLocationDto {
     }
 
     public static class Builder {
+        private Long id;
+        private ZonedDateTime dateTimeOfVisitLocationPoint;
         private Long locationPointId;
         private Long animalId;
+
+        @JsonIgnore
+        public Builder withId(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        @JsonIgnore
+        public Builder withDateTimeOfVisitLocationPoint(ZonedDateTime dateTimeOfVisitLocationPoint) {
+            this.dateTimeOfVisitLocationPoint = dateTimeOfVisitLocationPoint;
+            return this;
+        }
 
         public Builder withLocationPointId(Long locationPointId) {
             this.locationPointId = locationPointId;
             return this;
         }
 
+        @JsonIgnore
         public Builder withAnimalId(Long animalId) {
             this.animalId = animalId;
             return this;
@@ -49,10 +66,6 @@ public class AnimalVisitedLocationDto {
         public AnimalVisitedLocationDto build() {
             return new AnimalVisitedLocationDto(this);
         }
-    }
-
-    public void setId(@Min(1) Long id) {
-        this.id = id;
     }
 
 }

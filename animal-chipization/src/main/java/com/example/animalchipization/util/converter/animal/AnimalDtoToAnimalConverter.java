@@ -1,4 +1,4 @@
-package com.example.animalchipization.util.converter;
+package com.example.animalchipization.util.converter.animal;
 
 import com.example.animalchipization.entity.*;
 import com.example.animalchipization.mapper.Mapper;
@@ -12,6 +12,7 @@ import org.modelmapper.spi.MappingContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.LinkedList;
 import java.util.stream.Collectors;
 
 @Component
@@ -65,7 +66,7 @@ public class AnimalDtoToAnimalConverter implements Converter<AnimalDto, Animal> 
         entity.setChippingLocation(locationPointMapper.toEntity(locationPointService.findLocationPointById(dto.getChippingLocationId())));
         entity.setVisitedLocations(dto.getVisitedLocations().stream()
                 .map(id -> animalVisitedLocationMapper.toEntity(animalVisitedLocationService.findById(id)))
-                .collect(Collectors.toList()));
+                .collect(Collectors.toCollection(LinkedList::new)));
         entity.setDeathDateTime(dto.getDeathDateTime());
         return entity;
     }

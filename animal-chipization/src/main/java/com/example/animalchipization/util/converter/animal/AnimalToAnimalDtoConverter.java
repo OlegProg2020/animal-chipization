@@ -1,4 +1,4 @@
-package com.example.animalchipization.util.converter;
+package com.example.animalchipization.util.converter.animal;
 
 import com.example.animalchipization.entity.Animal;
 import com.example.animalchipization.entity.AnimalType;
@@ -8,6 +8,7 @@ import org.modelmapper.Converter;
 import org.modelmapper.spi.MappingContext;
 import org.springframework.stereotype.Component;
 
+import java.util.LinkedList;
 import java.util.stream.Collectors;
 
 @Component
@@ -27,7 +28,9 @@ public class AnimalToAnimalDtoConverter implements Converter<Animal, AnimalDto> 
                 .withChippingDateTime(entity.getChippingDateTime())
                 .withChipperId(entity.getChipper().getId())
                 .withChippingLocationId(entity.getChippingLocation().getId())
-                .withVisitedLocations(entity.getVisitedLocations().stream().map(AnimalVisitedLocation::getId).collect(Collectors.toList()))
+                .withVisitedLocations(entity.getVisitedLocations().stream()
+                        .map(AnimalVisitedLocation::getId)
+                        .collect(Collectors.toCollection(LinkedList::new)))
                 .withDeathDateTime(entity.getDeathDateTime())
                 .build();
         return dto;

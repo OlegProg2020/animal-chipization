@@ -16,11 +16,11 @@ public class AnimalVisitedLocationToAnimalVisitedLocationDtoConverter
 
         AnimalVisitedLocation entity = mappingContext.getSource();
         AnimalVisitedLocationDto dto = AnimalVisitedLocationDto.builder()
+                .withId(entity.getId())
+                .withDateTimeOfVisitLocationPoint(entity.getDateTimeOfVisitLocationPoint())
                 .withAnimalId(entity.getAnimal().getId())
                 .withLocationPointId(entity.getLocationPoint().getId())
                 .build();
-        dto.setId(entity.getId());
-        dto.setDateTimeOfVisitLocationPoint(entity.getDateTimeOfVisitLocationPoint());
         return dto;
     }
 
