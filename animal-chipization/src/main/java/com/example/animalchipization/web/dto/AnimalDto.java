@@ -14,6 +14,7 @@ import lombok.Setter;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 @JsonDeserialize(builder = AnimalDto.Builder.class)
@@ -38,7 +39,7 @@ public class AnimalDto {
     private Long chipperId;
     @Min(1)
     private Long chippingLocationId;
-    private LinkedList<@Min(1) Long> visitedLocations = new LinkedList<>();
+    private List<@Min(1) Long> visitedLocations = new LinkedList<>();
     private ZonedDateTime deathDateTime;
 
     private AnimalDto(Builder builder) {
@@ -71,7 +72,7 @@ public class AnimalDto {
         private ZonedDateTime chippingDateTime;
         private Long chipperId;
         private Long chippingLocationId;
-        private LinkedList<Long> visitedLocations = new LinkedList<>();
+        private List<Long> visitedLocations = new LinkedList<>();
         private ZonedDateTime deathDateTime;
 
         @JsonIgnore
@@ -127,7 +128,7 @@ public class AnimalDto {
         }
 
         @JsonIgnore
-        public Builder withVisitedLocations(LinkedList<Long> visitedLocations) {
+        public Builder withVisitedLocations(List<Long> visitedLocations) {
             this.visitedLocations = visitedLocations;
             return this;
         }

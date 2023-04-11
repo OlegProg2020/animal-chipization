@@ -112,6 +112,7 @@ public class AnimalVisitedLocationServiceImpl implements AnimalVisitedLocationSe
         this.checkAnimalVisitedLocationBelongsToAnimal(visitedLocation, animal);
         this.validatePatchAnimalVisitedLocation(visitedLocation, locationPoint);
 
+        visitedLocation.setLocationPoint(locationPoint);
         return animalVisitedLocationMapper.toDto(animalVisitedLocationRepository.save(visitedLocation));
     }
 
@@ -152,8 +153,10 @@ public class AnimalVisitedLocationServiceImpl implements AnimalVisitedLocationSe
     }
 
     private boolean isLocationEqualsAnimalLastVisitedLocation(LocationPoint locationPoint, Animal animal) {
-        AnimalVisitedLocation lastVisitedLocation = animal.getVisitedLocations().peekLast();
-        if (lastVisitedLocation != null) {
+        List<AnimalVisitedLocation> visitedLocations = animal.getVisitedLocations();
+        int lastVisitedLocationIndex = visitedLocations.size() - 1;
+        if (lastVisitedLocationIndex >= 0) {
+            AnimalVisitedLocation lastVisitedLocation = visitedLocations.get(lastVisitedLocationIndex);
             return locationPoint.equals(lastVisitedLocation.getLocationPoint());
         }
         return false;
@@ -178,8 +181,9 @@ public class AnimalVisitedLocationServiceImpl implements AnimalVisitedLocationSe
     /* helper methods for updateAnimalVisitedLocation(...) */
 
     private boolean isFirstVisitedLocationOfAnimal(LocationPoint locationPoint, Animal animal) {
-        AnimalVisitedLocation firstVisitedLocation = animal.getVisitedLocations().peekFirst();
-        if (firstVisitedLocation != null) {
+        List<AnimalVisitedLocation> visitedLocations = animal.getVisitedLocations();
+        if (visitedLocations.size() > 0) {
+            AnimalVisitedLocation firstVisitedLocation = visitedLocations.get(0);
             return locationPoint.equals(firstVisitedLocation.getLocationPoint());
         }
         return false;

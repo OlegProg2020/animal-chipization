@@ -42,7 +42,7 @@ public class Animal {
     private LocationPoint chippingLocation;
     @OneToMany(mappedBy = "animal", fetch = FetchType.LAZY)
     @OrderBy("dateTimeOfVisitLocationPoint ASC, id ASC")
-    private LinkedList<AnimalVisitedLocation> visitedLocations;
+    private List<AnimalVisitedLocation> visitedLocations;
     private ZonedDateTime deathDateTime;
 
     public Animal() {
@@ -52,16 +52,17 @@ public class Animal {
 
 
     public boolean isAnimalAtChippingLocation() {
-        AnimalVisitedLocation lastVisitedLocation = this.visitedLocations.peekLast();
-        if (lastVisitedLocation != null) {
+        int lastVisitedLocationIndex = this.visitedLocations.size() - 1;
+        if (lastVisitedLocationIndex >= 0) {
+            AnimalVisitedLocation lastVisitedLocation = this.visitedLocations.get(lastVisitedLocationIndex);
             return this.chippingLocation.equals(lastVisitedLocation.getLocationPoint());
         }
         return true;
     }
 
     private boolean isChippingLocationEqualsFirstVisitedLocationPoint() {
-        AnimalVisitedLocation firstVisitedLocation = this.visitedLocations.peekFirst();
-        if (firstVisitedLocation != null) {
+        if (this.visitedLocations.size() > 0) {
+            AnimalVisitedLocation firstVisitedLocation = this.visitedLocations.get(0);
             return firstVisitedLocation.getLocationPoint().equals(this.getChippingLocation());
         }
         return false;
@@ -75,12 +76,8 @@ public class Animal {
     }
 
     private void setLifeStatusToDeadAndSetDeathDateTime() {
-        if (this.lifeStatus == LifeStatus.ALIVE) {
-            throw new SettingLifeStatusInAliveFromDeadException();
-        } else {
-            this.lifeStatus = LifeStatus.DEAD;
-            this.deathDateTime = ZonedDateTime.now().truncatedTo(ChronoUnit.SECONDS);
-        }
+        this.lifeStatus = LifeStatus.DEAD;
+        this.deathDateTime = ZonedDateTime.now().truncatedTo(ChronoUnit.SECONDS);
     }
 
     public void setAndValidateLifeStatus(LifeStatus newLifeStatus) {
