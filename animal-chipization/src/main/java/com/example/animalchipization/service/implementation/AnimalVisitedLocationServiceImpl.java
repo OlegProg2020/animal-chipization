@@ -66,7 +66,8 @@ public class AnimalVisitedLocationServiceImpl implements AnimalVisitedLocationSe
 
         if (animalRepository.existsById(animalId)) {
             OffsetBasedPageRequest pageRequest = new OffsetBasedPageRequest(from, size,
-                    Sort.by("dateTimeOfVisitLocationPoint").ascending());
+                    Sort.by("dateTimeOfVisitLocationPoint").ascending()
+                            .and(Sort.by("id").ascending()));
 
             Specification<AnimalVisitedLocation> specifications = Specification.where(
                     hasAnimalId(animalId)
