@@ -2,25 +2,30 @@ package com.example.animalchipization.service.implementation;
 
 import com.example.animalchipization.data.repository.AnimalRepository;
 import com.example.animalchipization.data.repository.AnimalTypeRepository;
-import com.example.animalchipization.exception.*;
-import com.example.animalchipization.model.Animal;
-import com.example.animalchipization.model.AnimalType;
-import com.example.animalchipization.model.AnimalVisitedLocation;
-import com.example.animalchipization.model.enums.Gender;
-import com.example.animalchipization.model.enums.LifeStatus;
+import com.example.animalchipization.entity.Animal;
+import com.example.animalchipization.entity.AnimalType;
+import com.example.animalchipization.entity.enums.Gender;
+import com.example.animalchipization.entity.enums.LifeStatus;
+import com.example.animalchipization.exception.AttemptToRemoveAnimalNotAtTheChippingPointException;
+import com.example.animalchipization.exception.EmptyAnimalTypesException;
+import com.example.animalchipization.exception.RemovingSingleTypeOfAnimalException;
 import com.example.animalchipization.service.AnimalService;
-import com.example.animalchipization.util.OffsetBasedPageRequest;
+import com.example.animalchipization.service.mapper.Mapper;
+import com.example.animalchipization.util.pagination.OffsetBasedPageRequest;
+import com.example.animalchipization.web.dto.AnimalDto;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
-import java.util.List;
+import java.time.temporal.ChronoUnit;
+import java.util.Collection;
 import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.example.animalchipization.data.specification.AnimalSpecification.*;
 
@@ -29,29 +34,32 @@ public class AnimalServiceImpl implements AnimalService {
 
     private final AnimalRepository animalRepository;
     private final AnimalTypeRepository animalTypeRepository;
+    private final Mapper<Animal, AnimalDto> animalMapper;
 
     @Autowired
-    public AnimalServiceImpl(AnimalRepository animalRepository, AnimalTypeRepository animalTypeRepository) {
+    public AnimalServiceImpl(AnimalRepository animalRepository,
+                             AnimalTypeRepository animalTypeRepository,
+                             Mapper<Animal, AnimalDto> animalMapper) {
+
         this.animalRepository = animalRepository;
         this.animalTypeRepository = animalTypeRepository;
+        this.animalMapper = animalMapper;
     }
 
     @Override
-    public Animal findAnimalById(Long animalId) {
-        Optional<Animal> optionalAnimal = animalRepository.findById(animalId);
-        if (optionalAnimal.isPresent()) {
-            return optionalAnimal.get();
-        } else {
-            throw new NoSuchElementException();
-        }
+    public AnimalDto findById(@Min(1) Long animalId) {
+        return animalMapper.toDto(animalRepository.findById(animalId)
+                .orElseThrow(NoSuchElementException::new));
     }
 
     @Override
-    public Iterable<Animal> searchForAnimals(ZonedDateTime startDateTime, ZonedDateTime endDateTime,
-                                             Long chipperId, Long chippingLocationId, LifeStatus lifeStatus,
-                                             Gender gender, Integer from, Integer size) {
+    public Collection<AnimalDto> searchForAnimals(ZonedDateTime startDateTime, ZonedDateTime endDateTime,
+                                                  @Min(1) Long chipperId, @Min(1) Long chippingLocationId,
+                                                  LifeStatus lifeStatus, Gender gender,
+                                                  @Min(0) Integer from, @Min(1) Integer size) {
 
-        OffsetBasedPageRequest pageRequest = new OffsetBasedPageRequest(from, size, Sort.by("id").ascending());
+        OffsetBasedPageRequest pageRequest = new OffsetBasedPageRequest(
+                from, size, Sort.by("id").ascending());
         Specification<Animal> specifications = Specification.where(
                 hasChippingDateTimeGreaterThanOrEqualTo(startDateTime)
                         .and(hasChippingDateTimeLessThanOrEqualTo(endDateTime))
@@ -60,92 +68,90 @@ public class AnimalServiceImpl implements AnimalService {
                         .and(hasLifeStatus(lifeStatus))
                         .and(hasGender(gender))
         );
-        return animalRepository.findAll(specifications, pageRequest).getContent();
+        return animalRepository.findAll(specifications, pageRequest).getContent().stream()
+                .map(animalMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
-    public Animal addAnimal(@Valid Animal animal) {
-        return animalRepository.save(animal);
+    @Transactional
+    public AnimalDto addAnimal(@Valid AnimalDto animalDto) {
+        if (animalDto.getAnimalTypes().isEmpty()) {
+            throw new EmptyAnimalTypesException();
+        }
+        Animal animal = animalMapper.toEntity(animalDto);
+
+        animal.setLifeStatus(LifeStatus.ALIVE);
+        animal.setChippingDateTime(ZonedDateTime.now().truncatedTo(ChronoUnit.SECONDS));
+
+        Animal a = animalRepository.save(animal);
+        return animalMapper.toDto(a);
     }
 
     @Override
-    public Animal updateAnimal(Long animalId, Animal newAnimalDetails) {
-        Animal oldAnimalDetails = animalRepository.findById(animalId)
-                .orElseThrow(NoSuchElementException::new);
-        Optional<AnimalVisitedLocation> optFirstVisitedLocation =
-                oldAnimalDetails.getVisitedLocations().stream().findFirst();
-        if (optFirstVisitedLocation.isPresent()
-                && optFirstVisitedLocation.get().getLocationPoint()
-                .equals(newAnimalDetails.getChippingLocation())) {
-            throw new AnimalIsAlreadyAtThisPointException();
-        }
-        oldAnimalDetails.setWeight(newAnimalDetails.getWeight());
-        oldAnimalDetails.setLength(newAnimalDetails.getLength());
-        oldAnimalDetails.setHeight(newAnimalDetails.getHeight());
-        oldAnimalDetails.setGender(newAnimalDetails.getGender());
-        if (oldAnimalDetails.getLifeStatus() == LifeStatus.ALIVE) {
-            if (newAnimalDetails.getLifeStatus() == LifeStatus.DEAD) {
-                oldAnimalDetails.setLifeStatusToDeadAndSetDeathDateTime();
-            }
-        } else {
-            if (newAnimalDetails.getLifeStatus() == LifeStatus.ALIVE) {
-                throw new SettingLifeStatusInAliveFromDeadException();
-            }
-        }
-        oldAnimalDetails.setChipper(newAnimalDetails.getChipper());
-        oldAnimalDetails.setChippingLocation(newAnimalDetails.getChippingLocation());
-        return animalRepository.save(oldAnimalDetails);
-    }
-
-    public void deleteAnimalById(Long animalId) {
-        Animal animal = animalRepository.findById(animalId)
-                .orElseThrow(NoSuchElementException::new);
-        List<AnimalVisitedLocation> visitedLocations = animal.getVisitedLocations();
-        if (!visitedLocations.isEmpty()) {
-            int visitedLocationsSize = visitedLocations.size();
-            AnimalVisitedLocation lastVisitedLocation = visitedLocations.get(visitedLocationsSize - 1);
-            if (!lastVisitedLocation.getLocationPoint().equals(animal.getChippingLocation())) {
-                throw new AttemptToRemoveAnimalNotAtTheChippingPointException();
-            }
-        }
-        animalRepository.delete(animal);
-    }
-
-    @Override
-    public Animal addTypeToAnimal(Long animalId, Long typeId) {
+    @Transactional
+    public AnimalDto updateAnimal(@Min(1) Long animalId, @Valid AnimalDto updatedAnimalDto) {
         Animal animal = animalRepository.findById(animalId).orElseThrow(NoSuchElementException::new);
-        AnimalType type = animalTypeRepository.findById(typeId).orElseThrow(NoSuchElementException::new);
-        if (!animal.addAnimalType(type)) {
-            throw new DuplicateCollectionItemException();
-        }
-        return animalRepository.save(animal);
+        Animal updatedAnimal = animalMapper.toEntity(updatedAnimalDto);
+
+        animal.setWeight(updatedAnimal.getWeight());
+        animal.setLength(updatedAnimal.getLength());
+        animal.setHeight(updatedAnimal.getHeight());
+        animal.setGender(updatedAnimal.getGender());
+        animal.setAndValidateLifeStatus(updatedAnimal.getLifeStatus());
+        animal.setChipper(updatedAnimal.getChipper());
+        animal.setAndValidateChippingLocation(updatedAnimal.getChippingLocation());
+
+        return animalMapper.toDto(animalRepository.save(animal));
     }
 
     @Override
-    public Animal updateTypeOfAnimal(Long animalId, Long oldTypeId, Long newTypeId) {
+    @Transactional
+    public void deleteAnimalById(@Min(1) Long animalId) {
+        Animal animal = animalRepository.findById(animalId).orElseThrow(NoSuchElementException::new);
+        if (animal.isAnimalAtChippingLocation()) {
+            animalRepository.delete(animal);
+        } else {
+            throw new AttemptToRemoveAnimalNotAtTheChippingPointException();
+        }
+    }
+
+    @Override
+    @Transactional
+    public AnimalDto addTypeToAnimal(@Min(1) Long animalId, @Min(1) Long typeId) {
+        Animal animal = animalRepository.findById(animalId).orElseThrow(NoSuchElementException::new);
+        AnimalType animalType = animalTypeRepository.findById(typeId).orElseThrow(NoSuchElementException::new);
+
+        animal.addAnimalType(animalType);
+
+        return animalMapper.toDto(animalRepository.save(animal));
+    }
+
+    @Override
+    @Transactional
+    public AnimalDto updateTypeOfAnimal(@Min(1) Long animalId, @Min(1) Long oldTypeId,
+                                        @Min(1) Long newTypeId) {
+
         Animal animal = animalRepository.findById(animalId).orElseThrow(NoSuchElementException::new);
         AnimalType oldType = animalTypeRepository.findById(oldTypeId).orElseThrow(NoSuchElementException::new);
         AnimalType newType = animalTypeRepository.findById(newTypeId).orElseThrow(NoSuchElementException::new);
-        if (!animal.removeAnimalType(oldType)) {
-            throw new NoSuchElementException();
-        }
-        if (!animal.addAnimalType(newType)) {
-            throw new DuplicateCollectionItemException();
-        }
-        return animalRepository.save(animal);
+
+        animal.removeAnimalType(oldType);
+        animal.addAnimalType(newType);
+
+        return animalMapper.toDto(animalRepository.save(animal));
     }
 
     @Override
-    public Animal deleteTypeOfAnimal(Long animalId, Long typeId) {
+    public AnimalDto deleteTypeOfAnimal(@Min(1) Long animalId, @Min(1) Long typeId) {
         Animal animal = animalRepository.findById(animalId).orElseThrow(NoSuchElementException::new);
         AnimalType type = animalTypeRepository.findById(typeId).orElseThrow(NoSuchElementException::new);
-        if (!animal.removeAnimalType(type)) {
-            throw new NoSuchElementException();
-        }
+
+        animal.removeAnimalType(type);
         if (animal.getAnimalTypes().size() == 0) {
             throw new RemovingSingleTypeOfAnimalException();
         }
-        return animalRepository.save(animal);
+
+        return animalMapper.toDto(animalRepository.save(animal));
     }
 
 }

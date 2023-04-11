@@ -1,13 +1,13 @@
 package com.example.animalchipization.web.controller;
 
-import com.example.animalchipization.model.AnimalType;
 import com.example.animalchipization.service.AnimalTypeService;
-import com.example.animalchipization.web.form.AnimalTypeForm;
+import com.example.animalchipization.web.dto.AnimalTypeDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,27 +24,30 @@ public class AnimalTypeController {
     }
 
     @GetMapping("/{typeId}")
-    public ResponseEntity<AnimalType> findAnimalTypeById(@PathVariable("typeId") @Min(1) Long typeId) {
-        return new ResponseEntity<>(animalTypeService.findAnimalTypeById(typeId), HttpStatus.valueOf(200));
+    public ResponseEntity<AnimalTypeDto> findAnimalTypeById(@PathVariable("typeId") @Min(1) Long typeId) {
+        return new ResponseEntity<>(animalTypeService.findAnimalTypeById(typeId),
+                HttpStatus.valueOf(200));
     }
 
     @PostMapping(consumes = "application/json")
-    public ResponseEntity<AnimalType> addAnimalType(@RequestBody @Valid AnimalTypeForm animalTypeForm) {
-        AnimalType animalType = animalTypeForm.toAnimalType();
-        return new ResponseEntity<>(animalTypeService.addAnimalType(animalType), HttpStatus.valueOf(201));
+    @PreAuthorize("hasAnyRole({'ADMIN', 'CHIPPER'})")
+    public ResponseEntity<AnimalTypeDto> addAnimalType(@RequestBody @Valid AnimalTypeDto animalTypeDto) {
+        return new ResponseEntity<>(animalTypeService.addAnimalType(animalTypeDto),
+                HttpStatus.valueOf(201));
     }
 
     @PutMapping(path = "/{typeId}", consumes = "application/json")
-    public ResponseEntity<AnimalType> updateAnimalTypeById(@PathVariable("typeId") @Min(1) Long typeId,
-                                                           @RequestBody @Valid AnimalTypeForm animalTypeForm) {
-        AnimalType animalType = animalTypeForm.toAnimalType();
-        animalType.setId(typeId);
-        return new ResponseEntity<>(animalTypeService.updateAnimalType(animalType),
+    @PreAuthorize("hasAnyRole({'ADMIN', 'CHIPPER'})")
+    public ResponseEntity<AnimalTypeDto> updateAnimalType(@PathVariable("typeId") @Min(1) Long typeId,
+                                                          @RequestBody @Valid AnimalTypeDto animalTypeDto) {
+        animalTypeDto.setId(typeId);
+        return new ResponseEntity<>(animalTypeService.updateAnimalType(animalTypeDto),
                 HttpStatus.valueOf(200));
     }
 
     @DeleteMapping(path = "/{typeId}")
     @ResponseStatus(value = HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteAnimalTypeById(@PathVariable("typeId") @Min(1) Long typeId) {
         animalTypeService.deleteAnimalTypeById(typeId);
     }

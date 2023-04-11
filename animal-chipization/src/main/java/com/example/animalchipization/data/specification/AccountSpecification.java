@@ -1,6 +1,6 @@
 package com.example.animalchipization.data.specification;
 
-import com.example.animalchipization.model.Account;
+import com.example.animalchipization.entity.Account;
 import org.springframework.data.jpa.domain.Specification;
 
 public class AccountSpecification {

@@ -1,19 +1,18 @@
 package com.example.animalchipization.web.controller;
 
-import com.example.animalchipization.model.AnimalVisitedLocation;
 import com.example.animalchipization.service.AnimalVisitedLocationService;
-import com.example.animalchipization.web.form.AnimalVisitedLocationForm;
-import com.example.animalchipization.web.form.AnimalVisitedLocationPutForm;
-import jakarta.validation.Valid;
+import com.example.animalchipization.web.dto.AnimalVisitedLocationDto;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.util.Collection;
+import java.util.Map;
 
 @RestController
 @RequestMapping(path = "/animals/{animalId}/locations", produces = "application/json")
@@ -21,54 +20,53 @@ import java.time.LocalDateTime;
 public class AnimalVisitedLocationController {
 
     private final AnimalVisitedLocationService animalVisitedLocationService;
-    private final Converter<AnimalVisitedLocationForm, AnimalVisitedLocation> AnimalVisitedLocationFormToAnimalVisitedLocationConverter;
 
     @Autowired
-    public AnimalVisitedLocationController(AnimalVisitedLocationService animalVisitedLocationService,
-                                           Converter<AnimalVisitedLocationForm, AnimalVisitedLocation>
-                                                   AnimalVisitedLocationFormToAnimalVisitedLocationConverter) {
+    public AnimalVisitedLocationController(AnimalVisitedLocationService animalVisitedLocationService) {
         this.animalVisitedLocationService = animalVisitedLocationService;
-        this.AnimalVisitedLocationFormToAnimalVisitedLocationConverter = AnimalVisitedLocationFormToAnimalVisitedLocationConverter;
     }
 
     @GetMapping
-    public ResponseEntity<Iterable<AnimalVisitedLocation>> searchForAnimalVisitedLocations(
+    public ResponseEntity<Collection<AnimalVisitedLocationDto>> searchForAnimalVisitedLocations(
             @PathVariable("animalId") @Min(1) Long animalId,
-            @RequestParam(name = "startDateTime", required = false) LocalDateTime startDateTime,
-            @RequestParam(name = "endDateTime", required = false) LocalDateTime endDateTime,
+            @RequestParam(name = "startDateTime", required = false) ZonedDateTime startDateTime,
+            @RequestParam(name = "endDateTime", required = false) ZonedDateTime endDateTime,
             @RequestParam(name = "from", required = false, defaultValue = "0") @Min(0) Integer from,
             @RequestParam(name = "size", required = false, defaultValue = "10") @Min(1) Integer size) {
 
-        Iterable<AnimalVisitedLocation> animalVisitedLocations = animalVisitedLocationService
+        Collection<AnimalVisitedLocationDto> animalVisitedLocationsDto = animalVisitedLocationService
                 .searchForAnimalVisitedLocations(animalId, startDateTime, endDateTime, from, size);
-        return new ResponseEntity<>(animalVisitedLocations, HttpStatus.valueOf(200));
+        return new ResponseEntity<>(animalVisitedLocationsDto, HttpStatus.valueOf(200));
     }
 
     @PostMapping("/{pointId}")
-    public ResponseEntity<AnimalVisitedLocation> addAnimalVisitedLocation(
+    @PreAuthorize("hasAnyRole({'ADMIN', 'CHIPPER'})")
+    public ResponseEntity<AnimalVisitedLocationDto> addAnimalVisitedLocation(
             @PathVariable("animalId") @Min(1) Long animalId,
             @PathVariable("pointId") @Min(1) Long pointId) {
 
-        AnimalVisitedLocationForm animalVisitedLocationForm = new AnimalVisitedLocationForm(animalId, pointId);
-        AnimalVisitedLocation animalVisitedLocation = animalVisitedLocationService.addAnimalVisitedLocation(
-                AnimalVisitedLocationFormToAnimalVisitedLocationConverter
-                        .convert(animalVisitedLocationForm));
+        AnimalVisitedLocationDto animalVisitedLocation = animalVisitedLocationService
+                .addAnimalVisitedLocation(animalId, pointId);
         return new ResponseEntity<>(animalVisitedLocation, HttpStatus.valueOf(201));
     }
 
     @PutMapping(consumes = "application/json")
-    public ResponseEntity<AnimalVisitedLocation> updateAnimalVisitedLocation(
+    @PreAuthorize("hasAnyRole({'ADMIN', 'CHIPPER'})")
+    public ResponseEntity<AnimalVisitedLocationDto> updateAnimalVisitedLocation(
             @PathVariable("animalId") @Min(1) Long animalId,
-            @RequestBody @Valid AnimalVisitedLocationPutForm animalVisitedLocationPutForm) {
+            @RequestBody Map<String, @Min(1) Long> request) {
 
-        AnimalVisitedLocation animalVisitedLocation = animalVisitedLocationService
-                .updateAnimalVisitedLocation(animalId, animalVisitedLocationPutForm.getVisitedLocationPointId(),
-                        animalVisitedLocationPutForm.getLocationPointId());
+        Long visitedLocationPointId = request.get("visitedLocationPointId");
+        Long locationPointId = request.get("locationPointId");
+
+        AnimalVisitedLocationDto animalVisitedLocation = animalVisitedLocationService
+                .updateAnimalVisitedLocation(animalId, visitedLocationPointId, locationPointId);
         return new ResponseEntity<>(animalVisitedLocation, HttpStatus.valueOf(200));
     }
 
     @DeleteMapping("/{pointId}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteAnimalVisitedLocationById(@PathVariable("animalId") @Min(1) Long animalId,
                                                 @PathVariable("pointId") @Min(1) Long pointId) {
         animalVisitedLocationService.deleteAnimalVisitedLocation(animalId, pointId);

@@ -1,18 +1,25 @@
 package com.example.animalchipization.service;
 
-import com.example.animalchipization.model.AnimalVisitedLocation;
+import com.example.animalchipization.web.dto.AnimalVisitedLocationDto;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.util.Collection;
 
 public interface AnimalVisitedLocationService {
 
-    Iterable<AnimalVisitedLocation> searchForAnimalVisitedLocations(Long animalId, LocalDateTime startDateTime,
-                                                                    LocalDateTime endDateTime, Integer from,
-                                                                    Integer size);
+    AnimalVisitedLocationDto findById(Long pointId);
 
-    AnimalVisitedLocation addAnimalVisitedLocation(AnimalVisitedLocation animalVisitedLocation);
+    Collection<AnimalVisitedLocationDto> searchForAnimalVisitedLocations(
+            Long animalId, ZonedDateTime startDateTime,
+            ZonedDateTime endDateTime, Integer from,
+            Integer size);
 
-    AnimalVisitedLocation updateAnimalVisitedLocation(Long animalId, Long visitedLocationPointId, Long locationPointId);
+    AnimalVisitedLocationDto addAnimalVisitedLocation(Long animalId, Long pointId);
 
-    void deleteAnimalVisitedLocation(Long animalId, Long pointId);
+    AnimalVisitedLocationDto updateAnimalVisitedLocation(Long animalId,
+                                                         Long visitedLocationPointId,
+                                                         Long locationPointId);
+
+    void deleteAnimalVisitedLocation(Long animalId, Long visitedPointId);
+
 }
