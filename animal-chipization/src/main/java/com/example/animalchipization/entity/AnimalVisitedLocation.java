@@ -19,7 +19,7 @@ public class AnimalVisitedLocation {
     private ZonedDateTime dateTimeOfVisitLocationPoint;
     @ManyToOne(optional = false)
     private LocationPoint locationPoint;
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Animal animal;
 
     public AnimalVisitedLocation() {

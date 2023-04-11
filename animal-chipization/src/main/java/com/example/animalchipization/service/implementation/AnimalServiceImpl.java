@@ -83,7 +83,8 @@ public class AnimalServiceImpl implements AnimalService {
         animal.setLifeStatus(LifeStatus.ALIVE);
         animal.setChippingDateTime(ZonedDateTime.now().truncatedTo(ChronoUnit.SECONDS));
 
-        return animalMapper.toDto(animalRepository.save(animal));
+        Animal a = animalRepository.save(animal);
+        return animalMapper.toDto(a);
     }
 
     @Override
