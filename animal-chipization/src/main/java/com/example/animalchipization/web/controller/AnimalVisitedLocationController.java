@@ -10,7 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.Map;
 
@@ -29,8 +29,8 @@ public class AnimalVisitedLocationController {
     @GetMapping
     public ResponseEntity<Collection<AnimalVisitedLocationDto>> searchForAnimalVisitedLocations(
             @PathVariable("animalId") @Min(1) Long animalId,
-            @RequestParam(name = "startDateTime", required = false) LocalDateTime startDateTime,
-            @RequestParam(name = "endDateTime", required = false) LocalDateTime endDateTime,
+            @RequestParam(name = "startDateTime", required = false) ZonedDateTime startDateTime,
+            @RequestParam(name = "endDateTime", required = false) ZonedDateTime endDateTime,
             @RequestParam(name = "from", required = false, defaultValue = "0") @Min(0) Integer from,
             @RequestParam(name = "size", required = false, defaultValue = "10") @Min(1) Integer size) {
 

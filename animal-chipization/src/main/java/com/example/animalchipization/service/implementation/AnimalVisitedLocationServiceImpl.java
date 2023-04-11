@@ -21,7 +21,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -59,8 +59,8 @@ public class AnimalVisitedLocationServiceImpl implements AnimalVisitedLocationSe
     @Override
     public Collection<AnimalVisitedLocationDto> searchForAnimalVisitedLocations(
             @Min(1) Long animalId,
-            LocalDateTime startDateTime,
-            LocalDateTime endDateTime,
+            ZonedDateTime startDateTime,
+            ZonedDateTime endDateTime,
             @Min(0) Integer from,
             @Min(1) Integer size) {
 

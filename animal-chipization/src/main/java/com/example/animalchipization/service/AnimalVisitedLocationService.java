@@ -2,7 +2,7 @@ package com.example.animalchipization.service;
 
 import com.example.animalchipization.web.dto.AnimalVisitedLocationDto;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Collection;
 
 public interface AnimalVisitedLocationService {
@@ -10,8 +10,8 @@ public interface AnimalVisitedLocationService {
     AnimalVisitedLocationDto findById(Long pointId);
 
     Collection<AnimalVisitedLocationDto> searchForAnimalVisitedLocations(
-            Long animalId, LocalDateTime startDateTime,
-            LocalDateTime endDateTime, Integer from,
+            Long animalId, ZonedDateTime startDateTime,
+            ZonedDateTime endDateTime, Integer from,
             Integer size);
 
     AnimalVisitedLocationDto addAnimalVisitedLocation(Long animalId, Long pointId);

@@ -3,7 +3,7 @@ package com.example.animalchipization.data.specification;
 import com.example.animalchipization.entity.AnimalVisitedLocation;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 public class AnimalVisitedLocationSpecification {
     public static Specification<AnimalVisitedLocation> hasAnimalId(Long animalId) {
@@ -12,7 +12,7 @@ public class AnimalVisitedLocationSpecification {
     }
 
     public static Specification<AnimalVisitedLocation> hasDateTimeOfVisitLocationPointGreaterThanOrEqualTo(
-            LocalDateTime startDateTime) {
+            ZonedDateTime startDateTime) {
         return (root, criteriaQuery, criteriaBuilder) -> {
             if (startDateTime != null) {
                 return criteriaBuilder.greaterThanOrEqualTo(root.get("dateTimeOfVisitLocationPoint"), startDateTime);
@@ -23,7 +23,7 @@ public class AnimalVisitedLocationSpecification {
     }
 
     public static Specification<AnimalVisitedLocation> hasDateTimeOfVisitLocationPointLessThanOrEqualTo(
-            LocalDateTime endDateTime) {
+            ZonedDateTime endDateTime) {
         return (root, criteriaQuery, criteriaBuilder) -> {
             if (endDateTime != null) {
                 return criteriaBuilder.lessThanOrEqualTo(root.get("dateTimeOfVisitLocationPoint"), endDateTime);
