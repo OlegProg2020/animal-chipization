@@ -3,6 +3,7 @@ package com.example.animalchipization.config;
 import com.example.animalchipization.data.repository.AreaRepository;
 import com.example.animalchipization.entity.Area;
 import com.example.animalchipization.entity.enums.Role;
+import com.example.animalchipization.exception.AnimalIsAlreadyAtThisPointException;
 import com.example.animalchipization.service.AccountService;
 import com.example.animalchipization.web.dto.AccountDto;
 import org.locationtech.jts.geom.Polygon;
