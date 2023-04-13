@@ -1,6 +1,7 @@
 package com.example.animalchipization.data.repository;
 
 import com.example.animalchipization.entity.Area;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -22,10 +23,18 @@ public interface AreaRepository extends Repository<Area, Long> {
 
     @Modifying
     @Transactional
-    @Query(value = "INSERT INTO area (id, name, area_points) VALUES (10, 'name10', '(5,5),(-5,0),(0,5),(5,5)');",
+    @Query(value = "INSERT INTO area (name, area_points) VALUES (:name, :areaPoints);",
             nativeQuery = true)
-    void saveArea();
+    void save(@Param("name") String name, @Param("areaPoints") String areaPoints);
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE area SET name = :name, area_points = :areaPoints where id = :id;",
+            nativeQuery = true)
+    void update(@Param("id") Long id, @Param("name") String name, @Param("areaPoints") String areaPoints);
 
     Optional<Area> findById(Long id);
+
+    boolean existsById(Long id);
 
 }

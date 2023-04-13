@@ -1,11 +1,14 @@
 package com.example.animalchipization.config;
 
 import com.example.animalchipization.data.repository.AreaRepository;
+import com.example.animalchipization.util.converter.PolygonToSqlStringPolygonConverter;
 import com.example.animalchipization.entity.Area;
 import com.example.animalchipization.entity.enums.Role;
 import com.example.animalchipization.exception.AnimalIsAlreadyAtThisPointException;
 import com.example.animalchipization.service.AccountService;
 import com.example.animalchipization.web.dto.AccountDto;
+import org.hibernate.type.StandardBasicTypes;
+import org.hibernate.type.spi.TypeConfiguration;
 import org.locationtech.jts.geom.Polygon;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
@@ -55,7 +58,13 @@ public class DataConfig {
             //var a = areaRepository.save(area);
             //area.setAreaPoints(polygon);
             //areaRepository.save(area);
-            var a = areaRepository.findById(10L);
+            var a = areaRepository.existsById(1L);
+            var b = areaRepository.existsById(11L);
+            var c = areaRepository.findById(1L);
+            var d = areaRepository.findById(10L);
+            PolygonToSqlStringPolygonConverter converter = new PolygonToSqlStringPolygonConverter();
+            areaRepository.save(area.getName(), converter.convert(area.getAreaPoints()));
+            areaRepository.update(1L, "new_name", converter.convert(area.getAreaPoints()));
             area.setAreaPoints(polygon);
         };
     }
