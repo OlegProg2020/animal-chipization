@@ -1,5 +1,6 @@
 package com.example.animalchipization.entity;
 
+import com.example.animalchipization.util.converter.SqlPolygonToPolygonConverter;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -15,11 +16,12 @@ import org.locationtech.jts.geom.Polygon;
 public class Area {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(unique = true)
     private String name;
     @Column(columnDefinition = "polygon")
+    @Convert(converter = SqlPolygonToPolygonConverter.class)
     private Polygon areaPoints;
 
 }
