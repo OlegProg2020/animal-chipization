@@ -1,6 +1,5 @@
 package com.example.animalchipization.config;
 
-import com.example.animalchipization.data.repository.AreaRepository;
 import com.example.animalchipization.dto.AccountDto;
 import com.example.animalchipization.entity.enums.Role;
 import com.example.animalchipization.service.AccountService;
@@ -12,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 public class DataConfig {
 
     @Bean
-    public ApplicationRunner dataLoader(AccountService accountService, AreaRepository areaRepository) {
+    public ApplicationRunner dataLoader(AccountService accountService) {
         return args -> {
             AccountDto adminDto = AccountDto.builder().withFirstName("adminFirstName")
                     .withLastName("adminLastName").withEmail("admin@simbirsoft.com")

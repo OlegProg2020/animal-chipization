@@ -31,8 +31,8 @@ public class AreaDto {
         this.areaPoints = builder.areaPoints;
     }
 
-    public static LocationPointDto.Builder builder() {
-        return new LocationPointDto.Builder();
+    public static Builder builder() {
+        return new Builder();
     }
 
     public static class Builder {
