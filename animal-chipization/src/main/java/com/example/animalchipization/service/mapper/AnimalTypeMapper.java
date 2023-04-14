@@ -1,7 +1,7 @@
 package com.example.animalchipization.service.mapper;
 
+import com.example.animalchipization.dto.AnimalTypeDto;
 import com.example.animalchipization.entity.AnimalType;
-import com.example.animalchipization.web.dto.AnimalTypeDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

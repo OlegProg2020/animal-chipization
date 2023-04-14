@@ -2,6 +2,7 @@ package com.example.animalchipization.service.implementation;
 
 import com.example.animalchipization.data.repository.AnimalRepository;
 import com.example.animalchipization.data.repository.AnimalTypeRepository;
+import com.example.animalchipization.dto.AnimalDto;
 import com.example.animalchipization.entity.Animal;
 import com.example.animalchipization.entity.AnimalType;
 import com.example.animalchipization.entity.enums.Gender;
@@ -12,7 +13,6 @@ import com.example.animalchipization.exception.RemovingSingleTypeOfAnimalExcepti
 import com.example.animalchipization.service.AnimalService;
 import com.example.animalchipization.service.mapper.Mapper;
 import com.example.animalchipization.util.pagination.OffsetBasedPageRequest;
-import com.example.animalchipization.web.dto.AnimalDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;

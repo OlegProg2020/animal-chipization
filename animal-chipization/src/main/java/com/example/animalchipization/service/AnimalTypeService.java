@@ -1,6 +1,6 @@
 package com.example.animalchipization.service;
 
-import com.example.animalchipization.web.dto.AnimalTypeDto;
+import com.example.animalchipization.dto.AnimalTypeDto;
 
 public interface AnimalTypeService {
 

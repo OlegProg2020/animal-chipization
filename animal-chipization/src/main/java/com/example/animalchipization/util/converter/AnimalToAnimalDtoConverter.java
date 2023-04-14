@@ -1,9 +1,9 @@
 package com.example.animalchipization.util.converter;
 
+import com.example.animalchipization.dto.AnimalDto;
 import com.example.animalchipization.entity.Animal;
 import com.example.animalchipization.entity.AnimalType;
 import com.example.animalchipization.entity.AnimalVisitedLocation;
-import com.example.animalchipization.web.dto.AnimalDto;
 import org.modelmapper.Converter;
 import org.modelmapper.spi.MappingContext;
 import org.springframework.stereotype.Component;

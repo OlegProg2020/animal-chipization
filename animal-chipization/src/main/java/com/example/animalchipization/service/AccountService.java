@@ -1,6 +1,6 @@
 package com.example.animalchipization.service;
 
-import com.example.animalchipization.web.dto.AccountDto;
+import com.example.animalchipization.dto.AccountDto;
 
 import java.util.Collection;
 

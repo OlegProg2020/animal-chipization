@@ -1,8 +1,8 @@
 package com.example.animalchipization.service;
 
+import com.example.animalchipization.dto.AnimalDto;
 import com.example.animalchipization.entity.enums.Gender;
 import com.example.animalchipization.entity.enums.LifeStatus;
-import com.example.animalchipization.web.dto.AnimalDto;
 
 import java.time.ZonedDateTime;
 import java.util.Collection;

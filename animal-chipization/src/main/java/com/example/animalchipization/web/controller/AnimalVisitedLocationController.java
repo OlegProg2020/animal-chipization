@@ -1,7 +1,7 @@
 package com.example.animalchipization.web.controller;
 
+import com.example.animalchipization.dto.AnimalVisitedLocationDto;
 import com.example.animalchipization.service.AnimalVisitedLocationService;
-import com.example.animalchipization.web.dto.AnimalVisitedLocationDto;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

@@ -1,9 +1,9 @@
 package com.example.animalchipization.config;
 
 import com.example.animalchipization.data.repository.AreaRepository;
+import com.example.animalchipization.dto.AccountDto;
 import com.example.animalchipization.entity.enums.Role;
 import com.example.animalchipization.service.AccountService;
-import com.example.animalchipization.web.dto.AccountDto;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

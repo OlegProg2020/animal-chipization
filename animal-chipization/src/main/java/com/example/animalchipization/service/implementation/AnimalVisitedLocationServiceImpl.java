@@ -3,6 +3,7 @@ package com.example.animalchipization.service.implementation;
 import com.example.animalchipization.data.repository.AnimalRepository;
 import com.example.animalchipization.data.repository.AnimalVisitedLocationRepository;
 import com.example.animalchipization.data.repository.LocationPointRepository;
+import com.example.animalchipization.dto.AnimalVisitedLocationDto;
 import com.example.animalchipization.entity.Animal;
 import com.example.animalchipization.entity.AnimalVisitedLocation;
 import com.example.animalchipization.entity.LocationPoint;
@@ -13,7 +14,6 @@ import com.example.animalchipization.exception.FirstLocationPointConcidesWithChi
 import com.example.animalchipization.service.AnimalVisitedLocationService;
 import com.example.animalchipization.service.mapper.Mapper;
 import com.example.animalchipization.util.pagination.OffsetBasedPageRequest;
-import com.example.animalchipization.web.dto.AnimalVisitedLocationDto;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;

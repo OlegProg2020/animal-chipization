@@ -1,11 +1,11 @@
 package com.example.animalchipization.service.implementation;
 
 import com.example.animalchipization.data.repository.LocationPointRepository;
+import com.example.animalchipization.dto.LocationPointDto;
 import com.example.animalchipization.entity.LocationPoint;
 import com.example.animalchipization.exception.LocationPointWithSuchCoordinatesAlreadyExistsException;
 import com.example.animalchipization.service.LocationPointService;
 import com.example.animalchipization.service.mapper.Mapper;
-import com.example.animalchipization.web.dto.LocationPointDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;

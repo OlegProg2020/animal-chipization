@@ -1,9 +1,9 @@
 package com.example.animalchipization.web.controller;
 
+import com.example.animalchipization.dto.AnimalDto;
 import com.example.animalchipization.entity.enums.Gender;
 import com.example.animalchipization.entity.enums.LifeStatus;
 import com.example.animalchipization.service.AnimalService;
-import com.example.animalchipization.web.dto.AnimalDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;

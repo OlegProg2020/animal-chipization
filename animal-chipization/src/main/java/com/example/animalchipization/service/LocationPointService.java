@@ -1,6 +1,6 @@
 package com.example.animalchipization.service;
 
-import com.example.animalchipization.web.dto.LocationPointDto;
+import com.example.animalchipization.dto.LocationPointDto;
 
 public interface LocationPointService {
 
