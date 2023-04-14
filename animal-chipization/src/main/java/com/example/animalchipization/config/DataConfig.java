@@ -1,15 +1,16 @@
 package com.example.animalchipization.config;
 
+import com.example.animalchipization.data.repository.CustomAreaRepositoryImpl;
 import com.example.animalchipization.data.repository.AreaRepository;
 import com.example.animalchipization.util.converter.PolygonToSqlStringPolygonConverter;
 import com.example.animalchipization.entity.Area;
 import com.example.animalchipization.entity.enums.Role;
-import com.example.animalchipization.exception.AnimalIsAlreadyAtThisPointException;
 import com.example.animalchipization.service.AccountService;
 import com.example.animalchipization.web.dto.AccountDto;
-import org.hibernate.type.StandardBasicTypes;
-import org.hibernate.type.spi.TypeConfiguration;
 import org.locationtech.jts.geom.Polygon;
+import org.postgresql.geometric.PGpoint;
+import org.postgresql.geometric.PGpolygon;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +20,13 @@ import org.locationtech.jts.geom.GeometryFactory;
 
 @Configuration
 public class DataConfig {
+
+    private final CustomAreaRepositoryImpl areaCustomRepository;
+    @Autowired
+    public DataConfig(CustomAreaRepositoryImpl areaCustomRepository) {
+        this.areaCustomRepository = areaCustomRepository;
+    }
+
     @Bean
     public ApplicationRunner dataLoader(AccountService accountService, AreaRepository areaRepository) {
         return args -> {
@@ -63,8 +71,19 @@ public class DataConfig {
             var c = areaRepository.findById(1L);
             var d = areaRepository.findById(10L);
             PolygonToSqlStringPolygonConverter converter = new PolygonToSqlStringPolygonConverter();
+
+            areaCustomRepository.save(area);
+
+            PGpoint p1 = new PGpoint(0, 0);
+            PGpoint p2 = new PGpoint(1, 1);
+            PGpoint p3 = new PGpoint(1, 0);
+            PGpoint p4 = new PGpoint(0, 0);
+            PGpolygon pg = new PGpolygon(new PGpoint[] {p1, p2, p3, p4});
+
+            areaRepository.saveCustom(area.getName(), pg);
             areaRepository.save(area.getName(), converter.convert(area.getAreaPoints()));
             areaRepository.update(1L, "new_name", converter.convert(area.getAreaPoints()));
+
             area.setAreaPoints(polygon);
         };
     }

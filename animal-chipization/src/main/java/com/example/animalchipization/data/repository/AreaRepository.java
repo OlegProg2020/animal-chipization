@@ -2,6 +2,9 @@ package com.example.animalchipization.data.repository;
 
 import com.example.animalchipization.entity.Area;
 import jakarta.validation.constraints.NotNull;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.Polygon;
+import org.postgresql.geometric.PGpolygon;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -26,6 +29,12 @@ public interface AreaRepository extends Repository<Area, Long> {
     @Query(value = "INSERT INTO area (name, area_points) VALUES (:name, :areaPoints);",
             nativeQuery = true)
     void save(@Param("name") String name, @Param("areaPoints") String areaPoints);
+
+    @Modifying
+    @Transactional
+    @Query(value = "INSERT INTO area (name, area_points) VALUES (?, ?);",
+            nativeQuery = true)
+    void saveCustom(String name, PGpolygon areaPoints);
 
     @Modifying
     @Transactional
