@@ -9,12 +9,12 @@ import org.locationtech.jts.io.ParseException;
 import org.locationtech.jts.io.WKTReader;
 
 @Converter
-public class SqlPolygonToPolygonConverter implements AttributeConverter<Polygon, String> {
+public class StringSqlJpaPolygonToJtsPolygonConverter implements AttributeConverter<Polygon, String> {
 
     /**
      * When called, returns UnsupportedOperationException, since without
-     * using Postgis there is no data type corresponding to the SQL type
-     * 'poligon'.
+     * using Postgis and Hibernate Spatial there is no data type in JPA
+     * corresponding to the SQL type 'poligon'.
      */
     @Override
     public String convertToDatabaseColumn(Polygon attribute) {

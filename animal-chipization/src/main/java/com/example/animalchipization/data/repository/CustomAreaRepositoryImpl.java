@@ -1,58 +1,59 @@
 package com.example.animalchipization.data.repository;
 
 import com.example.animalchipization.entity.Area;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.Query;
-import org.postgresql.geometric.PGpoint;
+import org.locationtech.jts.geom.Polygon;
 import org.postgresql.geometric.PGpolygon;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.PreparedStatement;
+import java.util.Collection;
 
-@Repository
-public class CustomAreaRepositoryImpl {
+@Component
+public class CustomAreaRepositoryImpl implements CustomAreaRepository {
 
     private final JdbcTemplate jdbcTemplate;
+    private final Converter<Polygon, PGpolygon> jtsPolygonToPGpolygonConverter;
 
     @Autowired
-    public CustomAreaRepositoryImpl(JdbcTemplate jdbcTemplate) {
+    public CustomAreaRepositoryImpl(JdbcTemplate jdbcTemplate,
+                                    Converter<Polygon, PGpolygon> jtsPolygonToPGpolygonConverter) {
         this.jdbcTemplate = jdbcTemplate;
+        this.jtsPolygonToPGpolygonConverter = jtsPolygonToPGpolygonConverter;
     }
 
     @Transactional
     @Modifying
     public void save(Area area) {
         String sql = "INSERT INTO area (name, area_points) VALUES (?, ?);";
-        PGpoint p1 = new PGpoint(0, 0);
-        PGpoint p2 = new PGpoint(1, 1);
-        PGpoint p3 = new PGpoint(1, 0);
-        PGpoint p4 = new PGpoint(0, 0);
-        PGpolygon pg = new PGpolygon(new PGpoint[] {p1, p2, p3, p4});
-        var query = jdbcTemplate.update(sql, area.getName(), pg);
+        jdbcTemplate.update(sql, area.getName(),
+                jtsPolygonToPGpolygonConverter.convert(area.getAreaPoints()));
+    }
 
+    @Transactional
+    @Modifying
+    public void update(Area area) {
+        String sql = "UPDATE area SET name = ?, area_points = ? where id = ?;";
+        jdbcTemplate.update(sql, area.getName(),
+                jtsPolygonToPGpolygonConverter.convert(area.getAreaPoints()),
+                area.getId());
+    }
 
-        //TODO попробовать JDBC
-        /*String sql = "INSERT INTO area (name, area_points) VALUES (?, ?);";
-        Query query = entityManager.createNativeQuery(sql);
+    @Override
+    public Boolean existsByAreaPoints(Polygon areaPoints) {
+        String sql = "SELECT CASE WHEN COUNT(area_points) >= 1 THEN TRUE ELSE FALSE END FROM area WHERE area_points ~= ?";
+        return jdbcTemplate.queryForObject(sql, Boolean.class,
+                jtsPolygonToPGpolygonConverter.convert(areaPoints));
+    }
 
-        PGpoint p1 = new PGpoint(0, 0);
-        PGpoint p2 = new PGpoint(1, 1);
-        PGpoint p3 = new PGpoint(1, 0);
-        PGpoint p4 = new PGpoint(0, 0);
-        PGpolygon pg = new PGpolygon(new PGpoint[] {p1, p2, p3, p4});
-
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setObject(1, area.getName());
-            ps.setObject(2, pg);
-            ps.executeUpdate();
-        } catch (Exception exception) {
-        }
-        // https://jdbc.postgresql.org/documentation/server-prepare/*/
+    @Override
+    public Collection<PGpolygon> findAreaOverlapsByAreaPoints(Polygon areaPoints) {
+        String sql = "SELECT area_points FROM area WHERE area_points && ?";
+        return jdbcTemplate.queryForList(sql, PGpolygon.class,
+                jtsPolygonToPGpolygonConverter.convert(areaPoints));
     }
 
 }

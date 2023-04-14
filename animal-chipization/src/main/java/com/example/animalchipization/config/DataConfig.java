@@ -1,31 +1,15 @@
 package com.example.animalchipization.config;
 
-import com.example.animalchipization.data.repository.CustomAreaRepositoryImpl;
 import com.example.animalchipization.data.repository.AreaRepository;
-import com.example.animalchipization.util.converter.PolygonToSqlStringPolygonConverter;
-import com.example.animalchipization.entity.Area;
 import com.example.animalchipization.entity.enums.Role;
 import com.example.animalchipization.service.AccountService;
 import com.example.animalchipization.web.dto.AccountDto;
-import org.locationtech.jts.geom.Polygon;
-import org.postgresql.geometric.PGpoint;
-import org.postgresql.geometric.PGpolygon;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.GeometryFactory;
-
 @Configuration
 public class DataConfig {
-
-    private final CustomAreaRepositoryImpl areaCustomRepository;
-    @Autowired
-    public DataConfig(CustomAreaRepositoryImpl areaCustomRepository) {
-        this.areaCustomRepository = areaCustomRepository;
-    }
 
     @Bean
     public ApplicationRunner dataLoader(AccountService accountService, AreaRepository areaRepository) {
@@ -47,44 +31,6 @@ public class DataConfig {
                     .withPassword("qwerty123").withRole(Role.USER).build();
             userDto.setId(3L);
             accountService.registry(userDto);
-
-            // Area
-            Area area = new Area();
-            area.setId(2L);
-            area.setName("myArea");
-            GeometryFactory geometryFactory = new GeometryFactory();
-            Coordinate[] coordinates = new Coordinate[] {
-                    new Coordinate(0, 0),
-                    new Coordinate(0, 10),
-                    new Coordinate(10, 10),
-                    new Coordinate(10, 0),
-                    new Coordinate(0, 0)
-            };
-            Polygon polygon = geometryFactory.createPolygon(coordinates);
-            area.setAreaPoints(polygon);
-            //var a = areaRepository.findById(1L);
-            //var a = areaRepository.save(area);
-            //area.setAreaPoints(polygon);
-            //areaRepository.save(area);
-            var a = areaRepository.existsById(1L);
-            var b = areaRepository.existsById(11L);
-            var c = areaRepository.findById(1L);
-            var d = areaRepository.findById(10L);
-            PolygonToSqlStringPolygonConverter converter = new PolygonToSqlStringPolygonConverter();
-
-            areaCustomRepository.save(area);
-
-            PGpoint p1 = new PGpoint(0, 0);
-            PGpoint p2 = new PGpoint(1, 1);
-            PGpoint p3 = new PGpoint(1, 0);
-            PGpoint p4 = new PGpoint(0, 0);
-            PGpolygon pg = new PGpolygon(new PGpoint[] {p1, p2, p3, p4});
-
-            areaRepository.saveCustom(area.getName(), pg);
-            areaRepository.save(area.getName(), converter.convert(area.getAreaPoints()));
-            areaRepository.update(1L, "new_name", converter.convert(area.getAreaPoints()));
-
-            area.setAreaPoints(polygon);
         };
     }
 

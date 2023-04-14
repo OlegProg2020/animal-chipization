@@ -1,6 +1,6 @@
 package com.example.animalchipization.entity;
 
-import com.example.animalchipization.util.converter.SqlPolygonToPolygonConverter;
+import com.example.animalchipization.util.converter.StringSqlJpaPolygonToJtsPolygonConverter;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -21,7 +21,7 @@ public class Area {
     @Column(unique = true)
     private String name;
     @Column(columnDefinition = "polygon")
-    @Convert(converter = SqlPolygonToPolygonConverter.class)
+    @Convert(converter = StringSqlJpaPolygonToJtsPolygonConverter.class)
     private Polygon areaPoints;
 
 }
