@@ -22,4 +22,6 @@ public interface AnimalVisitedLocationService {
 
     void deleteAnimalVisitedLocation(Long animalId, Long visitedPointId);
 
+    Collection<AnimalVisitedLocationDto> findAllById(Iterable<Long> ids);
+
 }

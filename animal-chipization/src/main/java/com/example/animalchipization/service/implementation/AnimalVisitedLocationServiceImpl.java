@@ -26,6 +26,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import static com.example.animalchipization.data.specification.AnimalVisitedLocationSpecification.*;
 
@@ -132,7 +134,17 @@ public class AnimalVisitedLocationServiceImpl implements AnimalVisitedLocationSe
         animalVisitedLocationRepository.delete(visitedLocationPoint);
     }
 
+    public Collection<AnimalVisitedLocationDto> findAllById(Iterable<Long> ids) {
+        Iterable<AnimalVisitedLocation> visitedLocations = animalVisitedLocationRepository
+                .findAllById(ids);
+        return StreamSupport.stream(visitedLocations.spliterator(), false)
+                .map(animalVisitedLocationMapper::toDto)
+                .collect(Collectors.toList());
+    }
 
+
+
+    
 
     /* helper methods */
 

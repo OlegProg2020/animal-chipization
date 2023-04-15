@@ -12,7 +12,9 @@ import org.modelmapper.spi.MappingContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
@@ -64,9 +66,11 @@ public class AnimalDtoToAnimalConverter implements Converter<AnimalDto, Animal> 
         entity.setChippingDateTime(dto.getChippingDateTime());
         entity.setChipper(accountMapper.toEntity(accountService.findAccountById(dto.getChipperId())));
         entity.setChippingLocation(locationPointMapper.toEntity(locationPointService.findLocationPointById(dto.getChippingLocationId())));
-        entity.setVisitedLocations(dto.getVisitedLocations().stream()
-                .map(id -> animalVisitedLocationMapper.toEntity(animalVisitedLocationService.findById(id)))
-                .collect(Collectors.toCollection(LinkedList::new)));
+        List<AnimalVisitedLocation> visitedLocations = animalVisitedLocationService
+                .findAllById(dto.getVisitedLocations()).stream()
+                .map(animalVisitedLocationMapper::toEntity)
+                .collect(Collectors.toCollection(LinkedList::new));
+        entity.setVisitedLocations(visitedLocations);
         entity.setDeathDateTime(dto.getDeathDateTime());
         return entity;
     }
