@@ -55,7 +55,7 @@ public class AnimalDtoToAnimalConverter implements Converter<AnimalDto, Animal> 
         Animal entity = new Animal();
         entity.setId(dto.getId());
         entity.setAnimalTypes(dto.getAnimalTypes().stream()
-                .map(id -> animalTypeMapper.toEntity(animalTypeService.findAnimalTypeById(id)))
+                .map(id -> animalTypeMapper.toEntity(animalTypeService.findById(id)))
                 .collect(Collectors.toSet()));
         entity.setWeight(dto.getWeight());
         entity.setLength(dto.getLength());

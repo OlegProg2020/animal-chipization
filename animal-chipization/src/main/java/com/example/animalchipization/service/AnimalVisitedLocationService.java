@@ -7,20 +7,20 @@ import java.util.Collection;
 
 public interface AnimalVisitedLocationService {
 
-    AnimalVisitedLocationDto findById(Long pointId);
+    AnimalVisitedLocationDto findById(Long id);
 
     Collection<AnimalVisitedLocationDto> searchForAnimalVisitedLocations(
             Long animalId, ZonedDateTime startDateTime,
             ZonedDateTime endDateTime, Integer from,
             Integer size);
 
-    AnimalVisitedLocationDto addAnimalVisitedLocation(Long animalId, Long pointId);
+    AnimalVisitedLocationDto save(Long animalId, Long pointId);
 
-    AnimalVisitedLocationDto updateAnimalVisitedLocation(Long animalId,
-                                                         Long visitedLocationPointId,
-                                                         Long locationPointId);
+    AnimalVisitedLocationDto update(Long animalId,
+                                    Long visitedLocationPointId,
+                                    Long locationPointId);
 
-    void deleteAnimalVisitedLocation(Long animalId, Long visitedPointId);
+    void delete(Long animalId, Long visitedPointId);
 
     Collection<AnimalVisitedLocationDto> findAllById(Iterable<Long> ids);
 

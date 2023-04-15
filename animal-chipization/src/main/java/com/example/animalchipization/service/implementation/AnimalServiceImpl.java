@@ -47,8 +47,8 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public AnimalDto findById(@Min(1) Long animalId) {
-        return animalMapper.toDto(animalRepository.findById(animalId)
+    public AnimalDto findById(@Min(1) Long id) {
+        return animalMapper.toDto(animalRepository.findById(id)
                 .orElseThrow(NoSuchElementException::new));
     }
 
@@ -74,7 +74,7 @@ public class AnimalServiceImpl implements AnimalService {
 
     @Override
     @Transactional
-    public AnimalDto addAnimal(@Valid AnimalDto animalDto) {
+    public AnimalDto save(@Valid AnimalDto animalDto) {
         if (animalDto.getAnimalTypes().isEmpty()) {
             throw new EmptyAnimalTypesException();
         }
@@ -89,7 +89,7 @@ public class AnimalServiceImpl implements AnimalService {
 
     @Override
     @Transactional
-    public AnimalDto updateAnimal(@Min(1) Long animalId, @Valid AnimalDto updatedAnimalDto) {
+    public AnimalDto update(@Min(1) Long animalId, @Valid AnimalDto updatedAnimalDto) {
         Animal animal = animalRepository.findById(animalId).orElseThrow(NoSuchElementException::new);
         Animal updatedAnimal = animalMapper.toEntity(updatedAnimalDto);
 
@@ -106,8 +106,8 @@ public class AnimalServiceImpl implements AnimalService {
 
     @Override
     @Transactional
-    public void deleteAnimalById(@Min(1) Long animalId) {
-        Animal animal = animalRepository.findById(animalId).orElseThrow(NoSuchElementException::new);
+    public void deleteById(@Min(1) Long id) {
+        Animal animal = animalRepository.findById(id).orElseThrow(NoSuchElementException::new);
         if (animal.isAnimalAtChippingLocation()) {
             animalRepository.delete(animal);
         } else {

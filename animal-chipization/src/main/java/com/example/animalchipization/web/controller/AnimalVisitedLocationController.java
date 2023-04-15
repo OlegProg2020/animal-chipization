@@ -46,7 +46,7 @@ public class AnimalVisitedLocationController {
             @PathVariable("pointId") @Min(1) Long pointId) {
 
         AnimalVisitedLocationDto animalVisitedLocation = animalVisitedLocationService
-                .addAnimalVisitedLocation(animalId, pointId);
+                .save(animalId, pointId);
         return new ResponseEntity<>(animalVisitedLocation, HttpStatus.valueOf(201));
     }
 
@@ -60,7 +60,7 @@ public class AnimalVisitedLocationController {
         Long locationPointId = request.get("locationPointId");
 
         AnimalVisitedLocationDto animalVisitedLocation = animalVisitedLocationService
-                .updateAnimalVisitedLocation(animalId, visitedLocationPointId, locationPointId);
+                .update(animalId, visitedLocationPointId, locationPointId);
         return new ResponseEntity<>(animalVisitedLocation, HttpStatus.valueOf(200));
     }
 
@@ -69,7 +69,7 @@ public class AnimalVisitedLocationController {
     @PreAuthorize("hasRole('ADMIN')")
     public void deleteAnimalVisitedLocationById(@PathVariable("animalId") @Min(1) Long animalId,
                                                 @PathVariable("pointId") @Min(1) Long pointId) {
-        animalVisitedLocationService.deleteAnimalVisitedLocation(animalId, pointId);
+        animalVisitedLocationService.delete(animalId, pointId);
     }
 
 }

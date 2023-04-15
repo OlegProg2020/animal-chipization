@@ -26,7 +26,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import static com.example.animalchipization.data.specification.AnimalVisitedLocationSpecification.*;
@@ -86,7 +85,7 @@ public class AnimalVisitedLocationServiceImpl implements AnimalVisitedLocationSe
 
     @Override
     @Transactional
-    public AnimalVisitedLocationDto addAnimalVisitedLocation(@Min(1) Long animalId, @Min(1) Long pointId) {
+    public AnimalVisitedLocationDto save(@Min(1) Long animalId, @Min(1) Long pointId) {
 
         Animal animal = animalRepository.findById(animalId).orElseThrow(NoSuchElementException::new);
         LocationPoint point = locationPointRepository.findById(pointId).orElseThrow(NoSuchElementException::new);
@@ -102,9 +101,9 @@ public class AnimalVisitedLocationServiceImpl implements AnimalVisitedLocationSe
 
     @Override
     @Transactional
-    public AnimalVisitedLocationDto updateAnimalVisitedLocation(@Min(1) Long animalId,
-                                                                @Min(1) Long visitedLocationPointId,
-                                                                @Min(1) Long locationPointId) {
+    public AnimalVisitedLocationDto update(@Min(1) Long animalId,
+                                           @Min(1) Long visitedLocationPointId,
+                                           @Min(1) Long locationPointId) {
 
         Animal animal = animalRepository.findById(animalId).orElseThrow(NoSuchElementException::new);
         AnimalVisitedLocation visitedLocation = animalVisitedLocationRepository
@@ -121,7 +120,7 @@ public class AnimalVisitedLocationServiceImpl implements AnimalVisitedLocationSe
 
     @Override
     @Transactional
-    public void deleteAnimalVisitedLocation(Long animalId, Long visitedPointId) {
+    public void delete(Long animalId, Long visitedPointId) {
         Animal animal = animalRepository.findById(animalId).orElseThrow(NoSuchElementException::new);
         AnimalVisitedLocation visitedLocationPoint = animalVisitedLocationRepository.findById(visitedPointId)
                 .orElseThrow(NoSuchElementException::new);
@@ -144,7 +143,7 @@ public class AnimalVisitedLocationServiceImpl implements AnimalVisitedLocationSe
 
 
 
-    
+
 
     /* helper methods */
 

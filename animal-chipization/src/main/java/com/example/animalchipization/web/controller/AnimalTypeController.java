@@ -25,14 +25,14 @@ public class AnimalTypeController {
 
     @GetMapping("/{typeId}")
     public ResponseEntity<AnimalTypeDto> findAnimalTypeById(@PathVariable("typeId") @Min(1) Long typeId) {
-        return new ResponseEntity<>(animalTypeService.findAnimalTypeById(typeId),
+        return new ResponseEntity<>(animalTypeService.findById(typeId),
                 HttpStatus.valueOf(200));
     }
 
     @PostMapping(consumes = "application/json")
     @PreAuthorize("hasAnyRole({'ADMIN', 'CHIPPER'})")
     public ResponseEntity<AnimalTypeDto> addAnimalType(@RequestBody @Valid AnimalTypeDto animalTypeDto) {
-        return new ResponseEntity<>(animalTypeService.addAnimalType(animalTypeDto),
+        return new ResponseEntity<>(animalTypeService.save(animalTypeDto),
                 HttpStatus.valueOf(201));
     }
 
@@ -41,7 +41,7 @@ public class AnimalTypeController {
     public ResponseEntity<AnimalTypeDto> updateAnimalType(@PathVariable("typeId") @Min(1) Long typeId,
                                                           @RequestBody @Valid AnimalTypeDto animalTypeDto) {
         animalTypeDto.setId(typeId);
-        return new ResponseEntity<>(animalTypeService.updateAnimalType(animalTypeDto),
+        return new ResponseEntity<>(animalTypeService.update(animalTypeDto),
                 HttpStatus.valueOf(200));
     }
 
@@ -49,7 +49,7 @@ public class AnimalTypeController {
     @ResponseStatus(value = HttpStatus.OK)
     @PreAuthorize("hasRole('ADMIN')")
     public void deleteAnimalTypeById(@PathVariable("typeId") @Min(1) Long typeId) {
-        animalTypeService.deleteAnimalTypeById(typeId);
+        animalTypeService.deleteById(typeId);
     }
 
 }

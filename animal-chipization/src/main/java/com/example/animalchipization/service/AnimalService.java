@@ -9,17 +9,17 @@ import java.util.Collection;
 
 public interface AnimalService {
 
-    AnimalDto findById(Long animalId);
+    AnimalDto findById(Long id);
 
     Collection<AnimalDto> searchForAnimals(ZonedDateTime startDateTime, ZonedDateTime endDateTime,
                                            Long chipperId, Long chippingLocationId, LifeStatus lifeStatus,
                                            Gender gender, Integer from, Integer size);
 
-    AnimalDto addAnimal(AnimalDto animalDto);
+    AnimalDto save(AnimalDto animalDto);
 
-    AnimalDto updateAnimal(Long animalId, AnimalDto updatedAnimalDto);
+    AnimalDto update(Long animalId, AnimalDto updatedAnimalDto);
 
-    void deleteAnimalById(Long animalId);
+    void deleteById(Long id);
 
     AnimalDto addTypeToAnimal(Long animalId, Long typeId);
 

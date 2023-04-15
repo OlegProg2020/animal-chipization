@@ -4,11 +4,11 @@ import com.example.animalchipization.dto.AnimalTypeDto;
 
 public interface AnimalTypeService {
 
-    AnimalTypeDto findAnimalTypeById(Long typeId);
+    AnimalTypeDto findById(Long id);
 
-    AnimalTypeDto addAnimalType(AnimalTypeDto animalTypeDto);
+    AnimalTypeDto save(AnimalTypeDto animalTypeDto);
 
-    AnimalTypeDto updateAnimalType(AnimalTypeDto animalTypeDto);
+    AnimalTypeDto update(AnimalTypeDto animalTypeDto);
 
-    void deleteAnimalTypeById(Long typeId);
+    void deleteById(Long id);
 }

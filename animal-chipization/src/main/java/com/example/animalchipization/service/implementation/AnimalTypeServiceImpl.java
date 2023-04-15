@@ -30,13 +30,13 @@ public class AnimalTypeServiceImpl implements AnimalTypeService {
     }
 
     @Override
-    public AnimalTypeDto findAnimalTypeById(@Min(1) Long typeId) {
-        return mapper.toDto(animalTypeRepository.findById(typeId).orElseThrow(NoSuchElementException::new));
+    public AnimalTypeDto findById(@Min(1) Long id) {
+        return mapper.toDto(animalTypeRepository.findById(id).orElseThrow(NoSuchElementException::new));
     }
 
     @Override
     @Transactional
-    public AnimalTypeDto addAnimalType(@Valid AnimalTypeDto animalTypeDto) {
+    public AnimalTypeDto save(@Valid AnimalTypeDto animalTypeDto) {
         try {
             return mapper.toDto(animalTypeRepository.save(mapper.toEntity(animalTypeDto)));
         } catch (DataIntegrityViolationException exception) {
@@ -46,7 +46,7 @@ public class AnimalTypeServiceImpl implements AnimalTypeService {
 
     @Override
     @Transactional
-    public AnimalTypeDto updateAnimalType(@Valid AnimalTypeDto animalTypeDto) {
+    public AnimalTypeDto update(@Valid AnimalTypeDto animalTypeDto) {
         AnimalType updatingAnimalType = mapper.toEntity(animalTypeDto);
         try {
             if (animalTypeRepository.existsById(updatingAnimalType.getId())) {
@@ -61,9 +61,9 @@ public class AnimalTypeServiceImpl implements AnimalTypeService {
 
     @Override
     @Transactional
-    public void deleteAnimalTypeById(@Min(1) Long typeId) {
+    public void deleteById(@Min(1) Long id) {
         try {
-            animalTypeRepository.deleteById(typeId);
+            animalTypeRepository.deleteById(id);
         } catch (EmptyResultDataAccessException exception) {
             throw new NoSuchElementException();
         }
