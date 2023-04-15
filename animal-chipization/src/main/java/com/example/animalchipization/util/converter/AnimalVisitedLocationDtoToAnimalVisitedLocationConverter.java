@@ -50,7 +50,7 @@ public class AnimalVisitedLocationDtoToAnimalVisitedLocationConverter
         }
         entity.setLocationPoint(
                 locationPointMapper.toEntity(
-                        locationPointService.findLocationPointById(dto.getLocationPointId())
+                        locationPointService.findById(dto.getLocationPointId())
                 )
         );
         entity.setAnimal(

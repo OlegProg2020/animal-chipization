@@ -25,7 +25,7 @@ public class LocationPointController {
 
     @GetMapping("/{pointId}")
     public ResponseEntity<LocationPointDto> findLocationPointById(@PathVariable("pointId") @Min(1) Long pointId) {
-        return new ResponseEntity<>(locationPointService.findLocationPointById(pointId),
+        return new ResponseEntity<>(locationPointService.findById(pointId),
                 HttpStatus.valueOf(200));
     }
 
@@ -34,7 +34,7 @@ public class LocationPointController {
     public ResponseEntity<LocationPointDto> addLocationPoint(
             @RequestBody @Valid LocationPointDto locationPointDto) {
 
-        return new ResponseEntity<>(locationPointService.addLocationPoint(locationPointDto),
+        return new ResponseEntity<>(locationPointService.save(locationPointDto),
                 HttpStatus.valueOf(201));
     }
 
@@ -45,7 +45,7 @@ public class LocationPointController {
             @RequestBody @Valid LocationPointDto locationPointDto) {
 
         locationPointDto.setId(pointId);
-        return new ResponseEntity<>(locationPointService.updateLocationPoint(locationPointDto),
+        return new ResponseEntity<>(locationPointService.update(locationPointDto),
                 HttpStatus.valueOf(200));
     }
 
@@ -53,6 +53,6 @@ public class LocationPointController {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ADMIN')")
     public void deleteLocationPointById(@PathVariable(name = "pointId") @Min(1) Long pointId) {
-        locationPointService.deleteLocationPointById(pointId);
+        locationPointService.deleteById(pointId);
     }
 }

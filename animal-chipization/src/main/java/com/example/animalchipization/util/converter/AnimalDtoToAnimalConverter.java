@@ -12,7 +12,6 @@ import org.modelmapper.spi.MappingContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -65,7 +64,7 @@ public class AnimalDtoToAnimalConverter implements Converter<AnimalDto, Animal> 
         entity.setLifeStatus(dto.getLifeStatus());
         entity.setChippingDateTime(dto.getChippingDateTime());
         entity.setChipper(accountMapper.toEntity(accountService.findAccountById(dto.getChipperId())));
-        entity.setChippingLocation(locationPointMapper.toEntity(locationPointService.findLocationPointById(dto.getChippingLocationId())));
+        entity.setChippingLocation(locationPointMapper.toEntity(locationPointService.findById(dto.getChippingLocationId())));
         List<AnimalVisitedLocation> visitedLocations = animalVisitedLocationService
                 .findAllById(dto.getVisitedLocations()).stream()
                 .map(animalVisitedLocationMapper::toEntity)
