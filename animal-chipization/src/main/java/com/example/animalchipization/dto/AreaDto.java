@@ -9,6 +9,7 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -23,6 +24,7 @@ public class AreaDto {
     @NotEmpty
     private String name;
     @Min(3)
+    @UniqueElements
     private List<@Valid Coordinate> areaPoints = new LinkedList<>();
 
     private AreaDto(Builder builder) {

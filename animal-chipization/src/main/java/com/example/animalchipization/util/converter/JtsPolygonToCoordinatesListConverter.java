@@ -15,7 +15,7 @@ public class JtsPolygonToCoordinatesListConverter implements Converter<Polygon, 
     @Override
     public List<Coordinate> convert(Polygon source) {
         return Arrays.stream(source.getCoordinates())
-                .map(coordinate -> new Coordinate(coordinate.getX(), coordinate.getY()))
+                .map(coordinate -> new Coordinate(coordinate.getY(), coordinate.getX()))
                 .collect(Collectors.toList());
     }
 }

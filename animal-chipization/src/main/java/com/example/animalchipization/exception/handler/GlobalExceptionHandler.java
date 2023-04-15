@@ -1,9 +1,6 @@
 package com.example.animalchipization.exception.handler;
 
-import com.example.animalchipization.exception.AccountWithSuchEmailAlreadyExistsException;
-import com.example.animalchipization.exception.AnimalTypeWithSuchTypeAlreadyExistsException;
-import com.example.animalchipization.exception.DuplicateCollectionItemException;
-import com.example.animalchipization.exception.LocationPointWithSuchCoordinatesAlreadyExistsException;
+import com.example.animalchipization.exception.*;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.ValidationException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -47,6 +44,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AccountWithSuchEmailAlreadyExistsException.class)
     public ResponseEntity<?> onAccountWithThisEmailAlreadyExistsException(
             AccountWithSuchEmailAlreadyExistsException exception) {
+
+        return new ResponseEntity<>(HttpStatus.valueOf(409));
+    }
+
+    @ExceptionHandler(AreaWithSuchAreaPointsAlreadyExistsException.class)
+    public ResponseEntity<?> onAreaWithSuchAreaPointsAlreadyExistsException(
+            AreaWithSuchAreaPointsAlreadyExistsException exception) {
 
         return new ResponseEntity<>(HttpStatus.valueOf(409));
     }

@@ -15,7 +15,7 @@ public class CoordinatesListToJtsPolygonConverter implements Converter<List<Coor
     public Polygon convert(List<Coordinate> source) {
         org.locationtech.jts.geom.Coordinate[] jstCoordinates = source.stream()
                 .map(coordinate -> new org.locationtech.jts.geom.Coordinate(
-                        coordinate.getLatitude(), coordinate.getLongitude()))
+                        coordinate.getLongitude(), coordinate.getLatitude()))
                 .toArray(org.locationtech.jts.geom.Coordinate[]::new);
         GeometryFactory factory = new GeometryFactory();
         return factory.createPolygon(jstCoordinates);
