@@ -40,7 +40,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountDto findAccountById(@Min(1) Long accountId) {
+    public AccountDto findById(@Min(1) Long accountId) {
         return mapper.toDto(accountRepository.findById(accountId).orElseThrow(NoSuchElementException::new));
     }
 
@@ -61,7 +61,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional
-    public AccountDto updateAccount(@Valid AccountDto accountDto) {
+    public AccountDto update(@Valid AccountDto accountDto) {
         Account updatingAccount = mapper.toEntity(accountDto);
         updatingAccount.setPassword(passwordEncoder.encode(updatingAccount.getPassword()));
         try {
@@ -73,7 +73,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional
-    public void deleteAccountById(@Min(1) Long accountId) {
+    public void deleteById(@Min(1) Long accountId) {
         try {
             accountRepository.deleteById(accountId);
         } catch (EmptyResultDataAccessException exception) {

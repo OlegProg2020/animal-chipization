@@ -6,14 +6,14 @@ import java.util.Collection;
 
 public interface AccountService {
 
-    AccountDto findAccountById(Long accountId);
+    AccountDto findById(Long accountId);
 
     Collection<AccountDto> searchForAccounts(String firstName, String lastName,
                                              String email, Integer from, Integer size);
 
-    AccountDto updateAccount(AccountDto accountDto);
+    AccountDto update(AccountDto accountDto);
 
-    void deleteAccountById(Long accountId);
+    void deleteById(Long accountId);
 
     AccountDto registry(AccountDto accountDto);
 }

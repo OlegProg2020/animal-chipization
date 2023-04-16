@@ -23,9 +23,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import static com.example.animalchipization.data.specification.AnimalVisitedLocationSpecification.*;
@@ -120,7 +122,7 @@ public class AnimalVisitedLocationServiceImpl implements AnimalVisitedLocationSe
 
     @Override
     @Transactional
-    public void delete(Long animalId, Long visitedPointId) {
+    public void delete(@Min(1) Long animalId, @Min(1) Long visitedPointId) {
         Animal animal = animalRepository.findById(animalId).orElseThrow(NoSuchElementException::new);
         AnimalVisitedLocation visitedLocationPoint = animalVisitedLocationRepository.findById(visitedPointId)
                 .orElseThrow(NoSuchElementException::new);
@@ -133,12 +135,12 @@ public class AnimalVisitedLocationServiceImpl implements AnimalVisitedLocationSe
         animalVisitedLocationRepository.delete(visitedLocationPoint);
     }
 
-    public Collection<AnimalVisitedLocationDto> findAllById(Iterable<Long> ids) {
+    public Collection<AnimalVisitedLocationDto> findAllById(Iterable<@Min(1) Long> ids) {
         Iterable<AnimalVisitedLocation> visitedLocations = animalVisitedLocationRepository
                 .findAllById(ids);
         return StreamSupport.stream(visitedLocations.spliterator(), false)
                 .map(animalVisitedLocationMapper::toDto)
-                .collect(Collectors.toList());
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
 

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class JtsPolygonToCoordinatesListConverter implements Converter<Polygon, List<Coordinate>> {
+public class JtsPolygonToCoordinatesSetConverter implements Converter<Polygon, List<Coordinate>> {
 
     @Override
     public List<Coordinate> convert(Polygon source) {

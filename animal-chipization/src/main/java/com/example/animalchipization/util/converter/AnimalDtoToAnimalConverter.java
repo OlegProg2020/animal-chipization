@@ -63,7 +63,7 @@ public class AnimalDtoToAnimalConverter implements Converter<AnimalDto, Animal> 
         entity.setGender(dto.getGender());
         entity.setLifeStatus(dto.getLifeStatus());
         entity.setChippingDateTime(dto.getChippingDateTime());
-        entity.setChipper(accountMapper.toEntity(accountService.findAccountById(dto.getChipperId())));
+        entity.setChipper(accountMapper.toEntity(accountService.findById(dto.getChipperId())));
         entity.setChippingLocation(locationPointMapper.toEntity(locationPointService.findById(dto.getChippingLocationId())));
         List<AnimalVisitedLocation> visitedLocations = animalVisitedLocationService
                 .findAllById(dto.getVisitedLocations()).stream()
