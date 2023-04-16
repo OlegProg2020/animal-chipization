@@ -27,7 +27,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import static com.example.animalchipization.data.specification.AnimalVisitedLocationSpecification.*;

@@ -9,10 +9,9 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.validator.constraints.UniqueElements;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @JsonDeserialize(builder = AreaDto.Builder.class)
 @Getter
@@ -24,8 +23,7 @@ public class AreaDto {
     @NotEmpty
     private String name;
     @Min(3)
-    @UniqueElements
-    private List<@Valid Coordinate> areaPoints = new LinkedList<>();
+    private Set<@Valid Coordinate> areaPoints = new LinkedHashSet<>();
 
     private AreaDto(Builder builder) {
         this.id = builder.id;
@@ -40,7 +38,7 @@ public class AreaDto {
     public static class Builder {
         private Long id;
         private String name;
-        private List<Coordinate> areaPoints = new LinkedList<>();
+        private Set<Coordinate> areaPoints = new LinkedHashSet<>();
 
         @JsonIgnore
         public Builder withId(Long id) {
@@ -53,7 +51,7 @@ public class AreaDto {
             return this;
         }
 
-        public Builder withAreaPoints(List<Coordinate> areaPoints) {
+        public Builder withAreaPoints(Set<Coordinate> areaPoints) {
             this.areaPoints = areaPoints;
             return this;
         }
