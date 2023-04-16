@@ -1,5 +1,6 @@
 package com.example.animalchipization.util.converter;
 
+import com.example.animalchipization.exception.PointsOfLinearRingDoNotFormClosedLinestring;
 import com.example.animalchipization.web.model.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Polygon;
@@ -18,6 +19,10 @@ public class CoordinatesListToJtsPolygonConverter implements Converter<List<Coor
                         coordinate.getLongitude(), coordinate.getLatitude()))
                 .toArray(org.locationtech.jts.geom.Coordinate[]::new);
         GeometryFactory factory = new GeometryFactory();
-        return factory.createPolygon(jstCoordinates);
+        try {
+            return factory.createPolygon(jstCoordinates);
+        } catch (IllegalArgumentException exception) {
+            throw new PointsOfLinearRingDoNotFormClosedLinestring();
+        }
     }
 }

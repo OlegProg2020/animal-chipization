@@ -14,10 +14,10 @@ import org.locationtech.jts.geom.Polygon;
 import org.postgresql.geometric.PGpolygon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -47,42 +47,52 @@ public class AreaServiceImpl implements AreaService {
     @Transactional
     public AreaDto save(@Valid AreaDto areaDto) {
         Area area = mapper.toEntity(areaDto);
-        Polygon polygon = area.getAreaPoints();
-        if(!polygon.isValid()) {
+
+        this.validateAreaPointsPolygon(area.getAreaPoints());
+
+        areaRepository.save(area);
+        return mapper.toDto(area);
+    }
+
+    @Override
+    @Transactional
+    public AreaDto update(@Valid AreaDto areaDto) {
+        Area area = mapper.toEntity(areaDto);
+
+        this.validateAreaPointsPolygon(area.getAreaPoints());
+
+        areaRepository.update(area);
+        return areaDto;
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(@Min(1) Long id) {
+        try {
+            areaRepository.deleteById(id);
+        } catch (EmptyResultDataAccessException ignoredException) {
+            throw new NoSuchElementException();
+        }
+    }
+
+
+    // helper methods
+
+    private void validateAreaPointsPolygon(Polygon polygon) {
+        if (!polygon.isValid()) {
             throw new InvalidAreaPointsPolygonException();
         }
-        if(areaRepository.existsByAreaPoints(polygon)) {
+        if (areaRepository.existsByAreaPoints(polygon)) {
             throw new AreaWithSuchAreaPointsAlreadyExistsException();
         }
         List<Polygon> overlaps = areaRepository.findAreaOverlapsByAreaPoints(polygon).stream()
                 .map(pgPolygonToJtsPolygonConverter::convert)
                 .collect(Collectors.toList());
-        // touches() возвращает true, если границы двух полигонов
-        // касаются, но не пересекаются.
-        // В данном случае из бд вернутся только те Polygon, которые имеют
-        // как точки соприкосновения, так и точки пересечения.
-        // Кроме того будут получены зоны, содержат данную зону или
-        // которые содержатся внутри данной зоны.
-        // Для проверки этого случая используется метод...
-        // http://locationtech.github.io/jts/javadoc/org/locationtech/jts/geom/Geometry.html#covers-org.locationtech.jts.geom.Geometry-
-        // может все заменить на disjoint() ???
-        for(var overlap : overlaps) {
-            if(!overlap.touches(polygon)) {
+        for (var overlap : overlaps) {
+            if (!overlap.touches(polygon)) {
                 throw new AreaIntersectsWithExistingAreaException();
             }
         }
-    }
-
-    @Override
-    @Transactional
-    public AreaDto update(AreaDto areaDto) {
-        return null;
-    }
-
-    @Override
-    @Transactional
-    public void deleteById(Long id) {
-
     }
 
 }
