@@ -50,7 +50,7 @@ public class AreaServiceImpl implements AreaService {
 
         this.validateAreaPointsPolygon(area.getAreaPoints());
 
-        areaRepository.save(area);
+        area.setId(areaRepository.save(area));
         return mapper.toDto(area);
     }
 
@@ -58,6 +58,9 @@ public class AreaServiceImpl implements AreaService {
     @Transactional
     public AreaDto update(@Valid AreaDto areaDto) {
         Area area = mapper.toEntity(areaDto);
+        if (!areaRepository.existsById(area.getId())) {
+            throw new NoSuchElementException();
+        }
 
         this.validateAreaPointsPolygon(area.getAreaPoints());
 

@@ -7,10 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.PreparedStatement;
 import java.util.Collection;
+import java.util.Optional;
 
 @Component
 public class CustomAreaRepositoryImpl implements CustomAreaRepository {
@@ -25,12 +29,29 @@ public class CustomAreaRepositoryImpl implements CustomAreaRepository {
         this.jtsPolygonToPGpolygonConverter = jtsPolygonToPGpolygonConverter;
     }
 
+
+    /**
+     * Save area and return generated id.
+     * If id == null, throws RuntimeException("Failed to retrieve generated id").
+     *
+     * @param area
+     * @return generated id.
+     */
     @Transactional
     @Modifying
-    public void save(Area area) {
+    public long save(Area area) {
         String sql = "INSERT INTO area (name, area_points) VALUES (?, ?);";
-        jdbcTemplate.update(sql, area.getName(),
-                jtsPolygonToPGpolygonConverter.convert(area.getAreaPoints()));
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(
+                connection -> {
+                    PreparedStatement ps = connection.prepareStatement(sql);
+                    ps.setString(1, area.getName());
+                    ps.setObject(2, jtsPolygonToPGpolygonConverter.convert(area.getAreaPoints()));
+                    return ps;
+                }, keyHolder);
+        return Optional.ofNullable(keyHolder.getKey())
+                .map(Number::longValue)
+                .orElseThrow(() -> new RuntimeException("Failed to retrieve generated id"));
     }
 
     @Transactional

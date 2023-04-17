@@ -8,7 +8,13 @@ import java.util.Collection;
 
 public interface CustomAreaRepository {
 
-    void save(Area area);
+    /**
+     * Save area and return generated id.
+     *
+     * @param area
+     * @return generated id.
+     */
+    long save(Area area);
 
     void update(Area area);
 
