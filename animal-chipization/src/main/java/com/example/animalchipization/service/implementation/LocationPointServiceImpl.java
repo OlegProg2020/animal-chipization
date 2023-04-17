@@ -1,11 +1,11 @@
 package com.example.animalchipization.service.implementation;
 
 import com.example.animalchipization.data.repository.LocationPointRepository;
+import com.example.animalchipization.dto.LocationPointDto;
 import com.example.animalchipization.entity.LocationPoint;
 import com.example.animalchipization.exception.LocationPointWithSuchCoordinatesAlreadyExistsException;
 import com.example.animalchipization.service.LocationPointService;
 import com.example.animalchipization.service.mapper.Mapper;
-import com.example.animalchipization.web.dto.LocationPointDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,14 +30,14 @@ public class LocationPointServiceImpl implements LocationPointService {
     }
 
     @Override
-    public LocationPointDto findLocationPointById(@Min(1) Long pointId) {
-        return mapper.toDto(locationPointRepository.findById(pointId)
+    public LocationPointDto findById(@Min(1) Long id) {
+        return mapper.toDto(locationPointRepository.findById(id)
                 .orElseThrow(NoSuchElementException::new));
     }
 
     @Override
     @Transactional
-    public LocationPointDto addLocationPoint(@Valid LocationPointDto locationPointDto) {
+    public LocationPointDto save(@Valid LocationPointDto locationPointDto) {
         try {
             return mapper.toDto(locationPointRepository.save(mapper.toEntity(locationPointDto)));
         } catch (DataIntegrityViolationException exception) {
@@ -47,7 +47,7 @@ public class LocationPointServiceImpl implements LocationPointService {
 
     @Override
     @Transactional
-    public LocationPointDto updateLocationPoint(@Valid LocationPointDto locationPointDto) {
+    public LocationPointDto update(@Valid LocationPointDto locationPointDto) {
         LocationPoint updatingLocationPoint = mapper.toEntity(locationPointDto);
         if (locationPointRepository.existsById(updatingLocationPoint.getId())) {
             try {
@@ -62,7 +62,7 @@ public class LocationPointServiceImpl implements LocationPointService {
 
     @Override
     @Transactional
-    public void deleteLocationPointById(@Min(1) Long id) {
+    public void deleteById(@Min(1) Long id) {
         try {
             locationPointRepository.deleteById(id);
         } catch (EmptyResultDataAccessException ignoredException) {

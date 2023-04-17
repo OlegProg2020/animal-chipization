@@ -1,9 +1,9 @@
 package com.example.animalchipization.web.controller;
 
+import com.example.animalchipization.dto.AnimalDto;
 import com.example.animalchipization.entity.enums.Gender;
 import com.example.animalchipization.entity.enums.LifeStatus;
 import com.example.animalchipization.service.AnimalService;
-import com.example.animalchipization.web.dto.AnimalDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,14 +53,14 @@ public class AnimalController {
     @PostMapping(consumes = "application/json")
     @PreAuthorize("hasAnyRole({'ADMIN', 'CHIPPER'})")
     public ResponseEntity<AnimalDto> addAnimal(@RequestBody @Valid AnimalDto animalDto) {
-        return new ResponseEntity<>(animalService.addAnimal(animalDto), HttpStatus.valueOf(201));
+        return new ResponseEntity<>(animalService.save(animalDto), HttpStatus.valueOf(201));
     }
 
     @PutMapping(path = "/{animalId}", consumes = "application/json")
     @PreAuthorize("hasAnyRole({'ADMIN', 'CHIPPER'})")
     public ResponseEntity<AnimalDto> updateAnimal(@PathVariable("animalId") @Min(1) Long animalId,
                                                   @RequestBody @Valid AnimalDto updatedAnimalDto) {
-        return new ResponseEntity<>(animalService.updateAnimal(animalId, updatedAnimalDto),
+        return new ResponseEntity<>(animalService.update(animalId, updatedAnimalDto),
                 HttpStatus.valueOf(200));
     }
 
@@ -68,7 +68,7 @@ public class AnimalController {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ADMIN')")
     public void deleteAnimalById(@PathVariable("animalId") @Min(1) Long animalId) {
-        animalService.deleteAnimalById(animalId);
+        animalService.deleteById(animalId);
     }
 
     @PostMapping("/{animalId}/types/{typeId}")

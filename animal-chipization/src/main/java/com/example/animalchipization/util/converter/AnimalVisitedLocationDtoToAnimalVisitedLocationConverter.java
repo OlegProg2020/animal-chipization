@@ -1,14 +1,14 @@
 package com.example.animalchipization.util.converter;
 
+import com.example.animalchipization.dto.AnimalDto;
+import com.example.animalchipization.dto.AnimalVisitedLocationDto;
+import com.example.animalchipization.dto.LocationPointDto;
 import com.example.animalchipization.entity.Animal;
 import com.example.animalchipization.entity.AnimalVisitedLocation;
 import com.example.animalchipization.entity.LocationPoint;
 import com.example.animalchipization.service.AnimalService;
 import com.example.animalchipization.service.LocationPointService;
 import com.example.animalchipization.service.mapper.Mapper;
-import com.example.animalchipization.web.dto.AnimalDto;
-import com.example.animalchipization.web.dto.AnimalVisitedLocationDto;
-import com.example.animalchipization.web.dto.LocationPointDto;
 import org.modelmapper.Converter;
 import org.modelmapper.spi.MappingContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +50,7 @@ public class AnimalVisitedLocationDtoToAnimalVisitedLocationConverter
         }
         entity.setLocationPoint(
                 locationPointMapper.toEntity(
-                        locationPointService.findLocationPointById(dto.getLocationPointId())
+                        locationPointService.findById(dto.getLocationPointId())
                 )
         );
         entity.setAnimal(

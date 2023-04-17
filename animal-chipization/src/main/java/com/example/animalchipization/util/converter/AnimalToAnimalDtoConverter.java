@@ -1,9 +1,9 @@
 package com.example.animalchipization.util.converter;
 
+import com.example.animalchipization.dto.AnimalDto;
 import com.example.animalchipization.entity.Animal;
 import com.example.animalchipization.entity.AnimalType;
 import com.example.animalchipization.entity.AnimalVisitedLocation;
-import com.example.animalchipization.web.dto.AnimalDto;
 import org.modelmapper.Converter;
 import org.modelmapper.spi.MappingContext;
 import org.springframework.stereotype.Component;
@@ -17,9 +17,11 @@ public class AnimalToAnimalDtoConverter implements Converter<Animal, AnimalDto> 
     @Override
     public AnimalDto convert(MappingContext<Animal, AnimalDto> mappingContext) {
         Animal entity = mappingContext.getSource();
-        AnimalDto dto = AnimalDto.builder()
+        return AnimalDto.builder()
                 .withId(entity.getId())
-                .withAnimalTypes(entity.getAnimalTypes().stream().map(AnimalType::getId).collect(Collectors.toSet()))
+                .withAnimalTypes(entity.getAnimalTypes().stream()
+                        .map(AnimalType::getId)
+                        .collect(Collectors.toSet()))
                 .withWeight(entity.getWeight())
                 .withLength(entity.getLength())
                 .withHeight(entity.getHeight())
@@ -33,7 +35,6 @@ public class AnimalToAnimalDtoConverter implements Converter<Animal, AnimalDto> 
                         .collect(Collectors.toCollection(LinkedList::new)))
                 .withDeathDateTime(entity.getDeathDateTime())
                 .build();
-        return dto;
     }
 
 }

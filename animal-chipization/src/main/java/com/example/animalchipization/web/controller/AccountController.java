@@ -1,7 +1,7 @@
 package com.example.animalchipization.web.controller;
 
+import com.example.animalchipization.dto.AccountDto;
 import com.example.animalchipization.service.AccountService;
-import com.example.animalchipization.web.dto.AccountDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class AccountController {
     @PostAuthorize("#accountId.equals(authentication.principal.getId()) " +
             "or hasRole('ADMIN')")
     public ResponseEntity<AccountDto> findAccountById(@PathVariable("accountId") @Min(1) Long accountId) {
-        return new ResponseEntity<>(accountService.findAccountById(accountId), HttpStatus.valueOf(200));
+        return new ResponseEntity<>(accountService.findById(accountId), HttpStatus.valueOf(200));
     }
 
     @GetMapping("/search")
@@ -59,7 +59,7 @@ public class AccountController {
     public ResponseEntity<AccountDto> updateAccount(@PathVariable("accountId") @Min(1) Long accountId,
                                                     @RequestBody @Valid AccountDto accountDto) {
         accountDto.setId(accountId);
-        return new ResponseEntity<>(accountService.updateAccount(accountDto), HttpStatus.valueOf(200));
+        return new ResponseEntity<>(accountService.update(accountDto), HttpStatus.valueOf(200));
     }
 
     @DeleteMapping(path = "/{accountId}", consumes = "application/json")
@@ -67,7 +67,7 @@ public class AccountController {
     @PostAuthorize("#accountId.equals(authentication.principal.getId()) " +
             "or hasRole('ADMIN')")
     public void deleteAccountById(@PathVariable("accountId") @Min(1) Long accountId) {
-        accountService.deleteAccountById(accountId);
+        accountService.deleteById(accountId);
     }
 
 }

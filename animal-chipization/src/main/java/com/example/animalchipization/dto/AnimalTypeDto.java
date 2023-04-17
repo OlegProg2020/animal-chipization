@@ -1,4 +1,4 @@
-package com.example.animalchipization.web.dto;
+package com.example.animalchipization.dto;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;

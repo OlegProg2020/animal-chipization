@@ -2,6 +2,7 @@ package com.example.animalchipization.service.implementation;
 
 import com.example.animalchipization.data.repository.AnimalRepository;
 import com.example.animalchipization.data.repository.AnimalTypeRepository;
+import com.example.animalchipization.dto.AnimalDto;
 import com.example.animalchipization.entity.Animal;
 import com.example.animalchipization.entity.AnimalType;
 import com.example.animalchipization.entity.enums.Gender;
@@ -12,7 +13,6 @@ import com.example.animalchipization.exception.RemovingSingleTypeOfAnimalExcepti
 import com.example.animalchipization.service.AnimalService;
 import com.example.animalchipization.service.mapper.Mapper;
 import com.example.animalchipization.util.pagination.OffsetBasedPageRequest;
-import com.example.animalchipization.web.dto.AnimalDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,8 +47,8 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public AnimalDto findById(@Min(1) Long animalId) {
-        return animalMapper.toDto(animalRepository.findById(animalId)
+    public AnimalDto findById(@Min(1) Long id) {
+        return animalMapper.toDto(animalRepository.findById(id)
                 .orElseThrow(NoSuchElementException::new));
     }
 
@@ -74,7 +74,7 @@ public class AnimalServiceImpl implements AnimalService {
 
     @Override
     @Transactional
-    public AnimalDto addAnimal(@Valid AnimalDto animalDto) {
+    public AnimalDto save(@Valid AnimalDto animalDto) {
         if (animalDto.getAnimalTypes().isEmpty()) {
             throw new EmptyAnimalTypesException();
         }
@@ -89,7 +89,7 @@ public class AnimalServiceImpl implements AnimalService {
 
     @Override
     @Transactional
-    public AnimalDto updateAnimal(@Min(1) Long animalId, @Valid AnimalDto updatedAnimalDto) {
+    public AnimalDto update(@Min(1) Long animalId, @Valid AnimalDto updatedAnimalDto) {
         Animal animal = animalRepository.findById(animalId).orElseThrow(NoSuchElementException::new);
         Animal updatedAnimal = animalMapper.toEntity(updatedAnimalDto);
 
@@ -106,8 +106,8 @@ public class AnimalServiceImpl implements AnimalService {
 
     @Override
     @Transactional
-    public void deleteAnimalById(@Min(1) Long animalId) {
-        Animal animal = animalRepository.findById(animalId).orElseThrow(NoSuchElementException::new);
+    public void deleteById(@Min(1) Long id) {
+        Animal animal = animalRepository.findById(id).orElseThrow(NoSuchElementException::new);
         if (animal.isAnimalAtChippingLocation()) {
             animalRepository.delete(animal);
         } else {

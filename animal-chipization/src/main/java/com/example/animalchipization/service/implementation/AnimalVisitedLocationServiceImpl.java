@@ -3,6 +3,7 @@ package com.example.animalchipization.service.implementation;
 import com.example.animalchipization.data.repository.AnimalRepository;
 import com.example.animalchipization.data.repository.AnimalVisitedLocationRepository;
 import com.example.animalchipization.data.repository.LocationPointRepository;
+import com.example.animalchipization.dto.AnimalVisitedLocationDto;
 import com.example.animalchipization.entity.Animal;
 import com.example.animalchipization.entity.AnimalVisitedLocation;
 import com.example.animalchipization.entity.LocationPoint;
@@ -13,7 +14,6 @@ import com.example.animalchipization.exception.FirstLocationPointConcidesWithChi
 import com.example.animalchipization.service.AnimalVisitedLocationService;
 import com.example.animalchipization.service.mapper.Mapper;
 import com.example.animalchipization.util.pagination.OffsetBasedPageRequest;
-import com.example.animalchipization.web.dto.AnimalVisitedLocationDto;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -23,9 +23,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import static com.example.animalchipization.data.specification.AnimalVisitedLocationSpecification.*;
 
@@ -84,7 +86,7 @@ public class AnimalVisitedLocationServiceImpl implements AnimalVisitedLocationSe
 
     @Override
     @Transactional
-    public AnimalVisitedLocationDto addAnimalVisitedLocation(@Min(1) Long animalId, @Min(1) Long pointId) {
+    public AnimalVisitedLocationDto save(@Min(1) Long animalId, @Min(1) Long pointId) {
 
         Animal animal = animalRepository.findById(animalId).orElseThrow(NoSuchElementException::new);
         LocationPoint point = locationPointRepository.findById(pointId).orElseThrow(NoSuchElementException::new);
@@ -100,9 +102,9 @@ public class AnimalVisitedLocationServiceImpl implements AnimalVisitedLocationSe
 
     @Override
     @Transactional
-    public AnimalVisitedLocationDto updateAnimalVisitedLocation(@Min(1) Long animalId,
-                                                                @Min(1) Long visitedLocationPointId,
-                                                                @Min(1) Long locationPointId) {
+    public AnimalVisitedLocationDto update(@Min(1) Long animalId,
+                                           @Min(1) Long visitedLocationPointId,
+                                           @Min(1) Long locationPointId) {
 
         Animal animal = animalRepository.findById(animalId).orElseThrow(NoSuchElementException::new);
         AnimalVisitedLocation visitedLocation = animalVisitedLocationRepository
@@ -119,7 +121,7 @@ public class AnimalVisitedLocationServiceImpl implements AnimalVisitedLocationSe
 
     @Override
     @Transactional
-    public void deleteAnimalVisitedLocation(Long animalId, Long visitedPointId) {
+    public void delete(@Min(1) Long animalId, @Min(1) Long visitedPointId) {
         Animal animal = animalRepository.findById(animalId).orElseThrow(NoSuchElementException::new);
         AnimalVisitedLocation visitedLocationPoint = animalVisitedLocationRepository.findById(visitedPointId)
                 .orElseThrow(NoSuchElementException::new);
@@ -131,6 +133,16 @@ public class AnimalVisitedLocationServiceImpl implements AnimalVisitedLocationSe
         }
         animalVisitedLocationRepository.delete(visitedLocationPoint);
     }
+
+    public Collection<AnimalVisitedLocationDto> findAllById(Iterable<@Min(1) Long> ids) {
+        Iterable<AnimalVisitedLocation> visitedLocations = animalVisitedLocationRepository
+                .findAllById(ids);
+        return StreamSupport.stream(visitedLocations.spliterator(), false)
+                .map(animalVisitedLocationMapper::toDto)
+                .collect(Collectors.toCollection(LinkedList::new));
+    }
+
+
 
 
 
