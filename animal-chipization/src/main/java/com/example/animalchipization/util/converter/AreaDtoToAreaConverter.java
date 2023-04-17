@@ -9,15 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import java.util.Set;
 
 @Component
 public class AreaDtoToAreaConverter implements org.modelmapper.Converter<AreaDto, Area> {
 
-    private final Converter<List<Coordinate>, Polygon> coordinatesToPolygonConverter;
+    private final Converter<Set<Coordinate>, Polygon> coordinatesToPolygonConverter;
 
     @Autowired
-    public AreaDtoToAreaConverter(Converter<List<Coordinate>, Polygon> coordinatesToPolygonConverter) {
+    public AreaDtoToAreaConverter(Converter<Set<Coordinate>, Polygon> coordinatesToPolygonConverter) {
         this.coordinatesToPolygonConverter = coordinatesToPolygonConverter;
     }
 

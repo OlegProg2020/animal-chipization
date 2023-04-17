@@ -23,7 +23,7 @@ public class Animal {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "animal_animal_types",
             joinColumns = @JoinColumn(name = "animal_id"),
             inverseJoinColumns = @JoinColumn(name = "animal_type_id"))
@@ -40,7 +40,7 @@ public class Animal {
     private Account chipper;
     @ManyToOne(optional = false)
     private LocationPoint chippingLocation;
-    @OneToMany(mappedBy = "animal", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "animal", fetch = FetchType.EAGER)
     @OrderBy("dateTimeOfVisitLocationPoint ASC, id ASC")
     private List<AnimalVisitedLocation> visitedLocations;
     private ZonedDateTime deathDateTime;

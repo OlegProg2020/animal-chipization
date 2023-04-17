@@ -38,7 +38,7 @@ public class AreaDto {
     public static class Builder {
         private Long id;
         private String name;
-        private Set<Coordinate> areaPoints = new LinkedHashSet<>();
+        private LinkedHashSet<Coordinate> areaPoints = new LinkedHashSet<>();
 
         @JsonIgnore
         public Builder withId(Long id) {
@@ -51,7 +51,7 @@ public class AreaDto {
             return this;
         }
 
-        public Builder withAreaPoints(Set<Coordinate> areaPoints) {
+        public Builder withAreaPoints(LinkedHashSet<Coordinate> areaPoints) {
             this.areaPoints = areaPoints;
             return this;
         }

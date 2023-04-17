@@ -17,9 +17,11 @@ public class AnimalToAnimalDtoConverter implements Converter<Animal, AnimalDto> 
     @Override
     public AnimalDto convert(MappingContext<Animal, AnimalDto> mappingContext) {
         Animal entity = mappingContext.getSource();
-        AnimalDto dto = AnimalDto.builder()
+        return AnimalDto.builder()
                 .withId(entity.getId())
-                .withAnimalTypes(entity.getAnimalTypes().stream().map(AnimalType::getId).collect(Collectors.toSet()))
+                .withAnimalTypes(entity.getAnimalTypes().stream()
+                        .map(AnimalType::getId)
+                        .collect(Collectors.toSet()))
                 .withWeight(entity.getWeight())
                 .withLength(entity.getLength())
                 .withHeight(entity.getHeight())
@@ -33,7 +35,6 @@ public class AnimalToAnimalDtoConverter implements Converter<Animal, AnimalDto> 
                         .collect(Collectors.toCollection(LinkedList::new)))
                 .withDeathDateTime(entity.getDeathDateTime())
                 .build();
-        return dto;
     }
 
 }

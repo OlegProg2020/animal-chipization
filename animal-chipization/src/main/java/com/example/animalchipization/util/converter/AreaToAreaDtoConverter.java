@@ -9,15 +9,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
-import java.util.Set;
+import java.util.LinkedHashSet;
 
 @Component
 public class AreaToAreaDtoConverter implements org.modelmapper.Converter<Area, AreaDto> {
 
-    private final Converter<Polygon, Set<Coordinate>> polygonToCoordinatesConverter;
+    private final Converter<Polygon, LinkedHashSet<Coordinate>> polygonToCoordinatesConverter;
 
     @Autowired
-    public AreaToAreaDtoConverter(Converter<Polygon, Set<Coordinate>> polygonToCoordinatesConverter) {
+    public AreaToAreaDtoConverter(Converter<Polygon,
+            LinkedHashSet<Coordinate>> polygonToCoordinatesConverter) {
         this.polygonToCoordinatesConverter = polygonToCoordinatesConverter;
     }
 
