@@ -2,7 +2,6 @@ package com.example.animalchipization.data.repository;
 
 import com.example.animalchipization.entity.Area;
 import org.locationtech.jts.geom.Polygon;
-import org.postgresql.geometric.PGpolygon;
 
 import java.util.Collection;
 
@@ -20,7 +19,7 @@ public interface CustomAreaRepository {
 
     Boolean existsByAreaPoints(Polygon areaPoints);
 
-    Collection<PGpolygon> findAreaOverlapsByAreaPoints(Polygon areaPoints);
+    Collection<Area> findAreaOverlapsByAreaPoints(Polygon areaPoints);
 
     void deleteById(Long id);
 

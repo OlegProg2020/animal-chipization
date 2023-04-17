@@ -11,12 +11,11 @@ import com.example.animalchipization.service.mapper.Mapper;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.locationtech.jts.geom.Polygon;
-import org.postgresql.geometric.PGpolygon;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -26,15 +25,12 @@ public class AreaServiceImpl implements AreaService {
 
     private final AreaRepository areaRepository;
     private final Mapper<Area, AreaDto> mapper;
-    private final Converter<PGpolygon, Polygon> pgPolygonToJtsPolygonConverter;
 
     @Autowired
     public AreaServiceImpl(AreaRepository areaRepository,
-                           Mapper<Area, AreaDto> mapper,
-                           Converter<PGpolygon, Polygon> pgPolygonToJtsPolygonConverter) {
+                           Mapper<Area, AreaDto> mapper) {
         this.areaRepository = areaRepository;
         this.mapper = mapper;
-        this.pgPolygonToJtsPolygonConverter = pgPolygonToJtsPolygonConverter;
     }
 
     @Override
@@ -47,7 +43,7 @@ public class AreaServiceImpl implements AreaService {
     public AreaDto save(@Valid AreaDto areaDto) {
         Area area = mapper.toEntity(areaDto);
 
-        this.validateAreaPointsPolygon(area.getAreaPoints());
+        this.validateArea(area);
 
         area.setId(areaRepository.save(area));
         return mapper.toDto(area);
@@ -61,7 +57,7 @@ public class AreaServiceImpl implements AreaService {
             throw new NoSuchElementException();
         }
 
-        this.validateAreaPointsPolygon(area.getAreaPoints());
+        this.validateArea(area);
 
         areaRepository.update(area);
         return areaDto;
@@ -76,15 +72,21 @@ public class AreaServiceImpl implements AreaService {
 
     // helper methods
 
-    private void validateAreaPointsPolygon(Polygon polygon) {
+    private void validateArea(Area area) {
+        Polygon polygon = area.getAreaPoints();
+
         if (!polygon.isValid()) {
             throw new InvalidAreaPointsPolygonException();
         }
+
         if (areaRepository.existsByAreaPoints(polygon)) {
             throw new AreaWithSuchAreaPointsAlreadyExistsException();
         }
-        List<Polygon> overlaps = areaRepository.findAreaOverlapsByAreaPoints(polygon).stream()
-                .map(pgPolygonToJtsPolygonConverter::convert)
+
+        Collection<Area> areaOverlaps = areaRepository.findAreaOverlapsByAreaPoints(polygon);
+        areaOverlaps.removeIf(a -> a.getId().equals(area.getId()));
+        List<Polygon> overlaps = areaOverlaps.stream()
+                .map(Area::getAreaPoints)
                 .collect(Collectors.toList());
         for (var overlap : overlaps) {
             if (!overlap.touches(polygon)) {

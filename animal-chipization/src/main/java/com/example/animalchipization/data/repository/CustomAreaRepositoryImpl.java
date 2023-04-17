@@ -73,9 +73,9 @@ public class CustomAreaRepositoryImpl implements CustomAreaRepository {
     }
 
     @Override
-    public Collection<PGpolygon> findAreaOverlapsByAreaPoints(Polygon areaPoints) {
-        String sql = "SELECT area_points FROM area WHERE area_points && ?";
-        return jdbcTemplate.queryForList(sql, PGpolygon.class,
+    public Collection<Area> findAreaOverlapsByAreaPoints(Polygon areaPoints) {
+        String sql = "SELECT * FROM area WHERE area_points && ?";
+        return jdbcTemplate.queryForList(sql, Area.class,
                 jtsPolygonToPGpolygonConverter.convert(areaPoints));
     }
 
