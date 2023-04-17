@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.PreparedStatement;
 import java.util.Collection;
-import java.util.Optional;
 
 @Component
 public class CustomAreaRepositoryImpl implements CustomAreaRepository {
@@ -40,18 +39,20 @@ public class CustomAreaRepositoryImpl implements CustomAreaRepository {
     @Transactional
     @Modifying
     public long save(Area area) {
-        String sql = "INSERT INTO area (name, area_points) VALUES (?, ?);";
+        String sql = "INSERT INTO area (name, area_points) VALUES (?, ?) RETURNING id;";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(
                 connection -> {
-                    PreparedStatement ps = connection.prepareStatement(sql);
+                    PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
                     ps.setString(1, area.getName());
                     ps.setObject(2, jtsPolygonToPGpolygonConverter.convert(area.getAreaPoints()));
                     return ps;
                 }, keyHolder);
-        return Optional.ofNullable(keyHolder.getKey())
-                .map(Number::longValue)
-                .orElseThrow(() -> new RuntimeException("Failed to retrieve generated id"));
+        try {
+            return keyHolder.getKey().longValue();
+        } catch (NullPointerException exception) {
+            throw new RuntimeException("Failed to retrieve generated id");
+        }
     }
 
     @Transactional
