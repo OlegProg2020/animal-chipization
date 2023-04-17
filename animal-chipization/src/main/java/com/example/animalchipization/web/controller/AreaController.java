@@ -36,7 +36,7 @@ public class AreaController {
                 HttpStatus.valueOf(201));
     }
 
-    @PostMapping(path = "/{areaId}", consumes = "application/json")
+    @PutMapping(path = "/{areaId}", consumes = "application/json")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<AreaDto> updateArea(@PathVariable(name = "areaId") @Min(1) Long areaId,
                                               @RequestBody @Valid AreaDto areaDto) {
