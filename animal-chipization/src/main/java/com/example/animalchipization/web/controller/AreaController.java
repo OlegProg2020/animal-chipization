@@ -43,7 +43,7 @@ public class AreaController {
 
         areaDto.setId(areaId);
         return new ResponseEntity<>(areaService.update(areaDto),
-                HttpStatus.valueOf(201));
+                HttpStatus.valueOf(200));
     }
 
     @DeleteMapping(path = "/{areaId}", consumes = "application/json")

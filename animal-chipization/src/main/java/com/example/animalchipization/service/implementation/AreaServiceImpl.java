@@ -79,7 +79,9 @@ public class AreaServiceImpl implements AreaService {
         }
 
         Collection<Area> areaOverlaps = areaRepository.findAreaOverlapsByAreaPoints(polygon);
-        areaOverlaps.remove(area);
+        if (area.getId() != null) {
+            areaOverlaps.removeIf(a -> area.getId().equals(a.getId()));
+        }
         List<Polygon> overlaps = areaOverlaps.stream()
                 .map(Area::getAreaPoints)
                 .collect(Collectors.toList());
