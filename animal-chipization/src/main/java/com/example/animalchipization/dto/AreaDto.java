@@ -4,8 +4,8 @@ import com.example.animalchipization.web.model.Coordinate;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,7 +22,7 @@ public class AreaDto {
     private Long id;
     @NotEmpty
     private String name;
-    @Min(3)
+    @Size(min = 3)
     private Set<@Valid Coordinate> areaPoints = new LinkedHashSet<>();
 
     private AreaDto(Builder builder) {
