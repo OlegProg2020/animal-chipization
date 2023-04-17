@@ -4,7 +4,6 @@ import com.example.animalchipization.data.repository.AreaRepository;
 import com.example.animalchipization.dto.AreaDto;
 import com.example.animalchipization.entity.Area;
 import com.example.animalchipization.exception.AreaIntersectsWithExistingAreaException;
-import com.example.animalchipization.exception.AreaWithSuchAreaPointsAlreadyExistsException;
 import com.example.animalchipization.exception.InvalidAreaPointsPolygonException;
 import com.example.animalchipization.service.AreaService;
 import com.example.animalchipization.service.mapper.Mapper;
@@ -79,12 +78,8 @@ public class AreaServiceImpl implements AreaService {
             throw new InvalidAreaPointsPolygonException();
         }
 
-        if (areaRepository.existsByAreaPoints(polygon)) {
-            throw new AreaWithSuchAreaPointsAlreadyExistsException();
-        }
-
         Collection<Area> areaOverlaps = areaRepository.findAreaOverlapsByAreaPoints(polygon);
-        areaOverlaps.removeIf(a -> a.getId().equals(area.getId()));
+        areaOverlaps.remove(area);
         List<Polygon> overlaps = areaOverlaps.stream()
                 .map(Area::getAreaPoints)
                 .collect(Collectors.toList());

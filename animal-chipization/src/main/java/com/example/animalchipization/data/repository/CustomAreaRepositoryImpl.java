@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
@@ -21,12 +22,15 @@ public class CustomAreaRepositoryImpl implements CustomAreaRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final Converter<Polygon, PGpolygon> jtsPolygonToPGpolygonConverter;
+    private final RowMapper<Area> areaRowMapper;
 
     @Autowired
     public CustomAreaRepositoryImpl(JdbcTemplate jdbcTemplate,
-                                    Converter<Polygon, PGpolygon> jtsPolygonToPGpolygonConverter) {
+                                    Converter<Polygon, PGpolygon> jtsPolygonToPGpolygonConverter,
+                                    RowMapper<Area> areaRowMapper) {
         this.jdbcTemplate = jdbcTemplate;
         this.jtsPolygonToPGpolygonConverter = jtsPolygonToPGpolygonConverter;
+        this.areaRowMapper = areaRowMapper;
     }
 
 
@@ -75,7 +79,7 @@ public class CustomAreaRepositoryImpl implements CustomAreaRepository {
     @Override
     public Collection<Area> findAreaOverlapsByAreaPoints(Polygon areaPoints) {
         String sql = "SELECT * FROM area WHERE area_points && ?";
-        return jdbcTemplate.queryForList(sql, Area.class,
+        return jdbcTemplate.query(sql, areaRowMapper,
                 jtsPolygonToPGpolygonConverter.convert(areaPoints));
     }
 
