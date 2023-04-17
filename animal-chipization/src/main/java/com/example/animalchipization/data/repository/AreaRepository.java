@@ -11,6 +11,4 @@ public interface AreaRepository extends Repository<Area, Long>, CustomAreaReposi
     Optional<Area> findById(Long id);
 
     boolean existsById(Long id);
-
-    void deleteById(Long id);
 }

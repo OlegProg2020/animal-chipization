@@ -14,7 +14,6 @@ import org.locationtech.jts.geom.Polygon;
 import org.postgresql.geometric.PGpolygon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -71,11 +70,7 @@ public class AreaServiceImpl implements AreaService {
     @Override
     @Transactional
     public void deleteById(@Min(1) Long id) {
-        try {
-            areaRepository.deleteById(id);
-        } catch (EmptyResultDataAccessException ignoredException) {
-            throw new NoSuchElementException();
-        }
+        areaRepository.deleteById(id);
     }
 
 

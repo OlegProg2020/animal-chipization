@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.PreparedStatement;
 import java.util.Collection;
+import java.util.NoSuchElementException;
 
 @Component
 public class CustomAreaRepositoryImpl implements CustomAreaRepository {
@@ -76,6 +77,15 @@ public class CustomAreaRepositoryImpl implements CustomAreaRepository {
         String sql = "SELECT area_points FROM area WHERE area_points && ?";
         return jdbcTemplate.queryForList(sql, PGpolygon.class,
                 jtsPolygonToPGpolygonConverter.convert(areaPoints));
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        String sql = "DELETE FROM area WHERE id = ?";
+        int rowsAffected = jdbcTemplate.update(sql, id);
+        if (rowsAffected == 0) {
+            throw new NoSuchElementException();
+        }
     }
 
 }

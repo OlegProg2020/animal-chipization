@@ -21,4 +21,7 @@ public interface CustomAreaRepository {
     Boolean existsByAreaPoints(Polygon areaPoints);
 
     Collection<PGpolygon> findAreaOverlapsByAreaPoints(Polygon areaPoints);
+
+    void deleteById(Long id);
+
 }
