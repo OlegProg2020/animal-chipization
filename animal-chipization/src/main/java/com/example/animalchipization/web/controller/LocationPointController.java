@@ -3,6 +3,8 @@ package com.example.animalchipization.web.controller;
 import com.example.animalchipization.dto.LocationPointDto;
 import com.example.animalchipization.service.LocationPointService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +28,16 @@ public class LocationPointController {
     @GetMapping("/{pointId}")
     public ResponseEntity<LocationPointDto> findLocationPointById(@PathVariable("pointId") @Min(1) Long pointId) {
         return new ResponseEntity<>(locationPointService.findById(pointId),
+                HttpStatus.valueOf(200));
+    }
+
+    @GetMapping
+    public ResponseEntity<Long> findLocationPointByLatitudeAndLongitude(
+            @RequestParam("latitude") @DecimalMin(value = "-90") @DecimalMax(value = "90") Double latitude,
+            @RequestParam("longitude") @DecimalMin(value = "-180") @DecimalMax(value = "180") Double longitude) {
+
+        Long locationId = locationPointService.findByLatitudeAndLongitude(latitude, longitude).getId();
+        return new ResponseEntity<>(locationId,
                 HttpStatus.valueOf(200));
     }
 

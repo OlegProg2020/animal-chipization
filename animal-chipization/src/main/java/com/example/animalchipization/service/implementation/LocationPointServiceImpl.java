@@ -7,6 +7,8 @@ import com.example.animalchipization.exception.LocationPointWithSuchCoordinatesA
 import com.example.animalchipization.service.LocationPointService;
 import com.example.animalchipization.service.mapper.Mapper;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -27,6 +29,15 @@ public class LocationPointServiceImpl implements LocationPointService {
                                     Mapper<LocationPoint, LocationPointDto> mapper) {
         this.locationPointRepository = locationPointRepository;
         this.mapper = mapper;
+    }
+
+    @Override
+    public LocationPointDto findByLatitudeAndLongitude(
+            @DecimalMin(value = "-90") @DecimalMax(value = "90") Double latitude,
+            @DecimalMin(value = "-180") @DecimalMax(value = "180") Double longitude) {
+
+        return mapper.toDto(locationPointRepository.findByLatitudeAndLongitude(
+                latitude, longitude).orElseThrow(NoSuchElementException::new));
     }
 
     @Override
