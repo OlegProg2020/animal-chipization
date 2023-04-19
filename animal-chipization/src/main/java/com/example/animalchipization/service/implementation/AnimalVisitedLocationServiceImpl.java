@@ -24,7 +24,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import static com.example.animalchipization.data.specification.AnimalVisitedLocationSpecification.*;
 
@@ -58,11 +57,16 @@ public class AnimalVisitedLocationServiceImpl implements AnimalVisitedLocationSe
                 .orElseThrow(NoSuchElementException::new));
     }
 
-    public Collection<AnimalVisitedLocationDto> findAllById(Iterable<@Min(1) Long> ids) {
-        Iterable<AnimalVisitedLocation> visitedLocations = animalVisitedLocationRepository
-                .findAllById(ids);
+    @Override
+    public Collection<AnimalVisitedLocationDto> findAllById(Collection<@Min(1) Long> ids) {
+        Collection<AnimalVisitedLocation> visitedLocations = animalVisitedLocationRepository
+                .findAllByIdIn(ids);
 
-        return StreamSupport.stream(visitedLocations.spliterator(), false)
+        if (visitedLocations.size() < ids.size()) {
+            throw new NoSuchElementException();
+        }
+
+        return visitedLocations.stream()
                 .map(animalVisitedLocationMapper::toDto)
                 .collect(Collectors.toCollection(LinkedList::new));
     }
@@ -145,7 +149,6 @@ public class AnimalVisitedLocationServiceImpl implements AnimalVisitedLocationSe
         }
         animalVisitedLocationRepository.delete(visitedLocationPoint);
     }
-
 
     public boolean isSecondVisitedLocationEqualsAnimalChippingLocation(Animal animal) {
         List<AnimalVisitedLocation> visitedLocations = animal.getVisitedLocations();
