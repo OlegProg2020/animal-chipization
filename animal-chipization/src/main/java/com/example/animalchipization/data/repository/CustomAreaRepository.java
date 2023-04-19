@@ -16,6 +16,11 @@ public interface CustomAreaRepository {
 
     void update(Area area);
 
+    /**
+     * @return all Areas that have at least one point
+     * in common with the specified one, including
+     * inside or on the border.
+     */
     Collection<Area> findAreaOverlapsByAreaPoints(Polygon areaPoints);
 
     void deleteById(Long id);
