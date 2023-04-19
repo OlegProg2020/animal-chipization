@@ -60,14 +60,15 @@ public class LocationPointServiceImpl implements LocationPointService {
     @Transactional
     public LocationPointDto update(@Valid LocationPointDto locationPointDto) {
         LocationPoint updatingLocationPoint = mapper.toEntity(locationPointDto);
-        if (locationPointRepository.existsById(updatingLocationPoint.getId())) {
-            try {
-                return mapper.toDto(locationPointRepository.save(updatingLocationPoint));
-            } catch (DataIntegrityViolationException exception) {
-                throw new LocationPointWithSuchCoordinatesAlreadyExistsException();
-            }
-        } else {
+
+        if (!locationPointRepository.existsById(updatingLocationPoint.getId())) {
             throw new NoSuchElementException();
+        }
+
+        try {
+            return mapper.toDto(locationPointRepository.save(updatingLocationPoint));
+        } catch (DataIntegrityViolationException exception) {
+            throw new LocationPointWithSuchCoordinatesAlreadyExistsException();
         }
     }
 

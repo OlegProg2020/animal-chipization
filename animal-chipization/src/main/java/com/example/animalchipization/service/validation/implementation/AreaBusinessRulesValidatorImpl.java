@@ -1,10 +1,10 @@
-package com.example.animalchipization.service.validator.implementation;
+package com.example.animalchipization.service.validation.implementation;
 
 import com.example.animalchipization.data.repository.AreaRepository;
 import com.example.animalchipization.entity.Area;
 import com.example.animalchipization.exception.AreaIntersectsWithExistingAreaException;
 import com.example.animalchipization.exception.InvalidAreaPointsPolygonException;
-import com.example.animalchipization.service.validator.AreaBusinessRulesValidator;
+import com.example.animalchipization.service.validation.AreaBusinessRulesValidator;
 import org.locationtech.jts.geom.Polygon;
 import org.springframework.stereotype.Component;
 

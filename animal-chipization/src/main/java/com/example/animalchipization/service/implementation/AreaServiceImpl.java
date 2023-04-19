@@ -5,7 +5,7 @@ import com.example.animalchipization.dto.AreaDto;
 import com.example.animalchipization.entity.Area;
 import com.example.animalchipization.service.AreaService;
 import com.example.animalchipization.service.mapper.Mapper;
-import com.example.animalchipization.service.validator.AreaBusinessRulesValidator;
+import com.example.animalchipization.service.validation.AreaBusinessRulesValidator;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;

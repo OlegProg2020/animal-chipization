@@ -1,4 +1,4 @@
-package com.example.animalchipization.service.validator;
+package com.example.animalchipization.service.validation;
 
 import com.example.animalchipization.entity.Area;
 
