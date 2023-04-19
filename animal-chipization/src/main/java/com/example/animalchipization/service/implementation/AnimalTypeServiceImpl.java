@@ -20,25 +20,25 @@ import java.util.NoSuchElementException;
 public class AnimalTypeServiceImpl implements AnimalTypeService {
 
     private final AnimalTypeRepository animalTypeRepository;
-    private final Mapper<AnimalType, AnimalTypeDto> mapper;
+    private final Mapper<AnimalType, AnimalTypeDto> animalTypeMapper;
 
     @Autowired
     public AnimalTypeServiceImpl(AnimalTypeRepository animalTypeRepository,
-                                 Mapper<AnimalType, AnimalTypeDto> mapper) {
+                                 Mapper<AnimalType, AnimalTypeDto> animalTypeMapper) {
         this.animalTypeRepository = animalTypeRepository;
-        this.mapper = mapper;
+        this.animalTypeMapper = animalTypeMapper;
     }
 
     @Override
     public AnimalTypeDto findById(@Min(1) Long id) {
-        return mapper.toDto(animalTypeRepository.findById(id).orElseThrow(NoSuchElementException::new));
+        return animalTypeMapper.toDto(animalTypeRepository.findById(id).orElseThrow(NoSuchElementException::new));
     }
 
     @Override
     @Transactional
     public AnimalTypeDto save(@Valid AnimalTypeDto animalTypeDto) {
         try {
-            return mapper.toDto(animalTypeRepository.save(mapper.toEntity(animalTypeDto)));
+            return animalTypeMapper.toDto(animalTypeRepository.save(animalTypeMapper.toEntity(animalTypeDto)));
         } catch (DataIntegrityViolationException exception) {
             throw new AnimalTypeWithSuchTypeAlreadyExistsException();
         }
@@ -47,13 +47,14 @@ public class AnimalTypeServiceImpl implements AnimalTypeService {
     @Override
     @Transactional
     public AnimalTypeDto update(@Valid AnimalTypeDto animalTypeDto) {
-        AnimalType updatingAnimalType = mapper.toEntity(animalTypeDto);
+        AnimalType updatingAnimalType = animalTypeMapper.toEntity(animalTypeDto);
+
+        if (!animalTypeRepository.existsById(updatingAnimalType.getId())) {
+            throw new NoSuchElementException();
+        }
+
         try {
-            if (animalTypeRepository.existsById(updatingAnimalType.getId())) {
-                return mapper.toDto(animalTypeRepository.save(updatingAnimalType));
-            } else {
-                throw new NoSuchElementException();
-            }
+            return animalTypeMapper.toDto(animalTypeRepository.save(updatingAnimalType));
         } catch (DataIntegrityViolationException exception) {
             throw new AnimalTypeWithSuchTypeAlreadyExistsException();
         }
