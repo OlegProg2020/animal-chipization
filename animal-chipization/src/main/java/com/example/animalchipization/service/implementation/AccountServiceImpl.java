@@ -55,8 +55,21 @@ public class AccountServiceImpl implements AccountService {
                         .and(emailLike(email)));
 
         return accountRepository.findAll(specifications, pageRequest).getContent()
-                .stream().map(account -> mapper.toDto(account))
+                .stream().map(mapper::toDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public AccountDto registry(@Valid AccountDto accountDto) {
+        Account newAccount = mapper.toEntity(accountDto);
+        newAccount.setPassword(passwordEncoder.encode(newAccount.getPassword()));
+
+        try {
+            return mapper.toDto(accountRepository.save(newAccount));
+        } catch (DataIntegrityViolationException exception) {
+            throw new AccountWithSuchEmailAlreadyExistsException();
+        }
     }
 
     @Override
@@ -64,6 +77,7 @@ public class AccountServiceImpl implements AccountService {
     public AccountDto update(@Valid AccountDto accountDto) {
         Account updatingAccount = mapper.toEntity(accountDto);
         updatingAccount.setPassword(passwordEncoder.encode(updatingAccount.getPassword()));
+
         try {
             return mapper.toDto(accountRepository.save(updatingAccount));
         } catch (DataIntegrityViolationException exception) {
@@ -78,19 +92,6 @@ public class AccountServiceImpl implements AccountService {
             accountRepository.deleteById(accountId);
         } catch (EmptyResultDataAccessException exception) {
             throw new NoSuchElementException();
-        }
-
-    }
-
-    @Override
-    @Transactional
-    public AccountDto registry(@Valid AccountDto accountDto) {
-        Account newAccount = mapper.toEntity(accountDto);
-        newAccount.setPassword(passwordEncoder.encode(newAccount.getPassword()));
-        try {
-            return mapper.toDto(accountRepository.save(newAccount));
-        } catch (DataIntegrityViolationException exception) {
-            throw new AccountWithSuchEmailAlreadyExistsException();
         }
     }
 
