@@ -10,14 +10,11 @@ public interface CustomAreaRepository {
     /**
      * Save area and return generated id.
      *
-     * @param area
      * @return generated id.
      */
     long save(Area area);
 
     void update(Area area);
-
-    Boolean existsByAreaPoints(Polygon areaPoints);
 
     Collection<Area> findAreaOverlapsByAreaPoints(Polygon areaPoints);
 

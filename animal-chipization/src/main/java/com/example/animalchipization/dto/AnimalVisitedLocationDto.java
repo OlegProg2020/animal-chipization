@@ -3,6 +3,7 @@ package com.example.animalchipization.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.validation.constraints.Min;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,6 +13,7 @@ import java.time.ZonedDateTime;
 @JsonDeserialize(builder = AnimalVisitedLocationDto.Builder.class)
 @Getter
 @NoArgsConstructor
+@EqualsAndHashCode
 public class AnimalVisitedLocationDto {
 
     @Setter

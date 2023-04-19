@@ -11,6 +11,7 @@ import com.example.animalchipization.entity.enums.LifeStatus;
 import com.example.animalchipization.exception.AnimalIsAlreadyAtThisPointException;
 import com.example.animalchipization.exception.AttemptAddingLocationToAnimalWithDeadStatusException;
 import com.example.animalchipization.exception.FirstLocationPointConcidesWithChippingPointException;
+import com.example.animalchipization.exception.UpdatingPointToSamePointException;
 import com.example.animalchipization.service.AnimalVisitedLocationService;
 import com.example.animalchipization.service.mapper.Mapper;
 import com.example.animalchipization.util.pagination.OffsetBasedPageRequest;
@@ -238,9 +239,8 @@ public class AnimalVisitedLocationServiceImpl implements AnimalVisitedLocationSe
                 this.isLocationEqualsAnimalChippingLocation(newLocation, animal)) {
             throw new FirstLocationPointConcidesWithChippingPointException();
         }
-        /* updating point to the same point */
         if (visitedLocation.getLocationPoint().equals(newLocation)) {
-            throw new AnimalIsAlreadyAtThisPointException();
+            throw new UpdatingPointToSamePointException();
         }
         if (this.isLocationEqualsNextAnimalVisitedLocationPoint(visitedLocation, animal) ||
                 this.isLocationEqualsPreviousAnimalVisitedLocationPoint(visitedLocation, animal)) {

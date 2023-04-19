@@ -1,7 +1,8 @@
-package com.example.animalchipization.service.mapper;
+package com.example.animalchipization.service.mapper.implementation;
 
 import com.example.animalchipization.dto.LocationPointDto;
 import com.example.animalchipization.entity.LocationPoint;
+import com.example.animalchipization.service.mapper.DefaultMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
