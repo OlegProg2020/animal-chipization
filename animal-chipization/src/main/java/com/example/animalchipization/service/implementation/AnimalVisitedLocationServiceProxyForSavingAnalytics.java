@@ -45,10 +45,13 @@ public class AnimalVisitedLocationServiceProxyForSavingAnalytics implements Anim
 
         LocationPoint previousLocation = findThePreviousLocationWhereAnimalWasLocated(animal, visitedLocation);
         LocationPoint latestLocation = visitedLocation.getLocationPoint();
-        List<Area> previousLocationArea = areaRepository.findAreasContainingLocationPoint(previousLocation);
-        List<Area> latestLocationArea = areaRepository.findAreasContainingLocationPoint(latestLocation);
+        List<Area> previousLocationAreas = areaRepository.findAreasContainingLocationPoint(previousLocation);
+        List<Area> latestLocationAreas = areaRepository.findAreasContainingLocationPoint(latestLocation);
 
-        for (Area area : previousLocationArea) {
+        previousLocationAreas.removeAll(latestLocationAreas);
+        latestLocationAreas.removeAll(previousLocationAreas);
+
+        for (Area area : previousLocationAreas) {
             AreaAnalytics previousAnalytics = new AreaAnalytics();
             previousAnalytics.setArea(area);
             previousAnalytics.setAnimal(animal);
@@ -56,7 +59,7 @@ public class AnimalVisitedLocationServiceProxyForSavingAnalytics implements Anim
             previousAnalytics.setStatusOfVisit(StatusOfAnimalVisitToArea.GONE);
             analyticsService.save(previousAnalytics);
         }
-        for (Area area : latestLocationArea) {
+        for (Area area : latestLocationAreas) {
             AreaAnalytics latestAnalytics = new AreaAnalytics();
             latestAnalytics.setArea(area);
             latestAnalytics.setAnimal(animal);
