@@ -12,7 +12,6 @@ import java.util.Set;
 
 @Component
 public class CoordinatesSetToJtsPolygonConverter implements Converter<Set<Coordinate>, Polygon> {
-
     /**
      * Converts Set<Coordinate> to jts Polygon, while
      * adding the last coordinate that corresponds to

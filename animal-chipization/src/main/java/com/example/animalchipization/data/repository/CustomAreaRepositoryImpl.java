@@ -1,7 +1,9 @@
 package com.example.animalchipization.data.repository;
 
 import com.example.animalchipization.entity.Area;
+import com.example.animalchipization.entity.LocationPoint;
 import org.locationtech.jts.geom.Polygon;
+import org.postgresql.geometric.PGpoint;
 import org.postgresql.geometric.PGpolygon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.PreparedStatement;
 import java.util.Collection;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Component
@@ -33,6 +36,19 @@ public class CustomAreaRepositoryImpl implements CustomAreaRepository {
         this.areaRowMapper = areaRowMapper;
     }
 
+    @Override
+    public Collection<Area> findAreaOverlapsByAreaPoints(Polygon areaPoints) {
+        String sql = "SELECT * FROM area WHERE area_points && ?";
+        return jdbcTemplate.query(sql, areaRowMapper,
+                jtsPolygonToPGpolygonConverter.convert(areaPoints));
+    }
+
+    @Override
+    public List<Area> findAreasContainingLocationPoint(LocationPoint locationPoint) {
+        PGpoint pgPoint = new PGpoint(locationPoint.getLongitude(), locationPoint.getLatitude());
+        String sql = "SELECT * FROM area WHERE area_points @> ?";
+        return jdbcTemplate.query(sql, areaRowMapper, pgPoint);
+    }
 
     /**
      * Save area and return generated id.
@@ -70,13 +86,6 @@ public class CustomAreaRepositoryImpl implements CustomAreaRepository {
         jdbcTemplate.update(sql, area.getName(),
                 jtsPolygonToPGpolygonConverter.convert(area.getAreaPoints()),
                 area.getId());
-    }
-
-    @Override
-    public Collection<Area> findAreaOverlapsByAreaPoints(Polygon areaPoints) {
-        String sql = "SELECT * FROM area WHERE area_points && ?";
-        return jdbcTemplate.query(sql, areaRowMapper,
-                jtsPolygonToPGpolygonConverter.convert(areaPoints));
     }
 
     @Override

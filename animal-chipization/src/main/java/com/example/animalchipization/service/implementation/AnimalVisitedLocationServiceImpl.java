@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
-import static com.example.animalchipization.data.specification.AnimalVisitedLocationSpecification.*;
+import static com.example.animalchipization.data.specification.AnimalVisitedLocationSpecificationFactory.*;
 
 @Service
 public class AnimalVisitedLocationServiceImpl implements AnimalVisitedLocationService {
@@ -79,38 +79,21 @@ public class AnimalVisitedLocationServiceImpl implements AnimalVisitedLocationSe
             @Min(0) Integer from,
             @Min(1) Integer size) {
 
-        if (animalRepository.existsById(animalId)) {
-            OffsetBasedPageRequest pageRequest = new OffsetBasedPageRequest(from, size,
-                    Sort.by("dateTimeOfVisitLocationPoint").ascending()
-                            .and(Sort.by("id").ascending()));
-
-            Specification<AnimalVisitedLocation> specifications = Specification.where(
-                    hasAnimalId(animalId)
-                            .and(hasDateTimeOfVisitLocationPointGreaterThanOrEqualTo(startDateTime))
-                            .and(hasDateTimeOfVisitLocationPointLessThanOrEqualTo(endDateTime)));
-
-            return animalVisitedLocationRepository.findAll(specifications, pageRequest).getContent()
-                    .stream().map(animalVisitedLocationMapper::toDto)
-                    .collect(Collectors.toList());
-        } else {
+        if (!animalRepository.existsById(animalId)) {
             throw new NoSuchElementException();
         }
-    }
 
-    @Override
-    @Transactional
-    public AnimalVisitedLocationDto save(@Min(1) Long animalId, @Min(1) Long pointId) {
-        Animal animal = animalRepository.findById(animalId).orElseThrow(NoSuchElementException::new);
-        LocationPoint newLocation = locationPointRepository.findById(pointId)
-                .orElseThrow(NoSuchElementException::new);
+        OffsetBasedPageRequest pageRequest = new OffsetBasedPageRequest(from, size,
+                Sort.by("dateTimeOfVisitLocationPoint").ascending()
+                        .and(Sort.by("id").ascending()));
+        Specification<AnimalVisitedLocation> specifications = Specification.where(
+                hasAnimalId(animalId)
+                        .and(hasDateTimeOfVisitLocationPointGreaterThanOrEqualTo(startDateTime))
+                        .and(hasDateTimeOfVisitLocationPointLessThanOrEqualTo(endDateTime)));
 
-        AnimalVisitedLocation newVisitedLocation = new AnimalVisitedLocation();
-        newVisitedLocation.setAnimal(animal);
-        newVisitedLocation.setLocationPoint(newLocation);
-
-        visitedLocationBusinessRulesValidator.validateNewAnimalVisitedLocation(newVisitedLocation);
-
-        return animalVisitedLocationMapper.toDto(animalVisitedLocationRepository.save(newVisitedLocation));
+        return animalVisitedLocationRepository.findAll(specifications, pageRequest).getContent()
+                .stream().map(animalVisitedLocationMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override

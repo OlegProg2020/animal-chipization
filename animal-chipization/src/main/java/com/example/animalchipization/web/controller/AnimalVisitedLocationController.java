@@ -1,9 +1,11 @@
 package com.example.animalchipization.web.controller;
 
 import com.example.animalchipization.dto.AnimalVisitedLocationDto;
+import com.example.animalchipization.service.AnimalVisitedLocationSavingService;
 import com.example.animalchipization.service.AnimalVisitedLocationService;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,9 +22,15 @@ import java.util.Map;
 public class AnimalVisitedLocationController {
 
     private final AnimalVisitedLocationService animalVisitedLocationService;
+    private final AnimalVisitedLocationSavingService animalVisitedLocationSavingService;
 
     @Autowired
-    public AnimalVisitedLocationController(AnimalVisitedLocationService animalVisitedLocationService) {
+    public AnimalVisitedLocationController(
+            @Qualifier("AnimalVisitedLocationSavingServiceProxyForSavingAnalytics")
+            AnimalVisitedLocationSavingService animalVisitedLocationSavingService,
+            AnimalVisitedLocationService animalVisitedLocationService) {
+
+        this.animalVisitedLocationSavingService = animalVisitedLocationSavingService;
         this.animalVisitedLocationService = animalVisitedLocationService;
     }
 
@@ -45,7 +53,7 @@ public class AnimalVisitedLocationController {
             @PathVariable("animalId") @Min(1) Long animalId,
             @PathVariable("pointId") @Min(1) Long pointId) {
 
-        AnimalVisitedLocationDto animalVisitedLocation = animalVisitedLocationService
+        AnimalVisitedLocationDto animalVisitedLocation = animalVisitedLocationSavingService
                 .save(animalId, pointId);
         return new ResponseEntity<>(animalVisitedLocation, HttpStatus.valueOf(201));
     }

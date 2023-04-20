@@ -14,8 +14,6 @@ public interface AnimalVisitedLocationService {
             ZonedDateTime endDateTime, Integer from,
             Integer size);
 
-    AnimalVisitedLocationDto save(Long animalId, Long pointId);
-
     AnimalVisitedLocationDto update(Long animalId,
                                     Long visitedLocationPointId,
                                     Long locationPointId);

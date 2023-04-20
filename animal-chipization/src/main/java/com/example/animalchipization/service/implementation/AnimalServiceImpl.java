@@ -27,7 +27,7 @@ import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
-import static com.example.animalchipization.data.specification.AnimalSpecification.*;
+import static com.example.animalchipization.data.specification.AnimalSpecificationFactory.*;
 
 @Service
 public class AnimalServiceImpl implements AnimalService {
