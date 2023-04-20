@@ -20,7 +20,7 @@ public class AreaAnalytics {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @ManyToOne(optional = false, cascade = CascadeType.REMOVE)
+    @ManyToOne(optional = false, cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private Area area;
     @ManyToOne(optional = false, cascade = CascadeType.REMOVE)
     private Animal animal;

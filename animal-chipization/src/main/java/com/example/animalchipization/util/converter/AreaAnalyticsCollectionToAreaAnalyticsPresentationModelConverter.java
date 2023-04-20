@@ -51,16 +51,14 @@ public class AreaAnalyticsCollectionToAreaAnalyticsPresentationModelConverter
             Set<AnimalType> animalTypes = analytics.getAnimal().getAnimalTypes();
 
             for (AnimalType type : animalTypes) {
+                typesAnalyticsMap.putIfAbsent(type, new AnimalsQuantity());
                 typesAnalyticsMap.computeIfPresent(type, (key, value) -> {
                     switch (analytics.getStatusOfVisit()) {
-                        case ARRIVED:
-                            value.arrived++;
-                        case GONE:
-                            value.gone++;
+                        case ARRIVED -> value.arrived++;
+                        case GONE -> value.gone++;
                     }
                     return value;
                 });
-                typesAnalyticsMap.putIfAbsent(type, new AnimalsQuantity());
             }
         }
 
@@ -68,8 +66,8 @@ public class AreaAnalyticsCollectionToAreaAnalyticsPresentationModelConverter
     }
 
     private static class AnimalsQuantity {
-        Long arrived;
-        Long gone;
+        long arrived = 0;
+        long gone = 0;
     }
 
     private Collection<AnimalAnalytics> convertTypesAnalyticsMapToAnimalsAnalytics(

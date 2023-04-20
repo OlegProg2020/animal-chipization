@@ -9,15 +9,12 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
-
-import static com.example.animalchipization.data.specification.AreaAnalyticsSpecificationFactory.*;
 
 @Service
 public class AreaAnalyticsServiceImpl implements AreaAnalyticsService {
@@ -43,25 +40,17 @@ public class AreaAnalyticsServiceImpl implements AreaAnalyticsService {
             throw new NoSuchElementException();
         }
 
-        /*
-        Specification<AreaAnalytics> specifications = Specification.where(
-                hasAreaId(areaId)
-                        .and(hasDateGreaterThanOrEqualTo(startDate))
-                        .and(hasDateLessThanOrEqualTo(endDate))
-        );
-
-        Collection<Long> ids = analyticsRepository.findAllId(specifications).stream()
-                .map(IdOnly::getId)
-                .collect(Collectors.toList());
-            */
         Collection<Long> ids = analyticsRepository
                 .findAllByArea_IdAndDateBetween(areaId, startDate, endDate).stream()
                 .map(IdOnly::getId)
                 .collect(Collectors.toList());
-        Collection<AreaAnalytics> distinctAnalytics = analyticsRepository.
-                findDistinctOnAnimalAndStatusOfVisitAndIdIn(ids);
+        ids = analyticsRepository.
+                findDistinctOnAnimalAndStatusOfVisitAndIdIn(ids).stream()
+                .map(IdOnly::getId)
+                .collect(Collectors.toList());
+        Collection<AreaAnalytics> analyticsCollection = analyticsRepository.findAllByIdIn(ids);
 
-        return analyticsConverter.convert(distinctAnalytics);
+        return analyticsConverter.convert(analyticsCollection);
     }
 
 }
