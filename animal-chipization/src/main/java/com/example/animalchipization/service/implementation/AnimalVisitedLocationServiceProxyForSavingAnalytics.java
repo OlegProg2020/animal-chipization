@@ -63,20 +63,20 @@ public class AnimalVisitedLocationServiceProxyForSavingAnalytics implements Anim
 
         LocationPoint previousLocation = findThePreviousLocationWhereAnimalWasLocated(animal, visitedLocation);
         LocationPoint latestLocation = visitedLocation.getLocationPoint();
-        Optional<Area> previousLocationArea = areaRepository.findAreaContainingLocationPoint(previousLocation);
-        Optional<Area> latestLocationArea = areaRepository.findAreaContainingLocationPoint(latestLocation);
+        List<Area> previousLocationArea = areaRepository.findAreasContainingLocationPoint(previousLocation);
+        List<Area> latestLocationArea = areaRepository.findAreasContainingLocationPoint(latestLocation);
 
-        if (previousLocationArea.isPresent()) {
+        if (!previousLocationArea.isEmpty()) {
             AreaAnalytics previousAnalytics = new AreaAnalytics();
-            previousAnalytics.setArea(previousLocationArea.get());
+            previousAnalytics.setArea(previousLocationArea.get(0));
             previousAnalytics.setAnimal(animal);
             previousAnalytics.setDate(visitedLocation.getDateTimeOfVisitLocationPoint().toLocalDate());
             previousAnalytics.setStatusOfVisit(StatusOfAnimalVisitToArea.GONE);
             analyticsRepository.save(previousAnalytics);
         }
-        if (latestLocationArea.isPresent()) {
+        if (!latestLocationArea.isEmpty()) {
             AreaAnalytics latestAnalytics = new AreaAnalytics();
-            latestAnalytics.setArea(latestLocationArea.get());
+            latestAnalytics.setArea(latestLocationArea.get(0));
             latestAnalytics.setAnimal(animal);
             latestAnalytics.setDate(visitedLocation.getDateTimeOfVisitLocationPoint().toLocalDate());
             latestAnalytics.setStatusOfVisit(StatusOfAnimalVisitToArea.ARRIVED);
@@ -106,10 +106,11 @@ public class AnimalVisitedLocationServiceProxyForSavingAnalytics implements Anim
                                                                        AnimalVisitedLocation visitedLocation) {
 
         List<AnimalVisitedLocation> visitedLocations = animal.getVisitedLocations();
-        if (visitedLocations.size() <= 1) {
+        int currentVisitedLocationIndex = visitedLocations.indexOf(visitedLocation);
+        if (currentVisitedLocationIndex <= 1) {
             return animal.getChippingLocation();
         } else {
-            int previousVisitedLocationIndex = visitedLocations.indexOf(visitedLocation) - 1;
+            int previousVisitedLocationIndex = currentVisitedLocationIndex - 1;
             return visitedLocations.get(previousVisitedLocationIndex).getLocationPoint();
         }
     }

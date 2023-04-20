@@ -31,7 +31,7 @@ public class AreaAnalyticsController {
             @RequestParam("startDate") @NotNull LocalDate startDate,
             @RequestParam("endDate") @NotNull LocalDate endDate) {
 
-        if (startDate.isBefore(endDate) || startDate.isEqual(endDate)) {
+        if (startDate.isAfter(endDate) || startDate.isEqual(endDate)) {
             throw new StartDateGreaterThanOrEqualToEndDateException();
         }
 

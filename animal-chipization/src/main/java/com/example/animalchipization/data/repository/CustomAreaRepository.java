@@ -5,6 +5,7 @@ import com.example.animalchipization.entity.LocationPoint;
 import org.locationtech.jts.geom.Polygon;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 public interface CustomAreaRepository {
@@ -19,7 +20,7 @@ public interface CustomAreaRepository {
     /**
      * @return area containing the location point inside or on the border.
      */
-    Optional<Area> findAreaContainingLocationPoint(LocationPoint locationPoint);
+    List<Area> findAreasContainingLocationPoint(LocationPoint locationPoint);
 
     /**
      * Save area and return generated id.

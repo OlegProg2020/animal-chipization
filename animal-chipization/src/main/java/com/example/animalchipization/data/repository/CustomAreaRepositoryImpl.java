@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.PreparedStatement;
 import java.util.Collection;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -45,14 +46,10 @@ public class CustomAreaRepositoryImpl implements CustomAreaRepository {
     }
 
     @Override
-    public Optional<Area> findAreaContainingLocationPoint(LocationPoint locationPoint) {
+    public List<Area> findAreasContainingLocationPoint(LocationPoint locationPoint) {
         PGpoint pgPoint = new PGpoint(locationPoint.getLongitude(), locationPoint.getLatitude());
         String sql = "SELECT * FROM area WHERE area_points @> ?";
-        try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, Area.class, pgPoint));
-        } catch (EmptyResultDataAccessException exception) {
-            return Optional.empty();
-        }
+        return jdbcTemplate.query(sql, areaRowMapper, pgPoint);
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.example.animalchipization.service.mapper.converter;
 
+import com.example.animalchipization.data.repository.AnimalRepository;
 import com.example.animalchipization.dto.AnimalDto;
 import com.example.animalchipization.dto.AnimalVisitedLocationDto;
 import com.example.animalchipization.dto.LocationPointDto;
@@ -15,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+import java.util.NoSuchElementException;
+
 @Component
 public class AnimalVisitedLocationDtoToAnimalVisitedLocationConverter
         implements Converter<AnimalVisitedLocationDto, AnimalVisitedLocation> {
@@ -23,18 +26,21 @@ public class AnimalVisitedLocationDtoToAnimalVisitedLocationConverter
     private final AnimalService animalService;
     private final Mapper<LocationPoint, LocationPointDto> locationPointMapper;
     private final Mapper<Animal, AnimalDto> animalMapper;
+    private final AnimalRepository animalRepository;
 
     @Autowired
     public AnimalVisitedLocationDtoToAnimalVisitedLocationConverter(
             @Lazy LocationPointService locationPointService,
             @Lazy AnimalService animalService,
             Mapper<LocationPoint, LocationPointDto> locationPointMapper,
-            @Lazy Mapper<Animal, AnimalDto> animalMapper) {
+            @Lazy Mapper<Animal, AnimalDto> animalMapper,
+            AnimalRepository animalRepository) {
 
         this.locationPointService = locationPointService;
         this.animalService = animalService;
         this.locationPointMapper = locationPointMapper;
         this.animalMapper = animalMapper;
+        this.animalRepository = animalRepository;
     }
 
     @Override
@@ -54,9 +60,7 @@ public class AnimalVisitedLocationDtoToAnimalVisitedLocationConverter
                 )
         );
         entity.setAnimal(
-                animalMapper.toEntity(
-                        animalService.findById(dto.getAnimalId())
-                )
+                animalRepository.findById(dto.getAnimalId()).orElseThrow(NoSuchElementException::new)
         );
 
         return entity;
