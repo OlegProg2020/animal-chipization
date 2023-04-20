@@ -53,4 +53,9 @@ public class AreaAnalyticsServiceImpl implements AreaAnalyticsService {
         return analyticsConverter.convert(analyticsCollection);
     }
 
+    @Override
+    public void save(AreaAnalytics areaAnalytics) {
+        analyticsRepository.save(areaAnalytics);
+    }
+
 }

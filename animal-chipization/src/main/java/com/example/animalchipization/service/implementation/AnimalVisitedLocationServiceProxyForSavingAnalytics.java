@@ -1,56 +1,39 @@
 package com.example.animalchipization.service.implementation;
 
-import com.example.animalchipization.data.repository.AreaAnalyticsRepository;
 import com.example.animalchipization.data.repository.AreaRepository;
 import com.example.animalchipization.dto.AnimalVisitedLocationDto;
 import com.example.animalchipization.entity.*;
 import com.example.animalchipization.entity.enums.StatusOfAnimalVisitToArea;
-import com.example.animalchipization.service.AnimalVisitedLocationService;
+import com.example.animalchipization.service.AnimalVisitedLocationSavingService;
+import com.example.animalchipization.service.AreaAnalyticsService;
 import com.example.animalchipization.service.mapper.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import java.time.ZonedDateTime;
-import java.util.Collection;
 import java.util.List;
 
 @Component
-@Qualifier("AnimalVisitedLocationServiceProxyForSavingAnalytics")
-public class AnimalVisitedLocationServiceProxyForSavingAnalytics implements AnimalVisitedLocationService {
+@Qualifier("AnimalVisitedLocationSavingServiceProxyForSavingAnalytics")
+public class AnimalVisitedLocationServiceProxyForSavingAnalytics implements AnimalVisitedLocationSavingService {
 
-    private final AnimalVisitedLocationService animalVisitedLocationService;
+    private final AnimalVisitedLocationSavingService animalVisitedLocationService;
     private final Mapper<AnimalVisitedLocation, AnimalVisitedLocationDto> animalVisitedLocationMapper;
-    private final AreaAnalyticsRepository analyticsRepository;
+    private final AreaAnalyticsService analyticsService;
     private final AreaRepository areaRepository;
 
     @Autowired
     public AnimalVisitedLocationServiceProxyForSavingAnalytics(
-            @Qualifier("AnimalVisitedLocationServiceImpl") AnimalVisitedLocationService
+            @Qualifier("AnimalVisitedLocationSavingServiceImpl") AnimalVisitedLocationSavingService
                     animalVisitedLocationService,
             Mapper<AnimalVisitedLocation, AnimalVisitedLocationDto> animalVisitedLocationMapper,
-            AreaAnalyticsRepository analyticsRepository,
+            AreaAnalyticsService analyticsService,
             AreaRepository areaRepository) {
 
         this.animalVisitedLocationService = animalVisitedLocationService;
         this.animalVisitedLocationMapper = animalVisitedLocationMapper;
-        this.analyticsRepository = analyticsRepository;
+        this.analyticsService = analyticsService;
         this.areaRepository = areaRepository;
-    }
-
-    @Override
-    public AnimalVisitedLocationDto findById(Long id) {
-        return animalVisitedLocationService.findById(id);
-    }
-
-    @Override
-    public Collection<AnimalVisitedLocationDto> searchForAnimalVisitedLocations(
-            Long animalId, ZonedDateTime startDateTime,
-            ZonedDateTime endDateTime, Integer from,
-            Integer size) {
-
-        return animalVisitedLocationService.searchForAnimalVisitedLocations(animalId, startDateTime,
-                endDateTime, from, size);
     }
 
     @Override
@@ -65,41 +48,25 @@ public class AnimalVisitedLocationServiceProxyForSavingAnalytics implements Anim
         List<Area> previousLocationArea = areaRepository.findAreasContainingLocationPoint(previousLocation);
         List<Area> latestLocationArea = areaRepository.findAreasContainingLocationPoint(latestLocation);
 
-        if (!previousLocationArea.isEmpty()) {
+        for (Area area : previousLocationArea) {
             AreaAnalytics previousAnalytics = new AreaAnalytics();
-            previousAnalytics.setArea(previousLocationArea.get(0));
+            previousAnalytics.setArea(area);
             previousAnalytics.setAnimal(animal);
             previousAnalytics.setDate(visitedLocation.getDateTimeOfVisitLocationPoint().toLocalDate());
             previousAnalytics.setStatusOfVisit(StatusOfAnimalVisitToArea.GONE);
-            analyticsRepository.save(previousAnalytics);
+            analyticsService.save(previousAnalytics);
         }
-        if (!latestLocationArea.isEmpty()) {
+        for (Area area : latestLocationArea) {
             AreaAnalytics latestAnalytics = new AreaAnalytics();
-            latestAnalytics.setArea(latestLocationArea.get(0));
+            latestAnalytics.setArea(area);
             latestAnalytics.setAnimal(animal);
             latestAnalytics.setDate(visitedLocation.getDateTimeOfVisitLocationPoint().toLocalDate());
             latestAnalytics.setStatusOfVisit(StatusOfAnimalVisitToArea.ARRIVED);
-            analyticsRepository.save(latestAnalytics);
+            analyticsService.save(latestAnalytics);
         }
 
         return visitedLocationDto;
     }
-
-    @Override
-    public AnimalVisitedLocationDto update(Long animalId, Long visitedLocationPointId, Long locationPointId) {
-        return animalVisitedLocationService.update(animalId, visitedLocationPointId, locationPointId);
-    }
-
-    @Override
-    public void delete(Long animalId, Long visitedPointId) {
-        animalVisitedLocationService.delete(animalId, visitedPointId);
-    }
-
-    @Override
-    public Collection<AnimalVisitedLocationDto> findAllById(Collection<Long> ids) {
-        return animalVisitedLocationService.findAllById(ids);
-    }
-
 
     private LocationPoint findThePreviousLocationWhereAnimalWasLocated(Animal animal,
                                                                        AnimalVisitedLocation visitedLocation) {

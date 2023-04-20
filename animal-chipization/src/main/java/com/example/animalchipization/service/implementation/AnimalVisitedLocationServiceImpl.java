@@ -13,7 +13,6 @@ import com.example.animalchipization.service.validation.AnimalVisitedLocationBus
 import com.example.animalchipization.util.pagination.OffsetBasedPageRequest;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -29,7 +28,6 @@ import java.util.stream.Collectors;
 import static com.example.animalchipization.data.specification.AnimalVisitedLocationSpecificationFactory.*;
 
 @Service
-@Qualifier("AnimalVisitedLocationServiceImpl")
 public class AnimalVisitedLocationServiceImpl implements AnimalVisitedLocationService {
 
     private final AnimalRepository animalRepository;
@@ -96,22 +94,6 @@ public class AnimalVisitedLocationServiceImpl implements AnimalVisitedLocationSe
         return animalVisitedLocationRepository.findAll(specifications, pageRequest).getContent()
                 .stream().map(animalVisitedLocationMapper::toDto)
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    @Transactional
-    public AnimalVisitedLocationDto save(@Min(1) Long animalId, @Min(1) Long pointId) {
-        Animal animal = animalRepository.findById(animalId).orElseThrow(NoSuchElementException::new);
-        LocationPoint newLocation = locationPointRepository.findById(pointId)
-                .orElseThrow(NoSuchElementException::new);
-
-        AnimalVisitedLocation newVisitedLocation = new AnimalVisitedLocation();
-        newVisitedLocation.setAnimal(animal);
-        newVisitedLocation.setLocationPoint(newLocation);
-
-        visitedLocationBusinessRulesValidator.validateNewAnimalVisitedLocation(newVisitedLocation);
-
-        return animalVisitedLocationMapper.toDto(animalVisitedLocationRepository.save(newVisitedLocation));
     }
 
     @Override
