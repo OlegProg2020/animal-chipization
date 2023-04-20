@@ -1,10 +1,13 @@
 package com.example.animalchipization.data.repository;
 
 import com.example.animalchipization.entity.Area;
+import com.example.animalchipization.entity.LocationPoint;
 import org.locationtech.jts.geom.Polygon;
+import org.postgresql.geometric.PGpoint;
 import org.postgresql.geometric.PGpolygon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -16,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.PreparedStatement;
 import java.util.Collection;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Component
 public class CustomAreaRepositoryImpl implements CustomAreaRepository {
@@ -33,6 +37,19 @@ public class CustomAreaRepositoryImpl implements CustomAreaRepository {
         this.areaRowMapper = areaRowMapper;
     }
 
+    @Override
+    public Collection<Area> findAreaOverlapsByAreaPoints(Polygon areaPoints) {
+        String sql = "SELECT * FROM area WHERE area_points && ?";
+        return jdbcTemplate.query(sql, areaRowMapper,
+                jtsPolygonToPGpolygonConverter.convert(areaPoints));
+    }
+
+    @Override
+    public Area findAreaContainingLocationPoint(LocationPoint locationPoint) {
+        PGpoint pgPoint = new PGpoint(locationPoint.getLongitude(), locationPoint.getLatitude());
+        String sql = "SELECT * FROM area WHERE area_points @> ?";
+        return jdbcTemplate.queryForObject(sql, Area.class, pgPoint);
+    }
 
     /**
      * Save area and return generated id.
@@ -70,13 +87,6 @@ public class CustomAreaRepositoryImpl implements CustomAreaRepository {
         jdbcTemplate.update(sql, area.getName(),
                 jtsPolygonToPGpolygonConverter.convert(area.getAreaPoints()),
                 area.getId());
-    }
-
-    @Override
-    public Collection<Area> findAreaOverlapsByAreaPoints(Polygon areaPoints) {
-        String sql = "SELECT * FROM area WHERE area_points && ?";
-        return jdbcTemplate.query(sql, areaRowMapper,
-                jtsPolygonToPGpolygonConverter.convert(areaPoints));
     }
 
     @Override
