@@ -4,6 +4,7 @@ import com.example.animalchipization.dto.AnimalVisitedLocationDto;
 import com.example.animalchipization.service.AnimalVisitedLocationService;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,7 +23,9 @@ public class AnimalVisitedLocationController {
     private final AnimalVisitedLocationService animalVisitedLocationService;
 
     @Autowired
-    public AnimalVisitedLocationController(AnimalVisitedLocationService animalVisitedLocationService) {
+    public AnimalVisitedLocationController(@Qualifier("AnimalVisitedLocationServiceProxy")
+                                               AnimalVisitedLocationService animalVisitedLocationService) {
+
         this.animalVisitedLocationService = animalVisitedLocationService;
     }
 

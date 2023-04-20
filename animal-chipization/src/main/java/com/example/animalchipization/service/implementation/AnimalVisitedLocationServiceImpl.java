@@ -13,6 +13,7 @@ import com.example.animalchipization.service.validation.AnimalVisitedLocationBus
 import com.example.animalchipization.util.pagination.OffsetBasedPageRequest;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
 import static com.example.animalchipization.data.specification.AnimalVisitedLocationSpecification.*;
 
 @Service
+@Qualifier("AnimalVisitedLocationServiceImpl")
 public class AnimalVisitedLocationServiceImpl implements AnimalVisitedLocationService {
 
     private final AnimalRepository animalRepository;
