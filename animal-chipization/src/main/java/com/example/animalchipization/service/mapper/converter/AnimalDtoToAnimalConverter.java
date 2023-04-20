@@ -1,54 +1,40 @@
 package com.example.animalchipization.service.mapper.converter;
 
-import com.example.animalchipization.dto.*;
-import com.example.animalchipization.entity.*;
-import com.example.animalchipization.service.AccountService;
-import com.example.animalchipization.service.AnimalTypeService;
-import com.example.animalchipization.service.AnimalVisitedLocationService;
-import com.example.animalchipization.service.LocationPointService;
-import com.example.animalchipization.service.mapper.Mapper;
+import com.example.animalchipization.data.repository.AccountRepository;
+import com.example.animalchipization.data.repository.AnimalTypeRepository;
+import com.example.animalchipization.data.repository.AnimalVisitedLocationRepository;
+import com.example.animalchipization.data.repository.LocationPointRepository;
+import com.example.animalchipization.dto.AnimalDto;
+import com.example.animalchipization.entity.Animal;
+import com.example.animalchipization.entity.AnimalVisitedLocation;
 import org.modelmapper.Converter;
 import org.modelmapper.spi.MappingContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.NoSuchElementException;
 
 @Component
 public class AnimalDtoToAnimalConverter implements Converter<AnimalDto, Animal> {
 
-    private final AnimalTypeService animalTypeService;
-    private final AccountService accountService;
-    private final LocationPointService locationPointService;
-    private final AnimalVisitedLocationService animalVisitedLocationService;
-    private final Mapper<AnimalType, AnimalTypeDto> animalTypeMapper;
-    private final Mapper<Account, AccountDto> accountMapper;
-    private final Mapper<LocationPoint, LocationPointDto> locationPointMapper;
-    private final Mapper<AnimalVisitedLocation, AnimalVisitedLocationDto> animalVisitedLocationMapper;
+    private final AnimalTypeRepository animalTypeRepository;
+    private final AccountRepository accountRepository;
+    private final LocationPointRepository locationPointRepository;
+    private final AnimalVisitedLocationRepository animalVisitedLocationRepository;
 
     @Autowired
     public AnimalDtoToAnimalConverter(
-            AnimalTypeService animalTypeService,
-            AccountService accountService,
-            LocationPointService locationPointService,
-            @Qualifier("AnimalVisitedLocationServiceImpl")
-            AnimalVisitedLocationService animalVisitedLocationService,
-            Mapper<AnimalType, AnimalTypeDto> animalTypeMapper,
-            Mapper<Account, AccountDto> accountMapper,
-            Mapper<LocationPoint, LocationPointDto> locationPointMapper,
-            Mapper<AnimalVisitedLocation, AnimalVisitedLocationDto> animalVisitedLocationMapper) {
+            AnimalTypeRepository animalTypeRepository,
+            AccountRepository accountRepository,
+            LocationPointRepository locationPointRepository,
+            AnimalVisitedLocationRepository animalVisitedLocationRepository) {
 
-        this.animalTypeService = animalTypeService;
-        this.accountService = accountService;
-        this.locationPointService = locationPointService;
-        this.animalVisitedLocationService = animalVisitedLocationService;
-        this.animalTypeMapper = animalTypeMapper;
-        this.accountMapper = accountMapper;
-        this.locationPointMapper = locationPointMapper;
-        this.animalVisitedLocationMapper = animalVisitedLocationMapper;
+        this.animalTypeRepository = animalTypeRepository;
+        this.accountRepository = accountRepository;
+        this.locationPointRepository = locationPointRepository;
+        this.animalVisitedLocationRepository = animalVisitedLocationRepository;
     }
 
     @Override
@@ -56,21 +42,19 @@ public class AnimalDtoToAnimalConverter implements Converter<AnimalDto, Animal> 
         AnimalDto dto = mappingContext.getSource();
         Animal entity = new Animal();
         entity.setId(dto.getId());
-        entity.setAnimalTypes(dto.getAnimalTypes().stream()
-                .map(id -> animalTypeMapper.toEntity(animalTypeService.findById(id)))
-                .collect(Collectors.toSet()));
+        entity.setAnimalTypes(new HashSet<>(animalTypeRepository.findAllByIdIn(dto.getAnimalTypes())));
         entity.setWeight(dto.getWeight());
         entity.setLength(dto.getLength());
         entity.setHeight(dto.getHeight());
         entity.setGender(dto.getGender());
         entity.setLifeStatus(dto.getLifeStatus());
         entity.setChippingDateTime(dto.getChippingDateTime());
-        entity.setChipper(accountMapper.toEntity(accountService.findById(dto.getChipperId())));
-        entity.setChippingLocation(locationPointMapper.toEntity(locationPointService.findById(dto.getChippingLocationId())));
-        List<AnimalVisitedLocation> visitedLocations = animalVisitedLocationService
-                .findAllById(dto.getVisitedLocations()).stream()
-                .map(animalVisitedLocationMapper::toEntity)
-                .collect(Collectors.toCollection(LinkedList::new));
+        entity.setChipper(accountRepository.findById(dto.getChipperId())
+                .orElseThrow(NoSuchElementException::new));
+        entity.setChippingLocation(locationPointRepository.findById(dto.getChippingLocationId())
+                .orElseThrow(NoSuchElementException::new));
+        List<AnimalVisitedLocation> visitedLocations = animalVisitedLocationRepository
+                .findAllByIdIn(dto.getVisitedLocations()).stream().toList();
         entity.setVisitedLocations(visitedLocations);
         entity.setDeathDateTime(dto.getDeathDateTime());
         return entity;

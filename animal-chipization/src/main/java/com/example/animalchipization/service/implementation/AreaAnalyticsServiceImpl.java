@@ -2,6 +2,7 @@ package com.example.animalchipization.service.implementation;
 
 import com.example.animalchipization.data.projection.IdOnly;
 import com.example.animalchipization.data.repository.AreaAnalyticsRepository;
+import com.example.animalchipization.data.repository.AreaRepository;
 import com.example.animalchipization.entity.AreaAnalytics;
 import com.example.animalchipization.service.AreaAnalyticsService;
 import com.example.animalchipization.web.model.AreaAnalyticsPresentationModel;
@@ -21,14 +22,17 @@ public class AreaAnalyticsServiceImpl implements AreaAnalyticsService {
 
     private final AreaAnalyticsRepository analyticsRepository;
     private final Converter<Collection<AreaAnalytics>, AreaAnalyticsPresentationModel> analyticsConverter;
+    private final AreaRepository areaRepository;
 
     @Autowired
     public AreaAnalyticsServiceImpl(
             AreaAnalyticsRepository analyticsRepository,
-            Converter<Collection<AreaAnalytics>, AreaAnalyticsPresentationModel> analyticsConverter) {
+            Converter<Collection<AreaAnalytics>, AreaAnalyticsPresentationModel> analyticsConverter,
+            AreaRepository areaRepository) {
 
         this.analyticsRepository = analyticsRepository;
         this.analyticsConverter = analyticsConverter;
+        this.areaRepository = areaRepository;
     }
 
     @Override
@@ -36,7 +40,7 @@ public class AreaAnalyticsServiceImpl implements AreaAnalyticsService {
                                                                             @NotNull LocalDate startDate,
                                                                             @NotNull LocalDate endDate) {
 
-        if (!analyticsRepository.existsById(areaId)) {
+        if (!areaRepository.existsById(areaId)) {
             throw new NoSuchElementException();
         }
 
