@@ -1,5 +1,5 @@
 package com.example.animalchipization.entity.enums;
 
-public enum StatusOfAnimalVisitsToArea {
+public enum StatusOfAnimalVisitToArea {
     ARRIVED, GONE
 }
