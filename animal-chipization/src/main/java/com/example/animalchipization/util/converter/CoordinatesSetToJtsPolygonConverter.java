@@ -13,6 +13,12 @@ import java.util.Set;
 @Component
 public class CoordinatesSetToJtsPolygonConverter implements Converter<Set<Coordinate>, Polygon> {
 
+    /**
+     * Converts Set<Coordinate> to jts Polygon, while
+     * adding the last coordinate that corresponds to
+     * the first, if necessary.
+     * Note: the x coordinate corresponds to longitude, and y to latitude.
+     */
     @Override
     public Polygon convert(Set<Coordinate> source) {
         CoordinateList jtsCoordinates = new CoordinateList();

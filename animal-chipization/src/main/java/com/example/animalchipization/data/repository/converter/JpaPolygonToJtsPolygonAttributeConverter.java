@@ -1,4 +1,4 @@
-package com.example.animalchipization.util.converter;
+package com.example.animalchipization.data.repository.converter;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
@@ -9,12 +9,12 @@ import org.locationtech.jts.io.ParseException;
 import org.locationtech.jts.io.WKTReader;
 
 @Converter
-public class StringSqlJpaPolygonToJtsPolygonConverter implements AttributeConverter<Polygon, String> {
+public class JpaPolygonToJtsPolygonAttributeConverter implements AttributeConverter<Polygon, String> {
 
     /**
      * When called, returns UnsupportedOperationException, since without
      * using Postgis and Hibernate Spatial there is no data type in JPA
-     * corresponding to the SQL type 'poligon'.
+     * corresponding to the SQL type 'polygon'.
      */
     @Override
     public String convertToDatabaseColumn(Polygon attribute) {
@@ -40,7 +40,7 @@ public class StringSqlJpaPolygonToJtsPolygonConverter implements AttributeConver
             Coordinate[] coordinates = reader.read(buffer.toString()).getCoordinates();
             return factory.createPolygon(coordinates);
         } catch (ParseException exception) {
-            throw new IllegalArgumentException("Unable to convert SQL Polygon to JTS Polygon.");
+            throw new IllegalArgumentException("Unable to convert JPA String Polygon to JTS Polygon.");
         }
     }
 

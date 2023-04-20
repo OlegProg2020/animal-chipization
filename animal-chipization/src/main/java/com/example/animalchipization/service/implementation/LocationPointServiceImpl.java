@@ -7,6 +7,8 @@ import com.example.animalchipization.exception.LocationPointWithSuchCoordinatesA
 import com.example.animalchipization.service.LocationPointService;
 import com.example.animalchipization.service.mapper.Mapper;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -30,6 +32,15 @@ public class LocationPointServiceImpl implements LocationPointService {
     }
 
     @Override
+    public LocationPointDto findByLatitudeAndLongitude(
+            @DecimalMin(value = "-90") @DecimalMax(value = "90") Double latitude,
+            @DecimalMin(value = "-180") @DecimalMax(value = "180") Double longitude) {
+
+        return mapper.toDto(locationPointRepository.findByLatitudeAndLongitude(
+                latitude, longitude).orElseThrow(NoSuchElementException::new));
+    }
+
+    @Override
     public LocationPointDto findById(@Min(1) Long id) {
         return mapper.toDto(locationPointRepository.findById(id)
                 .orElseThrow(NoSuchElementException::new));
@@ -49,14 +60,15 @@ public class LocationPointServiceImpl implements LocationPointService {
     @Transactional
     public LocationPointDto update(@Valid LocationPointDto locationPointDto) {
         LocationPoint updatingLocationPoint = mapper.toEntity(locationPointDto);
-        if (locationPointRepository.existsById(updatingLocationPoint.getId())) {
-            try {
-                return mapper.toDto(locationPointRepository.save(updatingLocationPoint));
-            } catch (DataIntegrityViolationException exception) {
-                throw new LocationPointWithSuchCoordinatesAlreadyExistsException();
-            }
-        } else {
+
+        if (!locationPointRepository.existsById(updatingLocationPoint.getId())) {
             throw new NoSuchElementException();
+        }
+
+        try {
+            return mapper.toDto(locationPointRepository.save(updatingLocationPoint));
+        } catch (DataIntegrityViolationException exception) {
+            throw new LocationPointWithSuchCoordinatesAlreadyExistsException();
         }
     }
 

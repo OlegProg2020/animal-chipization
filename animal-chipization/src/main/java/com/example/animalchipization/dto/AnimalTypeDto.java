@@ -4,6 +4,7 @@ package com.example.animalchipization.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.validation.constraints.NotBlank;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import lombok.Setter;
 @JsonDeserialize(builder = AnimalTypeDto.Builder.class)
 @Getter
 @NoArgsConstructor
+@EqualsAndHashCode
 public class AnimalTypeDto {
 
     @Setter

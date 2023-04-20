@@ -7,11 +7,11 @@ import com.example.animalchipization.entity.Animal;
 import com.example.animalchipization.entity.AnimalType;
 import com.example.animalchipization.entity.enums.Gender;
 import com.example.animalchipization.entity.enums.LifeStatus;
-import com.example.animalchipization.exception.AttemptToRemoveAnimalNotAtTheChippingPointException;
 import com.example.animalchipization.exception.EmptyAnimalTypesException;
 import com.example.animalchipization.exception.RemovingSingleTypeOfAnimalException;
 import com.example.animalchipization.service.AnimalService;
 import com.example.animalchipization.service.mapper.Mapper;
+import com.example.animalchipization.service.validation.AnimalBusinessRulesValidator;
 import com.example.animalchipization.util.pagination.OffsetBasedPageRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -35,15 +35,18 @@ public class AnimalServiceImpl implements AnimalService {
     private final AnimalRepository animalRepository;
     private final AnimalTypeRepository animalTypeRepository;
     private final Mapper<Animal, AnimalDto> animalMapper;
+    private final AnimalBusinessRulesValidator animalBusinessRulesValidator;
 
     @Autowired
     public AnimalServiceImpl(AnimalRepository animalRepository,
                              AnimalTypeRepository animalTypeRepository,
-                             Mapper<Animal, AnimalDto> animalMapper) {
+                             Mapper<Animal, AnimalDto> animalMapper,
+                             AnimalBusinessRulesValidator animalBusinessRulesValidator) {
 
         this.animalRepository = animalRepository;
         this.animalTypeRepository = animalTypeRepository;
         this.animalMapper = animalMapper;
+        this.animalBusinessRulesValidator = animalBusinessRulesValidator;
     }
 
     @Override
@@ -78,13 +81,12 @@ public class AnimalServiceImpl implements AnimalService {
         if (animalDto.getAnimalTypes().isEmpty()) {
             throw new EmptyAnimalTypesException();
         }
-        Animal animal = animalMapper.toEntity(animalDto);
 
+        Animal animal = animalMapper.toEntity(animalDto);
         animal.setLifeStatus(LifeStatus.ALIVE);
         animal.setChippingDateTime(ZonedDateTime.now().truncatedTo(ChronoUnit.SECONDS));
 
-        Animal a = animalRepository.save(animal);
-        return animalMapper.toDto(a);
+        return animalMapper.toDto(animalRepository.save(animal));
     }
 
     @Override
@@ -93,13 +95,19 @@ public class AnimalServiceImpl implements AnimalService {
         Animal animal = animalRepository.findById(animalId).orElseThrow(NoSuchElementException::new);
         Animal updatedAnimal = animalMapper.toEntity(updatedAnimalDto);
 
+        animalBusinessRulesValidator.validatePatchAnimal(animal, updatedAnimal);
+
         animal.setWeight(updatedAnimal.getWeight());
         animal.setLength(updatedAnimal.getLength());
         animal.setHeight(updatedAnimal.getHeight());
         animal.setGender(updatedAnimal.getGender());
-        animal.setAndValidateLifeStatus(updatedAnimal.getLifeStatus());
+        if (animal.getLifeStatus() == LifeStatus.ALIVE
+                && updatedAnimal.getLifeStatus() == LifeStatus.DEAD) {
+            animal.setLifeStatus(LifeStatus.DEAD);
+            animal.setDeathDateTime(ZonedDateTime.now().truncatedTo(ChronoUnit.SECONDS));
+        }
         animal.setChipper(updatedAnimal.getChipper());
-        animal.setAndValidateChippingLocation(updatedAnimal.getChippingLocation());
+        animal.setChippingLocation(updatedAnimal.getChippingLocation());
 
         return animalMapper.toDto(animalRepository.save(animal));
     }
@@ -108,11 +116,10 @@ public class AnimalServiceImpl implements AnimalService {
     @Transactional
     public void deleteById(@Min(1) Long id) {
         Animal animal = animalRepository.findById(id).orElseThrow(NoSuchElementException::new);
-        if (animal.isAnimalAtChippingLocation()) {
-            animalRepository.delete(animal);
-        } else {
-            throw new AttemptToRemoveAnimalNotAtTheChippingPointException();
-        }
+
+        animalBusinessRulesValidator.validateDeletingAnimal(animal);
+
+        animalRepository.delete(animal);
     }
 
     @Override

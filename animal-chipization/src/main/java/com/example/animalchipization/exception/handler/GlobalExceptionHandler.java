@@ -17,65 +17,58 @@ import java.util.NoSuchElementException;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<?> onConstraintViolationException(ConstraintViolationException exception) {
+    public ResponseEntity<?> onConstraintViolationException() {
         return new ResponseEntity<>(HttpStatus.valueOf(400));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> onMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
+    public ResponseEntity<?> onMethodArgumentNotValidException() {
         return new ResponseEntity<>(HttpStatus.valueOf(400));
     }
 
     @ExceptionHandler(ValidationException.class)
-    public ResponseEntity<?> onValidationException(ValidationException exception) {
+    public ResponseEntity<?> onValidationException() {
+        return new ResponseEntity<>(HttpStatus.valueOf(400));
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<?> onDataIntegrityViolationException() {
         return new ResponseEntity<>(HttpStatus.valueOf(400));
     }
 
     @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<?> onNoSuchElementException(NoSuchElementException exception) {
+    public ResponseEntity<?> onNoSuchElementException() {
         return new ResponseEntity<>(HttpStatus.valueOf(404));
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)
-    public ResponseEntity<?> onUsernameNotFoundException(UsernameNotFoundException exception) {
+    public ResponseEntity<?> onUsernameNotFoundException() {
         return new ResponseEntity<>(HttpStatus.valueOf(401));
     }
 
     @ExceptionHandler(AccountWithSuchEmailAlreadyExistsException.class)
-    public ResponseEntity<?> onAccountWithThisEmailAlreadyExistsException(
-            AccountWithSuchEmailAlreadyExistsException exception) {
-
+    public ResponseEntity<?> onAccountWithThisEmailAlreadyExistsException() {
         return new ResponseEntity<>(HttpStatus.valueOf(409));
     }
 
     @ExceptionHandler(AreaWithSuchAreaPointsAlreadyExistsException.class)
-    public ResponseEntity<?> onAreaWithSuchAreaPointsAlreadyExistsException(
-            AreaWithSuchAreaPointsAlreadyExistsException exception) {
-
+    public ResponseEntity<?> onAreaWithSuchAreaPointsAlreadyExistsException() {
         return new ResponseEntity<>(HttpStatus.valueOf(409));
     }
 
     @ExceptionHandler(DuplicateCollectionItemException.class)
-    public ResponseEntity<?> onDuplicateItemException(DuplicateCollectionItemException exception) {
+    public ResponseEntity<?> onDuplicateItemException() {
         return new ResponseEntity<>(HttpStatus.valueOf(409));
     }
 
     @ExceptionHandler(AnimalTypeWithSuchTypeAlreadyExistsException.class)
-    public ResponseEntity<?> onAnimalTypeWithThisTypeAlreadyExistsException(
-            AnimalTypeWithSuchTypeAlreadyExistsException exception) {
-
+    public ResponseEntity<?> onAnimalTypeWithThisTypeAlreadyExistsException() {
         return new ResponseEntity<>(HttpStatus.valueOf(409));
     }
 
     @ExceptionHandler(LocationPointWithSuchCoordinatesAlreadyExistsException.class)
-    public ResponseEntity<?> onLocationPointWithThisCoordinatesAlreadyExistsException(
-            LocationPointWithSuchCoordinatesAlreadyExistsException exception) {
-
+    public ResponseEntity<?> onLocationPointWithSuchCoordinatesAlreadyExistsException() {
         return new ResponseEntity<>(HttpStatus.valueOf(409));
     }
 
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<?> onDataIntegrityViolationException(DataIntegrityViolationException exception) {
-        return new ResponseEntity<>(HttpStatus.valueOf(400));
-    }
 }
