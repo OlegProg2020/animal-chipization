@@ -1,7 +1,8 @@
-package com.example.animalchipization.service.mapper;
+package com.example.animalchipization.service.mapper.implementation;
 
 import com.example.animalchipization.dto.AnimalVisitedLocationDto;
 import com.example.animalchipization.entity.AnimalVisitedLocation;
+import com.example.animalchipization.service.mapper.DefaultMapper;
 import jakarta.annotation.PostConstruct;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;

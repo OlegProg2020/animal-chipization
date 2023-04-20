@@ -6,6 +6,8 @@ public interface LocationPointService {
 
     LocationPointDto findById(Long id);
 
+    LocationPointDto findByLatitudeAndLongitude(Double latitude, Double longitude);
+
     LocationPointDto save(LocationPointDto locationPointDto);
 
     LocationPointDto update(LocationPointDto locationPointDto);

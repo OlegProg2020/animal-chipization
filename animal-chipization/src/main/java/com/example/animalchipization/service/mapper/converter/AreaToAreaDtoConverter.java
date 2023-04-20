@@ -1,4 +1,4 @@
-package com.example.animalchipization.util.converter;
+package com.example.animalchipization.service.mapper.converter;
 
 import com.example.animalchipization.dto.AreaDto;
 import com.example.animalchipization.entity.Area;

@@ -2,16 +2,13 @@ package com.example.animalchipization.entity;
 
 import com.example.animalchipization.entity.enums.Gender;
 import com.example.animalchipization.entity.enums.LifeStatus;
-import com.example.animalchipization.exception.AnimalIsAlreadyAtThisPointException;
 import com.example.animalchipization.exception.DuplicateCollectionItemException;
-import com.example.animalchipization.exception.SettingLifeStatusInAliveFromDeadException;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.ZonedDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Entity
@@ -50,47 +47,6 @@ public class Animal {
         this.visitedLocations = new LinkedList<>();
     }
 
-
-    public boolean isAnimalAtChippingLocation() {
-        int lastVisitedLocationIndex = this.visitedLocations.size() - 1;
-        if (lastVisitedLocationIndex >= 0) {
-            AnimalVisitedLocation lastVisitedLocation = this.visitedLocations.get(lastVisitedLocationIndex);
-            return this.chippingLocation.equals(lastVisitedLocation.getLocationPoint());
-        }
-        return true;
-    }
-
-    private boolean isChippingLocationEqualsFirstVisitedLocationPoint() {
-        if (this.visitedLocations.size() > 0) {
-            AnimalVisitedLocation firstVisitedLocation = this.visitedLocations.get(0);
-            return firstVisitedLocation.getLocationPoint().equals(this.getChippingLocation());
-        }
-        return false;
-    }
-
-    public void setAndValidateChippingLocation(LocationPoint locationPoint) {
-        this.chippingLocation = locationPoint;
-        if (this.isChippingLocationEqualsFirstVisitedLocationPoint()) {
-            throw new AnimalIsAlreadyAtThisPointException();
-        }
-    }
-
-    private void setLifeStatusToDeadAndSetDeathDateTime() {
-        this.lifeStatus = LifeStatus.DEAD;
-        this.deathDateTime = ZonedDateTime.now().truncatedTo(ChronoUnit.SECONDS);
-    }
-
-    public void setAndValidateLifeStatus(LifeStatus newLifeStatus) {
-        if (this.lifeStatus == LifeStatus.ALIVE) {
-            if (newLifeStatus == LifeStatus.DEAD) {
-                this.setLifeStatusToDeadAndSetDeathDateTime();
-            }
-        } else {
-            if (newLifeStatus == LifeStatus.ALIVE) {
-                throw new SettingLifeStatusInAliveFromDeadException();
-            }
-        }
-    }
 
     public void addAnimalType(AnimalType animalType) {
         if (!this.animalTypes.add(animalType)) {

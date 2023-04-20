@@ -38,9 +38,9 @@ public class CustomAreaRepositoryImpl implements CustomAreaRepository {
      * Save area and return generated id.
      * If id == null, throws RuntimeException("Failed to retrieve generated id").
      *
-     * @param area
      * @return generated id.
      */
+    @Override
     @Transactional
     @Modifying
     public long save(Area area) {
@@ -52,7 +52,9 @@ public class CustomAreaRepositoryImpl implements CustomAreaRepository {
                     ps.setString(1, area.getName());
                     ps.setObject(2, jtsPolygonToPGpolygonConverter.convert(area.getAreaPoints()));
                     return ps;
-                }, keyHolder);
+                },
+                keyHolder
+        );
         try {
             return keyHolder.getKey().longValue();
         } catch (NullPointerException exception) {
@@ -60,6 +62,7 @@ public class CustomAreaRepositoryImpl implements CustomAreaRepository {
         }
     }
 
+    @Override
     @Transactional
     @Modifying
     public void update(Area area) {
@@ -70,13 +73,6 @@ public class CustomAreaRepositoryImpl implements CustomAreaRepository {
     }
 
     @Override
-    public Boolean existsByAreaPoints(Polygon areaPoints) {
-        String sql = "SELECT CASE WHEN COUNT(area_points) >= 1 THEN TRUE ELSE FALSE END FROM area WHERE area_points ~= ?";
-        return jdbcTemplate.queryForObject(sql, Boolean.class,
-                jtsPolygonToPGpolygonConverter.convert(areaPoints));
-    }
-
-    @Override
     public Collection<Area> findAreaOverlapsByAreaPoints(Polygon areaPoints) {
         String sql = "SELECT * FROM area WHERE area_points && ?";
         return jdbcTemplate.query(sql, areaRowMapper,
@@ -84,6 +80,8 @@ public class CustomAreaRepositoryImpl implements CustomAreaRepository {
     }
 
     @Override
+    @Transactional
+    @Modifying
     public void deleteById(Long id) {
         String sql = "DELETE FROM area WHERE id = ?";
         int rowsAffected = jdbcTemplate.update(sql, id);
