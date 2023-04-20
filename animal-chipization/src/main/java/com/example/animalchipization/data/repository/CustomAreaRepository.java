@@ -18,9 +18,8 @@ public interface CustomAreaRepository {
 
     /**
      * @return area containing the location point inside or on the border.
-     * If not found throws EmptyResultDataAccessException.
      */
-    Area findAreaContainingLocationPoint(LocationPoint locationPoint);
+    Optional<Area> findAreaContainingLocationPoint(LocationPoint locationPoint);
 
     /**
      * Save area and return generated id.

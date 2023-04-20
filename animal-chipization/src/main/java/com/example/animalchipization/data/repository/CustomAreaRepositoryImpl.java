@@ -45,10 +45,14 @@ public class CustomAreaRepositoryImpl implements CustomAreaRepository {
     }
 
     @Override
-    public Area findAreaContainingLocationPoint(LocationPoint locationPoint) {
+    public Optional<Area> findAreaContainingLocationPoint(LocationPoint locationPoint) {
         PGpoint pgPoint = new PGpoint(locationPoint.getLongitude(), locationPoint.getLatitude());
         String sql = "SELECT * FROM area WHERE area_points @> ?";
-        return jdbcTemplate.queryForObject(sql, Area.class, pgPoint);
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, Area.class, pgPoint));
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 
     /**
