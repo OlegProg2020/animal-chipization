@@ -18,7 +18,7 @@ public class AreaAnalyticsSpecificationFactory {
                 criteriaBuilder.greaterThanOrEqualTo(root.get("date"), startDate);
     }
 
-    public static Specification<AreaAnalytics> hasDateLessThanOrEqualTo(ZonedDateTime endDate) {
+    public static Specification<AreaAnalytics> hasDateLessThanOrEqualTo(LocalDate endDate) {
         return (root, criteriaQuery, criteriaBuilder) ->
                 criteriaBuilder.lessThanOrEqualTo(root.get("date"), endDate);
     }

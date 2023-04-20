@@ -81,22 +81,21 @@ public class AnimalVisitedLocationServiceImpl implements AnimalVisitedLocationSe
             @Min(0) Integer from,
             @Min(1) Integer size) {
 
-        if (animalRepository.existsById(animalId)) {
-            OffsetBasedPageRequest pageRequest = new OffsetBasedPageRequest(from, size,
-                    Sort.by("dateTimeOfVisitLocationPoint").ascending()
-                            .and(Sort.by("id").ascending()));
-
-            Specification<AnimalVisitedLocation> specifications = Specification.where(
-                    hasAnimalId(animalId)
-                            .and(hasDateTimeOfVisitLocationPointGreaterThanOrEqualTo(startDateTime))
-                            .and(hasDateTimeOfVisitLocationPointLessThanOrEqualTo(endDateTime)));
-
-            return animalVisitedLocationRepository.findAll(specifications, pageRequest).getContent()
-                    .stream().map(animalVisitedLocationMapper::toDto)
-                    .collect(Collectors.toList());
-        } else {
+        if (!animalRepository.existsById(animalId)) {
             throw new NoSuchElementException();
         }
+
+        OffsetBasedPageRequest pageRequest = new OffsetBasedPageRequest(from, size,
+                Sort.by("dateTimeOfVisitLocationPoint").ascending()
+                        .and(Sort.by("id").ascending()));
+        Specification<AnimalVisitedLocation> specifications = Specification.where(
+                hasAnimalId(animalId)
+                        .and(hasDateTimeOfVisitLocationPointGreaterThanOrEqualTo(startDateTime))
+                        .and(hasDateTimeOfVisitLocationPointLessThanOrEqualTo(endDateTime)));
+
+        return animalVisitedLocationRepository.findAll(specifications, pageRequest).getContent()
+                .stream().map(animalVisitedLocationMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override

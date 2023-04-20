@@ -10,6 +10,7 @@ import com.example.animalchipization.service.mapper.Mapper;
 import org.modelmapper.Converter;
 import org.modelmapper.spi.MappingContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;
@@ -33,6 +34,7 @@ public class AnimalDtoToAnimalConverter implements Converter<AnimalDto, Animal> 
             AnimalTypeService animalTypeService,
             AccountService accountService,
             LocationPointService locationPointService,
+            @Qualifier("AnimalVisitedLocationServiceImpl")
             AnimalVisitedLocationService animalVisitedLocationService,
             Mapper<AnimalType, AnimalTypeDto> animalTypeMapper,
             Mapper<Account, AccountDto> accountMapper,
