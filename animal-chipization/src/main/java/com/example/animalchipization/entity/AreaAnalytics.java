@@ -24,7 +24,7 @@ public class AreaAnalytics {
     private Area area;
     @ManyToOne(optional = false, cascade = CascadeType.REMOVE)
     private Animal animal;
-    private LocalDate dateTime;
+    private LocalDate date;
     @Enumerated(EnumType.STRING)
     private StatusOfAnimalVisitToArea statusOfVisit;
 

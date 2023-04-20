@@ -22,7 +22,7 @@ import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
-import static com.example.animalchipization.data.specification.AccountSpecification.*;
+import static com.example.animalchipization.data.specification.AccountSpecificationFactory.*;
 
 @Service
 public class AccountServiceImpl implements AccountService {

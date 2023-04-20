@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
-import static com.example.animalchipization.data.specification.AnimalVisitedLocationSpecification.*;
+import static com.example.animalchipization.data.specification.AnimalVisitedLocationSpecificationFactory.*;
 
 @Service
 @Qualifier("AnimalVisitedLocationServiceImpl")

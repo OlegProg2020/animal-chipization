@@ -70,7 +70,7 @@ public class AnimalVisitedLocationServiceProxyForSavingAnalytics implements Anim
             AreaAnalytics previousAnalytics = new AreaAnalytics();
             previousAnalytics.setArea(previousLocationArea.get());
             previousAnalytics.setAnimal(animal);
-            previousAnalytics.setDateTime(visitedLocation.getDateTimeOfVisitLocationPoint().toLocalDate());
+            previousAnalytics.setDate(visitedLocation.getDateTimeOfVisitLocationPoint().toLocalDate());
             previousAnalytics.setStatusOfVisit(StatusOfAnimalVisitToArea.GONE);
             analyticsRepository.save(previousAnalytics);
         }
@@ -78,7 +78,7 @@ public class AnimalVisitedLocationServiceProxyForSavingAnalytics implements Anim
             AreaAnalytics latestAnalytics = new AreaAnalytics();
             latestAnalytics.setArea(latestLocationArea.get());
             latestAnalytics.setAnimal(animal);
-            latestAnalytics.setDateTime(visitedLocation.getDateTimeOfVisitLocationPoint().toLocalDate());
+            latestAnalytics.setDate(visitedLocation.getDateTimeOfVisitLocationPoint().toLocalDate());
             latestAnalytics.setStatusOfVisit(StatusOfAnimalVisitToArea.ARRIVED);
             analyticsRepository.save(latestAnalytics);
         }

@@ -5,7 +5,8 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.time.ZonedDateTime;
 
-public class AnimalVisitedLocationSpecification {
+public class AnimalVisitedLocationSpecificationFactory {
+
     public static Specification<AnimalVisitedLocation> hasAnimalId(Long animalId) {
         return (root, criteriaQuery, criteriaBuilder) ->
                 criteriaBuilder.equal(root.get("animal").get("id"), animalId);

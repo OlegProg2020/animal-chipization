@@ -7,7 +7,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.time.ZonedDateTime;
 
-public class AnimalSpecification {
+public class AnimalSpecificationFactory {
 
     public static Specification<Animal> hasChippingDateTimeGreaterThanOrEqualTo(ZonedDateTime startDateTime) {
         return (root, criteriaQuery, criteriaBuilder) -> {
