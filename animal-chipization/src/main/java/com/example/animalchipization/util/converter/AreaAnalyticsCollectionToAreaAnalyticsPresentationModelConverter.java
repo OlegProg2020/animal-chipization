@@ -5,6 +5,7 @@ import com.example.animalchipization.entity.AreaAnalytics;
 import com.example.animalchipization.entity.enums.StatusOfAnimalVisitToArea;
 import com.example.animalchipization.web.model.AnimalAnalytics;
 import com.example.animalchipization.web.model.AreaAnalyticsPresentationModel;
+import io.micrometer.common.lang.NonNullApi;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +16,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
+@NonNullApi
 public class AreaAnalyticsCollectionToAreaAnalyticsPresentationModelConverter
         implements Converter<Collection<AreaAnalytics>, AreaAnalyticsPresentationModel> {
 
@@ -24,8 +26,9 @@ public class AreaAnalyticsCollectionToAreaAnalyticsPresentationModelConverter
 
         presentation.setTotalAnimalsArrived(getAnimalsArrived(source));
         presentation.setTotalAnimalsGone(getAnimalsGone(source));
-        long arrivedGoneDifference = presentation.getTotalAnimalsArrived() - presentation.getTotalAnimalsGone();
-        presentation.setTotalQuantityAnimals(arrivedGoneDifference >= 0L ? arrivedGoneDifference : 0L);
+        long arrivedGoneDifference =
+                presentation.getTotalAnimalsArrived() - presentation.getTotalAnimalsGone();
+        presentation.setTotalQuantityAnimals(arrivedGoneDifference >= 0 ? arrivedGoneDifference : 0);
         presentation.setAnimalsAnalytics(getAnimalsAnalytics(source));
         return presentation;
     }
@@ -83,7 +86,7 @@ public class AreaAnalyticsCollectionToAreaAnalyticsPresentationModelConverter
                     analytics.setAnimalsArrived(quantity.arrived);
                     analytics.setAnimalsGone(quantity.gone);
                     long arrivedGoneDifference = quantity.arrived - quantity.gone;
-                    analytics.setQuantityAnimals(arrivedGoneDifference >= 0L ? arrivedGoneDifference : 0L);
+                    analytics.setQuantityAnimals(arrivedGoneDifference >= 0 ? arrivedGoneDifference : 0);
                     return analytics;
                 })
                 .collect(Collectors.toList());
