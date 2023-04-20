@@ -4,7 +4,6 @@ import com.example.animalchipization.entity.AreaAnalytics;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
 
 public class AreaAnalyticsSpecificationFactory {
 

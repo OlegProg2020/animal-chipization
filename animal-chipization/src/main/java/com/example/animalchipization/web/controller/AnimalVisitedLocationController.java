@@ -24,7 +24,7 @@ public class AnimalVisitedLocationController {
 
     @Autowired
     public AnimalVisitedLocationController(@Qualifier("AnimalVisitedLocationServiceProxyForSavingAnalytics")
-                                               AnimalVisitedLocationService animalVisitedLocationService) {
+                                           AnimalVisitedLocationService animalVisitedLocationService) {
 
         this.animalVisitedLocationService = animalVisitedLocationService;
     }
