@@ -1,8 +1,8 @@
 package com.example.animalchipization.web.controller;
 
-import com.example.animalchipization.entity.AreaAnalytics;
 import com.example.animalchipization.exception.StartDateGreaterThanOrEqualToEndDateException;
 import com.example.animalchipization.service.AreaAnalyticsService;
+import com.example.animalchipization.web.model.AreaAnalyticsPresentationModel;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.Collection;
 
 @RestController
 @RequestMapping(path = "/areas", produces = "application/json")
@@ -27,7 +26,7 @@ public class AreaAnalyticsController {
     }
 
     @GetMapping("/{areaId}/analytics")
-    public ResponseEntity<Collection<AreaAnalytics>> getAnalytics(
+    public ResponseEntity<AreaAnalyticsPresentationModel> getAnalytics(
             @PathVariable("areaId") @Min(1) Long areaId,
             @RequestParam("startDate") @NotNull LocalDate startDate,
             @RequestParam("endDate") @NotNull LocalDate endDate) {
@@ -36,7 +35,8 @@ public class AreaAnalyticsController {
             throw new StartDateGreaterThanOrEqualToEndDateException();
         }
 
-        return new ResponseEntity<>(analyticsService.searchForAreaAnalytics(areaId, startDate, endDate),
+        return new ResponseEntity<>(
+                analyticsService.generateAreaAnalyticsPresentation(areaId, startDate, endDate),
                 HttpStatus.valueOf(200));
     }
 
