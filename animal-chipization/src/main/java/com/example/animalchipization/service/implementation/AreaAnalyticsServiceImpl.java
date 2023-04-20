@@ -43,13 +43,19 @@ public class AreaAnalyticsServiceImpl implements AreaAnalyticsService {
             throw new NoSuchElementException();
         }
 
+        /*
         Specification<AreaAnalytics> specifications = Specification.where(
                 hasAreaId(areaId)
                         .and(hasDateGreaterThanOrEqualTo(startDate))
                         .and(hasDateLessThanOrEqualTo(endDate))
         );
 
-        Collection<Long> ids = analyticsRepository.findAllIds(specifications).stream()
+        Collection<Long> ids = analyticsRepository.findAllId(specifications).stream()
+                .map(IdOnly::getId)
+                .collect(Collectors.toList());
+            */
+        Collection<Long> ids = analyticsRepository
+                .findAllByArea_IdAndDateBetween(areaId, startDate, endDate).stream()
                 .map(IdOnly::getId)
                 .collect(Collectors.toList());
         Collection<AreaAnalytics> distinctAnalytics = analyticsRepository.

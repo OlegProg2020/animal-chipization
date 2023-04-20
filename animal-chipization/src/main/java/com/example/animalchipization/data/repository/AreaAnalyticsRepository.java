@@ -7,12 +7,15 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
+import java.time.LocalDate;
 import java.util.Collection;
 
 public interface AreaAnalyticsRepository extends CrudRepository<AreaAnalytics, Long>,
         JpaSpecificationExecutor<AreaAnalytics> {
 
-    Collection<IdOnly> findAllIds(Specification<AreaAnalytics> specification);
+    //Collection<IdOnly> findAllId(Specification<AreaAnalytics> specification);
+
+    Collection<IdOnly> findAllByArea_IdAndDateBetween(Long areaId, LocalDate startDate, LocalDate endDate);
 
     @Query(value = "SELECT DISTINCT ON (animal_id, status_of_visit) * FROM area_analytics WHERE id IN ?",
             nativeQuery = true)
