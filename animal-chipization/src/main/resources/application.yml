@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/animal_chipization_db
+    username: postgres
+    password: admin1234
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+    generate-ddl: false
+    open-in-view: false
+  liquibase:
+    enabled: true
+server:
+  port: 8080

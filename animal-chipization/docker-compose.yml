@@ -1,0 +1,24 @@
+version: '3.9'
+
+services:
+# Сервис для разворачивания контейнера с базой данных
+  database:
+    image: postgres:latest
+    volumes:
+      - /var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=animal_chipization_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin1234
+
+# Сервис для разворачивания контейнера с приложением
+  webapi:
+    image: webapi
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://database:5432/animal_chipization_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin1234
