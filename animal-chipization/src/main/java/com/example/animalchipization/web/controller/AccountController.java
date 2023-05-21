@@ -4,6 +4,7 @@ import com.example.animalchipization.dto.AccountDto;
 import com.example.animalchipization.service.AccountService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

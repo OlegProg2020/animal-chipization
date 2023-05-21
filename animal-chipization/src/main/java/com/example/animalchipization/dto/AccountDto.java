@@ -11,25 +11,36 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.validation.annotation.Validated;
 
 @JsonDeserialize(builder = AccountDto.Builder.class)
 @Getter
 @NoArgsConstructor
 @EqualsAndHashCode
+@Schema(name = "Account", description = "User account entity")
 public class AccountDto {
 
     @Setter
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "User account identifier",
+            example = "1", minimum = "1")
     private Long id;
     @NotBlank
+    @Schema(description = "User first name", requiredMode = Schema.RequiredMode.REQUIRED,
+            minLength = 1)
     private String firstName;
     @NotBlank
+    @Schema(description = "User last name", requiredMode = Schema.RequiredMode.REQUIRED,
+            minLength = 1)
     private String lastName;
     @NotBlank
     @Email
+    @Schema(description = "User email", requiredMode = Schema.RequiredMode.REQUIRED)
     private String email;
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotBlank
+    @Schema(description = "User password", accessMode = Schema.AccessMode.WRITE_ONLY)
     private String password;
+    @Schema(description = "User role", defaultValue = "USER")
     private Role role;
 
     private AccountDto(Builder builder) {
